@@ -12,7 +12,7 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class Lecturer extends Authenticatable
 {
     use HasApiTokens;
     use HasFactory;
@@ -27,7 +27,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'lecturer_name',
         'email',
         'password',
     ];
@@ -61,4 +61,6 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    protected $table = 'lecturers';
 }
