@@ -3,8 +3,15 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Lecturer;
+use App\Models\Venue;
+use App\Models\Project;
+use App\Models\Student;
+use App\Models\EvaluatorList;
+use App\Models\SupervisorList;
 use Illuminate\Database\Seeder;
+use Database\Seeders\RoleSeeder;
+use Database\Seeders\LecturerSeeder;
+use Database\Seeders\ResearchGroupSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,7 +22,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ResearchGroupSeeder::class,
+            RoleSeeder::class,
+            LecturerSeeder::class, 
         ]);
-        Lecturer::factory(1)->create();
+
+        Student::factory()->count(80)->create();
+        Project::factory()->count(80)->create();
+        Venue::factory()->count(20)->create();
+        EvaluatorList::factory()->count(80)->create();
+        SupervisorList::factory()->count(80)->create();
     }
 }
