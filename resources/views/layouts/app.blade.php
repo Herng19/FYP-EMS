@@ -24,18 +24,22 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased flex">
+    <body class="font-sans antialiased flex min-h-screen">
         <x-side-navbar />
-        <div class="h-auto my-8 mx-2 border-l opacity-5 rounded-lg"></div>
+        {{-- seperation line --}}
+        <div class="h-auto my-8 mx-2 border-l opacity-60 rounded-lg"></div>
         <div class="min-h-screen w-full">
             <!-- Page Heading -->
-            @if (isset($header))
-                <header>
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+            <div class="flex max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 justify-between items-center">
+                @if (isset($header))
+                    <header>
+                        <div class="">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endif                    
+                @include('navigation-menu')
+            </div>
 
             <!-- Page Content -->
             <main>

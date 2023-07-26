@@ -12,6 +12,9 @@ class Student extends Model
     use HasFactory;
     use HasRoles;
 
+    protected $table = 'students';
+    protected $primaryKey = 'student_id';
+    
     public $guard_name = 'student';
     public $timestamps = false;
 }

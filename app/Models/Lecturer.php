@@ -63,4 +63,5 @@ class Lecturer extends Authenticatable
     ];
 
     protected $table = 'lecturers';
+    protected $primaryKey = 'lecturer_id';
 }

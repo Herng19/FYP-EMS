@@ -15,18 +15,30 @@ export default {
     theme: {
         colors: {
             'primary': {
+                '900': '#1E3483',
                 '700': '#1A39A6', 
                 '500': '#132FBA', 
                 '300': '#99ADF5', 
                 '200': '#D3DBF8', 
                 '100': '#E8EDFF', 
             }, 
+            'darkblue': '#38477C', 
             'gray': {
                 '900': '#2D2D2A',
             }, 
             'milk': '#FFF6D2', 
             'ivory': '#FFFEFA', 
             ...colors, 
+        },
+        borderRadius: {
+            'none': '0',
+            'sm': '0.125rem',
+            DEFAULT: '0.25rem',
+            DEFAULT: '4px',
+            'md': '12px',
+            'lg': '20px',
+            'full': '9999px',
+            'large': '20px',
         },
         extend: {
             fontFamily: {

@@ -28,7 +28,7 @@ class LecturerFactory extends Factory
         if($number <= 12){
             return [
                 'research_group_id' => $number++, 
-                'lecturer_name' => $this->faker->name(),
+                'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'email_verified_at' => now(),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
@@ -42,7 +42,7 @@ class LecturerFactory extends Factory
         else{
             return [
                 'research_group_id' => $this->faker->numberBetween(1, 12), 
-                'lecturer_name' => $this->faker->name(),
+                'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'email_verified_at' => now(),
                 'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password

@@ -15,10 +15,10 @@ class LecturerSeeder extends Seeder
     public function run(): void
     {
         Lecturer::create(['research_group_id' => 1,
-        'lecturer_name' => 'En.Zulfahmi',
-        'email' => 'zulfahmi@ump.edu.my',
+        'name' => 'En.Zulfahmi',
+        'email' => 'coordinator@example.com',
         'email_verified_at' => now(),
-        'password' => bcrypt('password'), // password
+        'password' => bcrypt('test'), // password
         'two_factor_secret' => null,
         'two_factor_recovery_codes' => null,
         'remember_token' => Str::random(10),
