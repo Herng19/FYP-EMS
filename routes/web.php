@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SuperviseeListController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,14 +28,11 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
 });
 
-Route::get('/supervisee', function () {
-    return view('supervisee.supervisee_list');
-})->name('supervisee');
+// Route for Supervisee List
+Route::get('/supervisee', [SuperviseeListController::class, 'showSuperviseeList'])->name('supervisee');
 
 Route::get('/evaluation', function () {
     return view('evaluation.student_list');

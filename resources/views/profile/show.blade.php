@@ -29,9 +29,9 @@
                 <x-section-border />
             @endif
 
-            <div class="mt-10 sm:mt-0">
+            {{-- <div class="mt-10 sm:mt-0">
                 @livewire('profile.logout-other-browser-sessions-form')
-            </div>
+            </div> --}}
 
             @if (Laravel\Jetstream\Jetstream::hasAccountDeletionFeatures())
                 <x-section-border />
@@ -40,6 +40,38 @@
                     @livewire('profile.delete-user-form')
                 </div>
             @endif
+
+            <x-form-section submit="updateProfileInformation">
+                <x-slot name="title">
+                    {{ __('FYP Information') }}
+                </x-slot>
+            
+                <x-slot name="description">
+                    {{ __('Update your FYP\'s title and description. ') }}
+                </x-slot>
+            
+                <x-slot name="form">
+                    <!-- FYP Title -->
+                    <div class="col-span-6 sm:col-span-4">
+                        <x-label for="name" value="{{ __('fyp_title') }}" />
+                        <x-input id="name" type="text" class="mt-1 block w-full"/>
+                        <x-input-error for="name" class="mt-2" />
+                    </div>
+            
+                    <!-- FYP Description -->
+                    <div class="col-span-6 sm:col-span-4">
+                        <x-label for="email" value="{{ __('fyp_description') }}" />
+                        <x-input id="email" type="email" class="mt-1 block w-full"/>
+                        <x-input-error for="email" class="mt-2" />
+                    </div>
+                </x-slot>
+            
+                <x-slot name="actions">
+                    <x-button wire:loading.attr="disabled" wire:target="photo">
+                        {{ __('Save') }}
+                    </x-button>
+                </x-slot>
+            </x-form-section>
         </div>
     </div>
 </x-app-layout>

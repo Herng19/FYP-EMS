@@ -1,13 +1,11 @@
-<table class="rounded-lg mt-4 pt-2 pb-4 bg-white drop-shadow-[0px_0px_12px_rgba(215,215,215,0.25)] w-full">
-    <thead class="border-b w-full">
-        <tr class="flex self-stretch">
-            <th class="px-4 py-2 text-primary-700 text-sm font-bold">No.</th>
+<table class="rounded-lg mt-4 bg-white drop-shadow-[0px_0px_12px_rgba(185,185,185,0.25)] w-full">
+    <thead class="w-full">
+        <tr class="flex self-stretch mx-8 mt-2 border-b">
+            <th class="my-4 mx-4 text-primary-700 text-sm font-bold w-4">No.</th>
             @foreach ($headers as $header)
-                <th class="px-4 py-2 mx-2 text-primary-700 text-sm font-bold text-left grow">{{ $header }}</th>
+                <th class="my-4 text-primary-700 text-sm font-bold text-left w-1/3">{{ $header }}</th>
             @endforeach
         </tr>
     </thead>
-    <tbody>
-        {{ $slot }}
-    </tbody>
+    {{ $slot }}
 </table>

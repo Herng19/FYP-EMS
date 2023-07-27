@@ -110,7 +110,7 @@
     {{-- logout button --}}
     <form method="POST" action="{{ route('logout') }}" x-data>
         @csrf
-        <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex mt-4 items-center object-fill py-2 px-8 rounded-lg justify-center bg-red-500 text-white hover:bg-red-600 hover:text-white active:ring-red-800 active:ring-2 active:ring-offset-2">
+        <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex mt-4 items-center object-fill py-2 px-8 rounded-md justify-center bg-red-500 text-white hover:bg-red-600 hover:text-white active:ring-red-800 active:ring-2 active:ring-offset-2">
             <div name="icon" class="text-inherit">
                 <i class="fa-regular fa-arrow-right-from-bracket"></i>
             </div>

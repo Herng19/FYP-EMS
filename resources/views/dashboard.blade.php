@@ -16,46 +16,32 @@
                 <a href="{{ route('supervisee') }}" class="font-bold text-sm text-primary-700">View</a>
             </div>
             <x-show-table :headers="['Name', 'PSM', 'Project Title']">
-                <tr class="flex self-stretch">
-                    <th class="px-4 py-2 text-primary-700 text-sm font-bold">No.</th>
-                    {{-- @foreach ($headers as $header)
-                        <th class="px-4 py-2 mx-2 text-primary-700 text-sm font-bold text-left grow">{{ $header }}</th>
-                    @endforeach --}}
-                </tr>
-                <tr class="flex self-stretch">
-                    <th class="px-4 py-2 text-primary-700 text-sm font-bold">No.</th>
-                    {{-- @foreach ($headers as $header)
-                        <th class="px-4 py-2 mx-2 text-primary-700 text-sm font-bold text-left grow">{{ $header }}</th>
-                    @endforeach --}}
-                </tr>
-                <tr class="flex self-stretch">
-                    <th class="px-4 py-2 text-primary-700 text-sm font-bold">No.</th>
-                    {{-- @foreach ($headers as $header)
-                        <th class="px-4 py-2 mx-2 text-primary-700 text-sm font-bold text-left grow">{{ $header }}</th>
-                    @endforeach --}}
-                </tr>
-                <tr class="flex self-stretch">
-                    <th class="px-4 py-2 text-primary-700 text-sm font-bold">No.</th>
-                    {{-- @foreach ($headers as $header)
-                        <th class="px-4 py-2 mx-2 text-primary-700 text-sm font-bold text-left grow">{{ $header }}</th>
-                    @endforeach --}}
-                </tr>
-                <tr class="flex self-stretch">
-                    <th class="px-4 py-2 text-primary-700 text-sm font-bold">No.</th>
-                    {{-- @foreach ($headers as $header)
-                        <th class="px-4 py-2 mx-2 text-primary-700 text-sm font-bold text-left grow">{{ $header }}</th>
-                    @endforeach --}}
-                </tr>
-                <tr class="flex self-stretch">
-                    <th class="px-4 py-2 text-primary-700 text-sm font-bold">No.</th>
-                    {{-- @foreach ($headers as $header)
-                        <th class="px-4 py-2 mx-2 text-primary-700 text-sm font-bold text-left grow">{{ $header }}</th>
-                    @endforeach --}}
-                </tr>
+                <tbody class="flex flex-col overflow-y-auto w-full" style="height: 40vh;">
+                    @foreach ($supervisees as $i => $supervisee)
+                        <tr class="flex mx-8 mt-2">
+                            <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ $i+1 }}.</td>
+                            <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->name }}</td>
+                            <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">PSM {{ $supervisee->psm_year }}</td>
+                            <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->project_title }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
             </x-show-table>
         </div>
-        <div class="px-4">
-            <div class="bg-primary-700 rounded-lg text-white">Evaluation</div>
+        <div class="p-4">
+            <div class="bg-primary-700 rounded-lg text-white p-8 h-full text-left justify-center drop-shadow-[0px_1px_18px_rgba(113,144,255,0.85)]">
+                <div class="h-5/6">
+                    <p class="font-bold text-xl text-white">Next Evaluation</p>
+                    <p class="font-semibold text-md text-white mt-4">First Evaluation (30%)</p>
+                    <p class="font-thin text-sm text-white">Submit until chapter 3, requirement part. </p>
+                    <p class="font-bold text-sm text-white mt-4">Due on 26/5/2023</p>
+                </div>
+                <a href="{{ route('evaluation') }}">
+                    <button class="w-full bg-white text-primary-700 font-bold text-md justify-center rounded-md px-8 py-2">
+                        Evaluate
+                    </button>
+                </a>
+            </div>
         </div>
     </div>
 </x-app-layout>

@@ -26,7 +26,16 @@ class DatabaseSeeder extends Seeder
             LecturerSeeder::class, 
         ]);
 
-        Student::factory()->count(80)->create();
+        Student::create([
+            'research_group_id' => 1, 
+            'name' => 'Loo Chang Herng', 
+            'password' => bcrypt('test'),
+            'email' => 'student@example.com', 
+            'course' => 'Software Engineering', 
+            'psm_year' => '1', 
+            'top_student' => '0'
+        ]); 
+        Student::factory()->count(79)->create();
         Project::factory()->count(80)->create();
         Venue::factory()->count(20)->create();
         EvaluatorList::factory()->count(80)->create();
