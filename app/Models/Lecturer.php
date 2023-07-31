@@ -21,13 +21,15 @@ class Lecturer extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
 
+    protected $table = 'lecturers';
+    protected $primaryKey = 'lecturer_id';
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'lecturer_name',
+        'name',
         'email',
         'password',
     ];
@@ -61,7 +63,4 @@ class Lecturer extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
-
-    protected $table = 'lecturers';
-    protected $primaryKey = 'lecturer_id';
 }

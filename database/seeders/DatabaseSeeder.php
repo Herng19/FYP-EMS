@@ -34,7 +34,8 @@ class DatabaseSeeder extends Seeder
             'course' => 'Software Engineering', 
             'psm_year' => '1', 
             'top_student' => '0'
-        ]); 
+        ])->assignRole('student'); 
+        
         Student::factory()->count(79)->create();
         Project::factory()->count(80)->create();
         Venue::factory()->count(20)->create();

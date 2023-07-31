@@ -32,9 +32,9 @@ export default {
         },
         borderRadius: {
             'none': '0',
-            'sm': '0.125rem',
+            'sm': '4px',
             DEFAULT: '0.25rem',
-            DEFAULT: '4px',
+            DEFAULT: '8px',
             'md': '12px',
             'lg': '20px',
             'full': '9999px',

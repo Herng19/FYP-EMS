@@ -6,7 +6,7 @@
     </div>
 
     {{-- available nav items --}}
-    <div class="h-4/5 mt-12">
+    <div class="h-5/6 mt-12">
         <x-navbar-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
             <x-slot name="icon">
                 <i class="fa-regular fa-objects-column"></i>
@@ -110,7 +110,7 @@
     {{-- logout button --}}
     <form method="POST" action="{{ route('logout') }}" x-data>
         @csrf
-        <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex mt-4 items-center object-fill py-2 px-8 rounded-md justify-center bg-red-500 text-white hover:bg-red-600 hover:text-white active:ring-red-800 active:ring-2 active:ring-offset-2">
+        <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex my-4 items-center object-fill py-2 px-8 rounded-md justify-center bg-red-500 text-white hover:bg-red-600 hover:text-white active:ring-red-800 active:ring-2 active:ring-offset-2">
             <div name="icon" class="text-inherit">
                 <i class="fa-regular fa-arrow-right-from-bracket"></i>
             </div>

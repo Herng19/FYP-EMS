@@ -1,8 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperviseeListController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +30,12 @@ Route::middleware([
     'verified'
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
+
+    // Route for manage FYP
+    Route::get('/fyp', [ProfileController::class, 'showFYP'])->name('showFYP');
+    Route::put('/fyp', [ProfileController::class, 'updateFYP']);
 });
+
 
 // Route for Supervisee List
 Route::get('/supervisee', [SuperviseeListController::class, 'showSuperviseeList'])->name('supervisee');

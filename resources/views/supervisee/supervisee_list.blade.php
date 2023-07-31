@@ -10,10 +10,10 @@
                 @foreach ($supervisees as $i => $supervisee)
                     <tr class="flex mx-8 mt-2">
                         <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ $i+1 }}.</td>
-                        <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->name }}</td>
-                        <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">PSM {{ $supervisee->psm_year }}</td>
-                        <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->project_title }}</td>
-                        <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->course }}</td>
+                        <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">{{ $supervisee->name }}</td>
+                        <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">PSM {{ $supervisee->psm_year }}</td>
+                        <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">{{ $supervisee->project_title }}</td>
+                        <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">{{ $supervisee->course }}</td>
                     </tr>
                 @endforeach
             </tbody>

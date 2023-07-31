@@ -3,9 +3,13 @@
 namespace App\Actions\Fortify;
 
 use App\Models\User;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Student;
+use App\Models\Lecturer;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
@@ -15,11 +19,22 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
      *
      * @param  array<string, string>  $input
      */
-    public function update(User $user, array $input): void
+    public function update($guard_name, array $input): void
     {
+        if($guard_name == 'student'){
+            $user = new Student;
+            $table = 'students';
+            $id = 'student_id';
+        }else{
+            $user = new Lecturer;
+            $table = 'lecturers';
+            $id = 'lecturer_id';
+        }
+        $user = Auth::user();
+
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', 'max:255', Rule::unique( $table, $id)->ignore($user->$id, $id)],
             'photo' => ['nullable', 'mimes:jpg,jpeg,png', 'max:1024'],
         ])->validateWithBag('updateProfileInformation');
 

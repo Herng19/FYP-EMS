@@ -20,7 +20,7 @@ class StudentFactory extends Factory
         return [
             'research_group_id' => $this->faker->numberBetween(1, 11),
             'name' => $this->faker->name,
-            'password' => $this->faker->password,
+            'password' => bcrypt('test'),
             'email' => $this->faker->unique()->safeEmail,
             'course' => $this->faker->randomElement(['Software Engineering', 'Graphics Design & Animation', 'Data & Networking']),
             'psm_year' => $this->faker->randomElement(['1', '2']),
