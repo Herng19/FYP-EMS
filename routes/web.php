@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperviseeListController;
+use App\Http\Controllers\EvaluationScheduleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,7 @@ use App\Http\Controllers\SuperviseeListController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 Route::get('/layout', function () {
@@ -27,26 +28,32 @@ Route::get('/layout', function () {
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
-    'verified'
+    'verified',
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
 
-    // Route for manage FYP
-    Route::get('/fyp', [ProfileController::class, 'showFYP'])->name('showFYP');
-    Route::put('/fyp', [ProfileController::class, 'updateFYP']);
 });
 
+Route::middleware('auth:web')->group(function () {
+    Route::get('/supervisee', [SuperviseeListController::class, 'showSuperviseeList'])->name('supervisee');
+    
+    Route::get('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
+    Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
+    Route::get('/evaluation schedule/edit-slot/{student_id}', [EvaluationScheduleController::class, 'edit_slot'])->name('edit_slot');
+});
+
+Route::middleware('auth:student')->group(function () {
+        // Route for manage FYP
+        Route::get('/fyp', [ProfileController::class, 'showFYP'])->name('showFYP');
+        Route::put('/fyp', [ProfileController::class, 'updateFYP']);
+});
 
 // Route for Supervisee List
-Route::get('/supervisee', [SuperviseeListController::class, 'showSuperviseeList'])->name('supervisee');
 
 Route::get('/evaluation', function () {
     return view('evaluation.student_list');
 })->name('evaluation');
 
-Route::get('/evaluation schedule', function () {
-    return view('evaluation_schedule.manage_schedule');
-})->name('evaluation schedule');
 
 Route::get('/rubric', function () {
     return view('rubric.rubric_list');

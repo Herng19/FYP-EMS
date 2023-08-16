@@ -1,12 +1,15 @@
 <div class="px-2 mx-8 py-4 my-4 justify-center flex-col">
     {{-- title --}}
     <div class="flex justify-center items-center">
-        <i class="fa-solid fa-book text-primary-700 bg-milk"></i>
-        <span class="text-primary-700 pl-2 font-bold font-serif break-normal whitespace-nowrap">FYP-EMS</span>
+        <a href="/dashboard">
+            <i class="fa-solid fa-book text-primary-700 bg-milk"></i>
+            <span class="text-primary-700 pl-2 font-bold font-serif break-normal whitespace-nowrap">FYP-EMS</span>
+        </a>
     </div>
 
     {{-- available nav items --}}
     <div class="h-5/6 mt-12">
+        {{-- Dashboard --}}
         <x-navbar-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
             <x-slot name="icon">
                 <i class="fa-regular fa-objects-column"></i>
@@ -15,6 +18,9 @@
                 {{ __('Dashboard') }}
             </x-slot>
         </x-navbar-item>
+
+        {{-- Supervisee List --}}
+        @role('supervisor')
         <x-navbar-item href="{{ route('supervisee') }}" :active="request()->routeIs('supervisee')">
             <x-slot name="icon">
                 <i class="fa-regular fa-users"></i>
@@ -23,6 +29,10 @@
                 {{__('Supervisee')}}
             </x-slot>
         </x-navbar-item>
+        @endrole
+
+        @hasanyrole('supervisor|evaluator')
+        {{-- Evaluation --}}
         <x-navbar-item href="{{ route('evaluation') }}" :active="request()->routeIs('evaluation')">
             <x-slot name="icon">
                 <i class="fa-regular fa-graduation-cap"></i>
@@ -31,6 +41,9 @@
                 {{__('Evaluation')}}
             </x-slot>
         </x-navbar-item>
+        @endhasanyrole
+
+        {{-- Evaluation Schedule --}}
         <x-navbar-item href="{{ route('evaluation schedule') }}" :active="request()->routeIs('evaluation schedule')">
             <x-slot name="icon">
                 <i class="fa-regular fa-table"></i>
@@ -39,6 +52,8 @@
                 {{__('Evaluation Schedule')}}
             </x-slot>
         </x-navbar-item>
+
+        {{-- Rubric --}}
         <x-navbar-item href="{{ route('rubric') }}" :active="request()->routeIs('rubric')">
             <x-slot name="icon">
                 <i class="fa-regular fa-chart-pie"></i>
@@ -47,6 +62,8 @@
                 {{__('Rubric')}}
             </x-slot>
         </x-navbar-item>
+
+        {{-- Top Students --}}
         <x-navbar-item href="{{ route('top students') }}" :active="request()->routeIs('top students')">
             <x-slot name="icon">
                 <i class="fa-regular fa-crown"></i>
@@ -55,6 +72,9 @@
                 {{__('Top Students')}}
             </x-slot>
         </x-navbar-item>
+
+        @role('coordinator')
+        {{-- Industrial Evaluation --}}
         <div x-data="{dropdown: false}" class="relative cursor-pointer" @click="dropdown = ! dropdown">
             <div class="flex mt-4 items-center object-fill py-2 px-8 rounded-lg justify-center text-gray">
                 <div name="icon" class="text-inherit">
@@ -71,6 +91,7 @@
                 </button>
             </div>
             <div x-show="dropdown">
+                {{-- Industrial Evaluator --}}
                 <x-navbar-item href="{{ route('industrial evaluator') }}" :active="request()->routeIs('industrial evaluator')" class="pl-12">
                     <x-slot name="icon">
                         <i class="fa-regular fa-user-tie"></i>
@@ -79,6 +100,8 @@
                         {{__('Industrial Evaluator')}}
                     </x-slot>
                 </x-navbar-item>
+
+                {{-- Industrial Schedule --}}
                 <x-navbar-item href="{{ route('industrial schedule') }}" :active="request()->routeIs('industrial schedule')" class="pl-12">
                     <x-slot name="icon">
                         <i class="fa-regular fa-table-tree"></i>
@@ -87,6 +110,8 @@
                         {{__('Evaluation Schedule')}}
                     </x-slot>
                 </x-navbar-item>
+
+                {{-- Industrial Evaluation --}}
                 <x-navbar-item href="{{ route('industrial evaluation') }}" :active="request()->routeIs('industrial evaluation')" class="pl-12">
                     <x-slot name="icon">
                         <i class="fa-sharp fa-regular fa-graduation-cap"></i>
@@ -97,6 +122,9 @@
                 </x-navbar-item>
             </div>
         </div>
+        @endrole
+
+        {{-- Report --}}
         <x-navbar-item href="{{ route('report') }}" :active="request()->routeIs('report')">
             <x-slot name="icon">
                 <i class="fa-regular fa-chart-mixed"></i>

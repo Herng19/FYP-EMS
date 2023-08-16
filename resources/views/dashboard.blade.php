@@ -1,13 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
+        {{ __('Dashboard') }}
     </x-slot>
     <div class="flex items-stretch mx-12 w-auto">
-        <x-dashboard-item title="PSM 1 Supervisee" data="2"/>
-        <x-dashboard-item title="PSM 2 Supervisee" data="2"/>
-        <x-dashboard-item title="Evaluatees" data="2"/>
+        <x-dashboard-item title="PSM 1 Supervisee" data="{{ $psm1_students }}"/>
+        <x-dashboard-item title="PSM 2 Supervisee" data="{{ $psm2_students }}"/>
+        <x-dashboard-item title="Evaluatees" data="{{ $evaluatees }}"/>
     </div>
     <div class="grid grid-cols-3 gap-12 mx-20 my-12">
         <div class="col-span-2">

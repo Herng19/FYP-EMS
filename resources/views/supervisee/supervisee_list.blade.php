@@ -1,8 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-2xl text-gray-800 leading-tight">
-            {{ __('Supervisee List') }}
-        </h2>
+        {{ __('Supervisee List') }}
     </x-slot>
     <div class="px-8">
         <x-show-table :headers="['Name', 'PSM', 'Project Title', 'Course']">

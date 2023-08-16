@@ -16,11 +16,13 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
         {{-- Font Awesome Icon --}}
-        <link rel="stylesheet" data-purpose="Layout StyleSheet" title="Web Awesome" href="/css/app-wa-8d95b745961f6b33ab3aa1b98a45291a.css?vsn=d">
         <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css">
         <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/sharp-solid.css">
         <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/sharp-regular.css" >
         <link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v6.4.0/css/sharp-light.css">
+
+        {{-- AJAX Request --}}
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
         <!-- Styles -->
         @livewireStyles
@@ -34,7 +36,7 @@
             <div class="flex max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 justify-between items-center">
                 @if (isset($header))
                     <header>
-                        <div class="">
+                        <div class="font-bold text-2xl text-gray-800 leading-tight">
                             {{ $header }}
                         </div>
                     </header>
