@@ -10,4 +10,8 @@ class Venue extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    public function slots() {
+        return $this->hasMany(Slot::class, 'venue_id', 'venue_id');
+    }
 }

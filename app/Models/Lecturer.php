@@ -63,4 +63,16 @@ class Lecturer extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function research_group() {
+        return $this->belongsTo(ResearchGroup::class, 'research_group_id', 'research_group_id');
+    }
+
+    public function evaluatees() {
+        return $this->belongsToMany(Student::class, 'evaluator_lists', 'student_id', 'lecturer_id');
+    }
+
+    public function supervisees() {
+        return $this->belongsToMany(Student::class, 'supervisor_lists', 'student_id', 'lecturer_id');
+    }
 }

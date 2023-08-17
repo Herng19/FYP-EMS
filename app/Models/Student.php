@@ -66,4 +66,24 @@ class Student extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+    public function research_group() {
+        return $this->belongsTo(ResearchGroup::class, 'research_group_id', 'research_group_id');
+    }
+
+    public function slot() {
+        return $this->hasOne(Slot::class, 'student_id', 'student_id');
+    }
+
+    public function project() {
+        return $this->hasOne(Project::class, 'student_id', 'student_id');
+    }
+
+    public function evaluators() {
+        return $this->belongsToMany(Lecturer::class, 'evaluator_lists', 'student_id', 'lecturer_id');
+    }
+
+    public function supervisors() {
+        return $this->belongsToMany(Lecturer::class, 'supervisor_lists', 'student_id', 'lecturer_id');
+    }
 }

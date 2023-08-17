@@ -29,7 +29,7 @@
                             @foreach($schedules as $schedule)
                                 @if($schedule->venue_id == $venue->venue_id && (date("H:i", strtotime($schedule->start_time))) == $timeslot)
                                     <td class="w-12 p-2 border-l">
-                                        <a href="/evaluation schedule/edit-slot/{{$schedule->student_id}}">
+                                        <a href="/evaluation schedule/edit-slot/{{$schedule->slot_id}}">
                                             <div class="text-primary-700 font-bold">{{$schedule->name}}</div>
                                         </a>
                                     </td>
@@ -52,7 +52,8 @@
         });
         
         $('#date').on('change', function(e) {
-            date = $("input[name=date]").val();         
+            date = $("input[name=date]").val();
+        
             $.ajax({
                   type: "POST",
                   url: '/evaluation schedule',
@@ -66,7 +67,7 @@
                     console.log(error);
                   }
             });
-        })
+        });
 
         $(window).load(function() {
             date = document.getElementById('date').value;
@@ -83,6 +84,6 @@
                     console.log(error);
                   }
             });
-        })
+        });
     </script>
 </x-app-layout>

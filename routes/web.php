@@ -39,7 +39,8 @@ Route::middleware('auth:web')->group(function () {
     
     Route::get('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
     Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
-    Route::get('/evaluation schedule/edit-slot/{student_id}', [EvaluationScheduleController::class, 'edit_slot'])->name('edit_slot');
+    Route::get('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'edit_slot'])->name('edit_slot');
+    Route::post('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'edit_slot'])->name('edit_slot');
 });
 
 Route::middleware('auth:student')->group(function () {

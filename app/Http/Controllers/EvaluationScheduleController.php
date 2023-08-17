@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Slot;
 use App\Models\Venue;
 use App\Models\Student;
+use App\Models\Lecturer;
 use Illuminate\Http\Request;
+use App\Models\ResearchGroup;
 use Illuminate\Support\Facades\DB;
 
 class EvaluationScheduleController extends Controller
@@ -20,7 +23,7 @@ class EvaluationScheduleController extends Controller
                         ->join('slots', 'students.student_id', 'slots.student_id')
                         ->join('venues', 'slots.venue_id', 'venues.venue_id')
                         ->join('evaluation_schedules', 'slots.schedule_id', '=', 'evaluation_schedules.schedule_id')
-                        ->select('students.student_id', 'students.name', 'projects.project_title', 'evaluation_schedules.schedule_date', 'slots.start_time', 'venues.venue_id', 'venues.venue_name')
+                        ->select('students.student_id', 'students.name', 'projects.project_title', 'evaluation_schedules.schedule_date', 'slots.slot_id', 'slots.start_time', 'venues.venue_id', 'venues.venue_name')
                         ->where('evaluation_schedules.schedule_date', '=', $request->date)
                         ->orderBy('venues.venue_id')
                         ->get();
@@ -31,7 +34,7 @@ class EvaluationScheduleController extends Controller
         }
     }
 
-    public function scheduleEvaluation(Request $request) {
+    public function scheduleEvaluationSchedule(Request $request) {
         $global_best_position = $this->particle_swarm_optimization();
         $schedule = array();
         for ($i = 0; $i < count($global_best_position); $i += 4) {
@@ -189,7 +192,22 @@ class EvaluationScheduleController extends Controller
         return $best_position;
     }
 
-    public function edit_slot($student_id) {
-        return view('evaluation_schedule.edit_slot');
+    public function edit_slot($slot_id, Request $request) {
+        $students = Student::all()->sortBy('name');
+        $slot = Slot::find($slot_id);
+
+        isset($request->student_id) ? $selected_student = Student::find($request->student_id) : $selected_student = Student::find($slot->student_id);
+
+        $evaluators = $selected_student->evaluators->toArray();
+        $venues = Venue::all();
+        $timeslots = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
+        $available_evaluators = Lecturer::where('research_group_id', $selected_student->research_group_id)->get();
+        return view('evaluation_schedule.edit_slot', ["students" => $students, 
+                                                "slot" => $slot,
+                                                "selected_student" => $selected_student, 
+                                                "venues" => $venues, 
+                                                "timeslots" => $timeslots, 
+                                                "evaluators" => $evaluators, 
+                                                "available_evaluators" => $available_evaluators]);
     }
 }
