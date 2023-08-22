@@ -2,14 +2,24 @@
     <x-slot name="header">
         {{ __('Evaluation Schedule') }}
     </x-slot>
+
     <div class="mx-12 mt-4">
+        {{-- Action Message --}}
+        <x-success-message/>
+
+        {{-- Evaluation Schedule Actions --}}
         <form action="" method="POST">
             @csrf
             <div class="flex justify-between w-full items-center">
-                <input type="date" name="date" id="date" class="rounded-md border-0 text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]"/>
-                <x-button type="submit">GENERATE</x-button>
+                <input type="date" name="date" id="date" class="rounded-md border-0 text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" value="{{Session::get('date')}}"/>
+                <div>
+                    <x-secondary-button class="border-primary-700 border-2 font-bold text-primary-700"><a href="/evaluation schedule/create-slot">NEW SLOT</a></x-secondary-button>
+                    <x-button type="submit">GENERATE</x-button>
+                </div>
             </div>
         </form>
+
+        {{-- Evaluation Schedule --}}
         <div id="table">
         <table class="my-6 bg-white w-full h-2/3 rounded-lg drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]"  style="height: 70vh;">
             <thead>
@@ -53,24 +63,7 @@
         
         $('#date').on('change', function(e) {
             date = $("input[name=date]").val();
-        
-            $.ajax({
-                  type: "POST",
-                  url: '/evaluation schedule',
-                  data: {
-                    date: date,
-                  },
-                  success: function(result) {
-                    $('#table').html(jQuery(result).find('#table').html());
-                  },
-                  error: function (error) {
-                    console.log(error);
-                  }
-            });
-        });
 
-        $(window).load(function() {
-            date = document.getElementById('date').value;
             $.ajax({
                   type: "POST",
                   url: '/evaluation schedule',
@@ -79,6 +72,7 @@
                   },
                   success: function(result) {
                     $('#table').html(jQuery(result).find('#table').html());
+                    console.log(result);
                   },
                   error: function (error) {
                     console.log(error);

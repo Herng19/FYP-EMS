@@ -9,6 +9,10 @@ class EvaluationSchedule extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'schedule_date',
+    ];
+
     public function slots() {
         return $this->hasMany(Slot::class, 'schedule_id', 'schedule_id');
     }

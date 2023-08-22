@@ -23,6 +23,6 @@ class ProfileController extends Controller
 
         Project::where('student_id', '=', Auth::user()->student_id)->update($input);
 
-        return back()->with('success-message', 'Updated Successfully');
+        return back()->with('success-message', 'Final Year Project Infomation Updated Successfully');
     }
 }

@@ -3,14 +3,13 @@
         {{__('Edit Slot')}}
     </x-slot>
 
-    {{-- Update Success Message --}}
-    <x-success-message />
-
     {{-- Edit Slot Form --}}
     <div class="mx-20" id="slot-form">
-        <form action="/evaluation schedule/edit-slot/{{ $slot->slot_id }}" method="POST" id="edit-slot-form">
+        {{-- Update Success Message --}}
+         <x-success-message />
+         
+        <form action="/evaluation schedule/create-slot" method="POST" id="edit-slot-form">
             @csrf
-            @method('PUT')
             {{-- Student's Information --}}
             <div>
                 <div class="font-bold text-md text-gray">
@@ -19,7 +18,6 @@
 
                 {{-- Form Fields --}}
                 <div class="ml-4 mt-2">
-                    <input type="hidden" value="{{ $slot->slot_id }}" name="slot_id"/>
                     {{-- Student's Name --}}
                     <label for="name" class="text-gray text-xs font-bold">Student Name</label>
                     <select id="name" name="name" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-700 px-4 py-2 border-0 rounded-md" required>
@@ -70,7 +68,7 @@
                     <label for="venue" class="text-gray text-xs font-bold">Venue</label>
                     <select id="venue" name="venue" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-700 px-4 py-2 border-0 rounded-md" required>
                         @foreach($venues as $venue)
-                            @if($venue->venue_id == $slot->venue_id)
+                            @if($venue->venue_id == old('venue'))
                                 <option value="{{$venue->venue_id}}" class="text-primary-700 text-inherit font-semibold" selected>{{$venue->venue_code}} {{$venue->venue_name}}</option>
                             @else
                                 <option value="{{$venue->venue_id}}" class="text-primary-700 text-inherit font-semibold">{{$venue->venue_code}} {{$venue->venue_name}}</option>
@@ -84,7 +82,7 @@
                     <div class="grid grid-cols-2 gap-4 mt-4">
                         <div>
                             <label for="date" class="block text-gray text-xs font-bold">Date</label>
-                            <x-input id="date" class="block text-sm font-semibold mt-1 w-full pl-4" type="date" name="date" value="{{ \Carbon\Carbon::parse($slot->start_time)->format('Y-m-d')}}" required/>
+                            <x-input id="date" class="block text-sm font-semibold mt-1 w-full pl-4" type="date" name="date" value="{{ old('date')}}" required/>
                             @error('date')
                                 <div class="text-red-500 text-xs mt-1">{{$message}}</div>
                             @enderror
@@ -93,7 +91,7 @@
                             <label for="timeslot" class="block text-gray text-xs font-bold">Timeslot</label>
                             <select id="timeslot" name="timeslot" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-700 px-4 py-2 border-0 rounded-md" required>
                                 @foreach($timeslots as $timeslot)
-                                    @if((date("H:i", strtotime($slot->start_time))) == $timeslot)
+                                    @if($timeslot == old('timeslot'))
                                         <option value="{{$timeslot}}" class="text-primary-700 text-inherit font-semibold" selected>{{$timeslot}}</option>
                                     @else
                                         <option value="{{$timeslot}}" class="text-primary-700 text-inherit font-semibold">{{$timeslot}}</option>
@@ -111,7 +109,7 @@
                         <label for="evaluator1" class="block text-gray text-xs font-bold">Evaluator 1</label>
                         <select id="evaluator1" name="evaluator1" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-700 px-4 py-2 border-0 rounded-md" required>
                             @foreach($available_evaluators as $available_evaluator)
-                                @if(isset($evaluators[0]) && $available_evaluator->lecturer_id == $evaluators[0]['lecturer_id'])
+                                @if($available_evaluator->lecturer_id == old('evaluator1'))
                                     <option value="{{$available_evaluator->lecturer_id}}" class="text-primary-700 text-inherit font-semibold" selected>{{$available_evaluator->name}}</option>
                                 @else
                                     <option value="{{$available_evaluator->lecturer_id}}" class="text-primary-700 text-inherit font-semibold">{{$available_evaluator->name}}</option>
@@ -128,7 +126,7 @@
                         <label for="evaluator2" class="block text-gray text-xs font-bold">Evaluator 2</label>
                         <select id="evaluator2" name="evaluator2" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-700 px-4 py-2 border-0 rounded-md" required>
                             @foreach($available_evaluators as $available_evaluator)
-                                @if(isset($evaluators[1]) && $available_evaluator->lecturer_id == $evaluators[1]['lecturer_id'])
+                                @if($available_evaluator->lecturer_id == old('evaluator2'))
                                     <option value="{{$available_evaluator->lecturer_id}}" class="text-primary-700 text-inherit font-semibold" selected>{{$available_evaluator->name}}</option>
                                 @else
                                     <option value="{{$available_evaluator->lecturer_id}}" class="text-primary-700 text-inherit font-semibold">{{$available_evaluator->name}}</option>
@@ -145,10 +143,8 @@
 
         {{-- Buttons --}}
         <div class="flex my-8 justify-end items-center">
-            <x-danger-button data-modal-target="popup-modal" data-modal-toggle="popup-modal" class="bg-red-600 hover:bg-red-700 active:bg-red-600 focus:bg-red-600 focus:ring focus:ring-red-600">Delete</x-danger-button>
-            @include('components.delete-confirmation-modal', ['route' => '/evaluation schedule/edit-slot/'.$slot->slot_id, 'title' => "Delete Slot", 'description' => "Are you sure to delete this slot?"])
             <x-secondary-button class="ml-4" id="cancel-button"><a href="/evaluation schedule">Cancel</a></x-secondary-button>
-            <x-button type="submit" class="ml-4" form="edit-slot-form">Update</x-button>
+            <x-button type="submit" class="ml-4" form="edit-slot-form">Create</x-button>
         </div>
     </div>
 
@@ -162,14 +158,12 @@
         // When student is selected, update student info and available evaluators
         $('body').on('change', "#name", function(e) {
             student_id = $("#name").find(":selected").val();  
-            slot_id = '{{$slot->slot_id}}';
 
             $.ajax({
-                  type: "POST",
-                  url: "/evaluation schedule/edit-slot/"+slot_id, 
+                  type: "PUT",
+                  url: "/evaluation schedule/create-slot", 
                   data: {
-                    student_id: student_id,
-                    slot_id: slot_id, 
+                    student_id: student_id, 
                   },
                   success: function(result) {
                       $('#slot-form').html(jQuery(result).find('#slot-form').html());

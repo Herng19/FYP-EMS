@@ -9,5 +9,10 @@ class EvaluatorList extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'student_id', 
+        'lecturer_id', 
+    ];
+
     public $timestamps = false;
 }

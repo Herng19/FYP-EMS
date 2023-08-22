@@ -4,6 +4,8 @@
             {{ __('FYP Information') }}
         </h2>
     </x-slot>
+
+    <x-success-message />
     <div class="ml-8">
         <div class="text-md font-bold">
             Final Year Project Information
@@ -39,5 +41,4 @@
             </form>
         </div>
     </div>
-    <x-success-message />
 </x-app-layout>

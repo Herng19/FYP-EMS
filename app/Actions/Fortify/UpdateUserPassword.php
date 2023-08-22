@@ -26,7 +26,7 @@ class UpdateUserPassword implements UpdatesUserPasswords
             $guard = 'current_password:student'; 
         }else{
             $user = new Lecturer;
-            'current_password:web'; 
+            $guard = 'current_password:web'; 
         }
         $user = Auth::user();
 

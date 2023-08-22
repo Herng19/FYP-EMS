@@ -11,6 +11,13 @@ class Slot extends Model
 
     public $timestamps = false;
     protected $primaryKey = 'slot_id';
+    protected $fillable = [
+        'schedule_id',
+        'student_id',
+        'venue_id',
+        'start_time',
+        'end_time',
+    ];
 
     public function student() {
         return $this->belongsTo(Student::class, 'student_id', 'student_id');

@@ -6,9 +6,12 @@ use App\Models\Slot;
 use App\Models\Venue;
 use App\Models\Student;
 use App\Models\Lecturer;
+use App\Rules\crashVenue;
 use Illuminate\Http\Request;
-use App\Models\ResearchGroup;
+use App\Models\EvaluatorList;
+use App\Models\EvaluationSchedule;
 use Illuminate\Support\Facades\DB;
+use App\Rules\evaluatorCrashTimeslot;
 
 class EvaluationScheduleController extends Controller
 {
@@ -17,14 +20,18 @@ class EvaluationScheduleController extends Controller
             return view('evaluation_schedule.student_schedule');
         }
         else if(auth('web')->check()) {
-            $timeslots = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
+            if(isset($request->date) && $request->date != null) {
+                session(['date' => $request->date]);
+            }
+
+            $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
             $schedules = DB::table('students')
                         ->join('projects', 'students.student_id', '=', 'projects.student_id')
                         ->join('slots', 'students.student_id', 'slots.student_id')
                         ->join('venues', 'slots.venue_id', 'venues.venue_id')
                         ->join('evaluation_schedules', 'slots.schedule_id', '=', 'evaluation_schedules.schedule_id')
                         ->select('students.student_id', 'students.name', 'projects.project_title', 'evaluation_schedules.schedule_date', 'slots.slot_id', 'slots.start_time', 'venues.venue_id', 'venues.venue_name')
-                        ->where('evaluation_schedules.schedule_date', '=', $request->date)
+                        ->where('evaluation_schedules.schedule_date', '=', session('date'))
                         ->orderBy('venues.venue_id')
                         ->get();
 
@@ -32,6 +39,140 @@ class EvaluationScheduleController extends Controller
 
             return view('evaluation_schedule.manage_schedule', ['schedules' => $schedules, 'venues' => $venues, 'timeslots' => $timeslots]);
         }
+    }
+
+    public function newSlot(Request $request) {
+        $students = Student::all()->sortBy('name');
+        (isset($request->student_id))? $selected_student = Student::find($request->student_id) : ((null !== $request->old('name'))? $selected_student = Student::find($request->old('name')) : $selected_student = Student::all()->sortBy('name')->first());
+ 
+
+        $venues = Venue::all();
+        $timeslots = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
+        $available_evaluators = Lecturer::where('research_group_id', $selected_student->research_group_id)->get();
+
+        return view('evaluation_schedule.create_slot', ["students" => $students, 
+                                                "selected_student" => $selected_student, 
+                                                "venues" => $venues, 
+                                                "timeslots" => $timeslots, 
+                                                "available_evaluators" => $available_evaluators]);
+    }
+
+    public function createSlot(Request $request) {
+        $formFields = $request->validate([
+            'name' => ['required', 'unique:App\Models\Slot,student_id'],
+            'venue' => ['required',  new crashVenue],
+            'date' => ['required', 'date'], 
+            'timeslot' => 'required',
+            'evaluator1' => ['required', 'different:evaluator2',  new evaluatorCrashTimeslot], 
+            'evaluator2' => ['required', 'different:evaluator1',  new evaluatorCrashTimeslot]
+        ], ['name.unique' => 'Student has already been assigned a slot']); 
+
+        $date = $formFields['date'];
+        $time = $formFields['timeslot'];
+        $start_time = date('Y-m-d H:i:s', strtotime("$date $time"));
+        $end_time_converted = date('H:i:s', strtotime($time) + 30*60);
+        $end_time = date('Y-m-d H:i:s', strtotime("$date $end_time_converted"));
+        $schedule = EvaluationSchedule::where('schedule_date', "=", $date)->first();
+        $schedule !== null ? $schedule = $schedule : $schedule = EvaluationSchedule::create(['schedule_date' => $date]);
+
+        Slot::create([
+            'student_id' => $formFields['name'],
+            'venue_id' => $formFields['venue'],
+            'schedule_id' => $schedule->schedule_id, 
+            'start_time' => $start_time,
+            'end_time' => $end_time, 
+        ]);
+
+        EvaluatorList::create([
+            'student_id' => $formFields['name'],
+            'lecturer_id' => $formFields['evaluator1']
+        ]); 
+
+        EvaluatorList::create([
+            'student_id' => $formFields['name'],
+            'lecturer_id' => $formFields['evaluator2']
+        ]); 
+
+        return redirect('/evaluation schedule')->with('success-message', 'Slot Created Successfully');
+    }
+
+    public function editSlot($slot_id, Request $request) {
+        $students = Student::all()->sortBy('name');
+        $slot = Slot::find($slot_id);
+
+        isset($request->student_id) ? $selected_student = Student::find($request->student_id) : $selected_student = Student::find($slot->student_id);
+
+        $evaluators = $selected_student->evaluators->toArray();
+        $venues = Venue::all();
+        $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
+        $available_evaluators = Lecturer::where('research_group_id', $selected_student->research_group_id)->get();
+
+        return view('evaluation_schedule.edit_slot', ["students" => $students, 
+                                                "slot" => $slot,
+                                                "selected_student" => $selected_student, 
+                                                "venues" => $venues, 
+                                                "timeslots" => $timeslots, 
+                                                "evaluators" => $evaluators, 
+                                                "available_evaluators" => $available_evaluators]);
+    }
+
+    public function updateSlot($slot_id, Request $request) { 
+        $formFields = $request->validate([
+            'name' => ['required'],
+            'venue' => ['required',  new crashVenue],
+            'date' => ['required', 'date'], 
+            'timeslot' => 'required',
+            'evaluator1' => ['required', 'different:evaluator2',  new evaluatorCrashTimeslot], 
+            'evaluator2' => ['required', 'different:evaluator1',  new evaluatorCrashTimeslot]
+        ]); 
+
+        $date = $formFields['date'];
+        $time = $formFields['timeslot'];
+        $start_time = date('Y-m-d H:i:s', strtotime("$date $time"));
+        $end_time_converted = date('H:i:s', strtotime($time) + 30*60);
+        $end_time = date('Y-m-d H:i:s', strtotime("$date $end_time_converted"));
+        $schedule = EvaluationSchedule::where('schedule_date', "=", $date)->first();
+        $schedule !== null ? $schedule = $schedule : $schedule = EvaluationSchedule::create(['schedule_date' => $date]);
+        
+        $slot = Slot::find($slot_id);
+        $evaluators = EvaluatorList::where('student_id', "=", $slot->student_id)->limit(2)->get();
+
+        if($evaluators === null) {
+            EvaluatorList::create([
+                'student_id' => $formFields['name'],
+                'lecturer_id' => $formFields['evaluator1']
+            ]); 
+    
+            EvaluatorList::create([
+                'student_id' => $formFields['name'],
+                'lecturer_id' => $formFields['evaluator2']
+            ]); 
+        }
+        else {
+            foreach($evaluators as $i => $evaluator) {
+                EvaluatorList::where('evaluator_list_id', '=', $evaluator->evaluator_list_id)->update([
+                    'lecturer_id' => $formFields['evaluator' . ($i + 1)]
+                ]);
+            }
+        }
+
+        $slot->update([
+            'student_id' => $formFields['name'],
+            'venue_id' => $formFields['venue'],
+            'schedule_id' => $schedule->schedule_id, 
+            'start_time' => $start_time,
+            'end_time' => $end_time, 
+        ]);
+        
+        return back()->with('success-message', 'Slot Updated Successfully');
+    }
+
+    public function deleteSlot($slot_id) {
+        $slot = Slot::find($slot_id);
+        EvaluatorList::where('student_id', '=', $slot->student_id)->delete();
+ 
+        $slot->delete();
+        return redirect('/evaluation schedule')->with('success-message', 'Slot Deleted Successfully');
     }
 
     public function scheduleEvaluationSchedule(Request $request) {
@@ -192,22 +333,5 @@ class EvaluationScheduleController extends Controller
         return $best_position;
     }
 
-    public function edit_slot($slot_id, Request $request) {
-        $students = Student::all()->sortBy('name');
-        $slot = Slot::find($slot_id);
 
-        isset($request->student_id) ? $selected_student = Student::find($request->student_id) : $selected_student = Student::find($slot->student_id);
-
-        $evaluators = $selected_student->evaluators->toArray();
-        $venues = Venue::all();
-        $timeslots = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
-        $available_evaluators = Lecturer::where('research_group_id', $selected_student->research_group_id)->get();
-        return view('evaluation_schedule.edit_slot', ["students" => $students, 
-                                                "slot" => $slot,
-                                                "selected_student" => $selected_student, 
-                                                "venues" => $venues, 
-                                                "timeslots" => $timeslots, 
-                                                "evaluators" => $evaluators, 
-                                                "available_evaluators" => $available_evaluators]);
-    }
 }
