@@ -41,6 +41,12 @@ class EvaluationScheduleController extends Controller
         }
     }
 
+    public function viewSchedule() {
+        $evaluatees = Lecturer::find(auth('web')->user()->lecturer_id)->evaluatees()->paginate(10);
+        
+        return view('evaluation_schedule.evaluator_schedule', ['evaluatees' => $evaluatees]);
+    }
+
     public function newSlot(Request $request) {
         $students = Student::all()->sortBy('name');
         (isset($request->student_id))? $selected_student = Student::find($request->student_id) : ((null !== $request->old('name'))? $selected_student = Student::find($request->old('name')) : $selected_student = Student::all()->sortBy('name')->first());

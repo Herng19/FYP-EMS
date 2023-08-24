@@ -53,6 +53,9 @@ Route::middleware('auth:web')->group(function () {
 
     // Delete Slot
     Route::delete('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'deleteSlot']);
+
+    // View Evaluation Schedule
+    Route::get('evaluation schedule/view-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('view_schedule');
 });
 
 Route::middleware('auth:student')->group(function () {

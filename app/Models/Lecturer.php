@@ -69,10 +69,10 @@ class Lecturer extends Authenticatable
     }
 
     public function evaluatees() {
-        return $this->belongsToMany(Student::class, 'evaluator_lists', 'student_id', 'lecturer_id');
+        return $this->belongsToMany(Student::class, 'evaluator_lists', 'lecturer_id', 'student_id');
     }
 
     public function supervisees() {
-        return $this->belongsToMany(Student::class, 'supervisor_lists', 'student_id', 'lecturer_id');
+        return $this->belongsToMany(Student::class, 'supervisor_lists', 'lecturer_id', 'student_id');
     }
 }

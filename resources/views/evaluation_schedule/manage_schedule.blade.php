@@ -3,9 +3,14 @@
         {{ __('Evaluation Schedule') }}
     </x-slot>
 
-    <div class="mx-12 mt-4">
+    <div class="mx-12">
         {{-- Action Message --}}
         <x-success-message/>
+
+        {{-- My Schedule --}}
+        <div class="flex justify-end mb-2">
+            <a href="/evaluation schedule/view-schedule" class="text-primary-700 font-semibold text-sm underline">My Schedule >></a>
+        </div>
 
         {{-- Evaluation Schedule Actions --}}
         <form action="" method="POST">

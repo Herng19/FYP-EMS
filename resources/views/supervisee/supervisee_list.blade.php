@@ -4,7 +4,7 @@
     </x-slot>
     <div class="px-8">
         <x-show-table :headers="['Name', 'PSM', 'Project Title', 'Course']">
-            <tbody class="flex flex-col w-full" style="height: 60vh;">
+            <tbody class="flex flex-col w-full" style="height: 70vh;">
                 @foreach ($supervisees as $i => $supervisee)
                     <tr class="flex mx-8 mt-2">
                         <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ $i+1 }}.</td>
