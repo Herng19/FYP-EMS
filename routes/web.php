@@ -42,26 +42,29 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
 
     // Create Slot
-    Route::get('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('create_slot');
-    Route::put('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('create_slot');
-    Route::post('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'createSlot'])->name('create_slot');
+    Route::get('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('evaluation schedule.create_slot');
+    Route::put('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('evaluation schedule.create_slot');
+    Route::post('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'createSlot'])->name('evaluation schedule.create_slot');
 
     // Edit Slot
-    Route::get('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot'])->name('edit_slot');
-    Route::post('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot'])->name('edit_slot');
+    Route::get('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot'])->name('evaluation schedule.edit_slot');
+    Route::post('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot'])->name('evaluation schedule.edit_slot');
     Route::put('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'updateSlot']);
 
     // Delete Slot
     Route::delete('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'deleteSlot']);
 
     // View Evaluation Schedule
-    Route::get('evaluation schedule/view-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('view_schedule');
+    Route::get('/evaluation schedule/view-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('evaluation schedule.view_schedule');
 });
 
 Route::middleware('auth:student')->group(function () {
-        // Route for manage FYP
-        Route::get('/fyp', [ProfileController::class, 'showFYP'])->name('showFYP');
-        Route::put('/fyp', [ProfileController::class, 'updateFYP']);
+    // Route for manage FYP
+    Route::get('/fyp', [ProfileController::class, 'showFYP'])->name('showFYP');
+    Route::put('/fyp', [ProfileController::class, 'updateFYP']);
+
+    // View Evaluation Schedule
+    Route::get('/evaluation schedule/student-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('evaluation schedule.student_schedule');
 });
 
 // Route for Supervisee List

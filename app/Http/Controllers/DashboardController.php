@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -10,10 +11,10 @@ class DashboardController extends Controller
 {
     public function showDashboard() {
         if(auth('student')->check()) {
-            $project = Project::where('student_id', auth()->user()->student_id)->first();
+            $student = Student::find(auth()->user()->student_id);
             
             return view('student_dashboard', [
-                'project' => $project
+                'student' => $student
             ]);
         }
         else{

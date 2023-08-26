@@ -18,10 +18,10 @@
                     <i class="fa-regular fa-calendar-minus text-primary-700 p-4 bg-primary-100 rounded-full h-12 w-12"></i>
                     <div class="ml-4 items-center">
                         <div class="text-primary-100 text-xs font-semibold">
-                            21 May 2023, WED (Static Data)
+                            {{ strtoupper(date("d M Y", strtotime($student->slot->start_time))) }}, {{ strtoupper(date("l", strtotime($student->slot->start_time))) }}
                         </div>
                         <div class="text-md font-bold text-white">
-                            12:00 PM - 12:30 PM (Static Data)
+                            {{(date("H:i", strtotime($student->slot->start_time)))}} - {{(date("H:i", strtotime($student->slot->end_time)))}}
                         </div>
                     </div>
                 </div>
@@ -29,10 +29,10 @@
                     <i class="fa-regular fa-location-dot text-primary-700 p-4 bg-primary-100 rounded-full h-12 w-12 text-center "></i>
                     <div class="ml-4 items-center">
                         <div class="text-primary-100 text-xs font-semibold">
-                            Formal Review Room (Static Data)
+                            {{ $student->slot->venues->venue_name }}
                         </div>
                         <div class="text-md font-bold text-white">
-                            BK-201 (Static Data)
+                            {{ $student->slot->venues->venue_code }}
                         </div>
                     </div>
                 </div>
@@ -51,12 +51,12 @@
             <div class="py-8 px-4">
                 <div class="flex">
                     <div class="text-md font-semibold">
-                        {{ $project->project_title }}
+                        {{ $student->project->project_title }}
                     </div>
                 </div>
                 <div class="mt-4 h-20 overflow-hidden">
                     <div class="text-sm font-normal text-gray-400 text-justify">
-                        {{ $project->project_description}}
+                        {{ $student->project->project_description}}
                     </div>
                 </div>
             </div>

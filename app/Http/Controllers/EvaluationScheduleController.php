@@ -42,9 +42,17 @@ class EvaluationScheduleController extends Controller
     }
 
     public function viewSchedule() {
-        $evaluatees = Lecturer::find(auth('web')->user()->lecturer_id)->evaluatees()->paginate(10);
-        
-        return view('evaluation_schedule.evaluator_schedule', ['evaluatees' => $evaluatees]);
+        if(auth('web')->check()) {
+            $evaluatees = Lecturer::find(auth('web')->user()->lecturer_id)->evaluatees()->paginate(10);
+            
+            return view('evaluation_schedule.evaluator_schedule', ['evaluatees' => $evaluatees]);
+        }
+        else if(auth('student')->check()) {
+            $student = Student::find(auth('student')->user()->student_id);
+            $industrial_evaluation = null; 
+
+            return view('evaluation_schedule.student_schedule', ['student' => $student, 'industrial_evaluation' => $industrial_evaluation]);
+        }
     }
 
     public function newSlot(Request $request) {
