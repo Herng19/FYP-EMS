@@ -87,7 +87,8 @@ class EvaluationScheduleController extends Controller
         $end_time_converted = date('H:i:s', strtotime($time) + 30*60);
         $end_time = date('Y-m-d H:i:s', strtotime("$date $end_time_converted"));
         $schedule = EvaluationSchedule::where('schedule_date', "=", $date)->first();
-        $schedule !== null ? $schedule = $schedule : $schedule = EvaluationSchedule::create(['schedule_date' => $date]);
+        $schedule !== null ? $schedule = $schedule : EvaluationSchedule::create(['schedule_date' => $date]);
+        $schedule = EvaluationSchedule::where('schedule_date', "=", $date)->first();
 
         Slot::create([
             'student_id' => $formFields['name'],
@@ -107,7 +108,7 @@ class EvaluationScheduleController extends Controller
             'lecturer_id' => $formFields['evaluator2']
         ]); 
 
-        return redirect('/evaluation schedule')->with('success-message', 'Slot Created Successfully');
+        return view('/evaluation schedule')->with('success-message', 'Slot Created Successfully');
     }
 
     public function editSlot($slot_id, Request $request) {
@@ -146,7 +147,8 @@ class EvaluationScheduleController extends Controller
         $end_time_converted = date('H:i:s', strtotime($time) + 30*60);
         $end_time = date('Y-m-d H:i:s', strtotime("$date $end_time_converted"));
         $schedule = EvaluationSchedule::where('schedule_date', "=", $date)->first();
-        $schedule !== null ? $schedule = $schedule : $schedule = EvaluationSchedule::create(['schedule_date' => $date]);
+        $schedule !== null ? $schedule = $schedule : EvaluationSchedule::create(['schedule_date' => $date]);
+        $schedule = EvaluationSchedule::where('schedule_date', "=", $date)->first();
         
         $slot = Slot::find($slot_id);
         $evaluators = EvaluatorList::where('student_id', "=", $slot->student_id)->limit(2)->get();
@@ -190,23 +192,101 @@ class EvaluationScheduleController extends Controller
     }
 
     public function scheduleEvaluationSchedule(Request $request) {
-        $global_best_position = $this->particle_swarm_optimization();
-        $schedule = array();
-        for ($i = 0; $i < count($global_best_position); $i += 4) {
-            $timeslot = $timeslots[$global_best_position[$i]];
-            $room = $rooms[$global_best_position[$i + 1]];
-            $evaluator1 = $evaluators1[$global_best_position[$i + 2]];
-            $evaluator2 = $evaluators2[$global_best_position[$i + 3]];
-            $schedule[] = array($timeslot, $room, $evaluator1, $evaluator2);
+        // Clear schdule on requested date
+        $schedule_id = EvaluationSchedule::whereDate('schedule_date', $request->date)->pluck('schedule_id')->first();
+
+        // If schedule does not exist, create new schedule
+        ($schedule_id !== null)? $schedule_id = $schedule_id : $schedule_id = EvaluationSchedule::create(['schedule_date' => $request->date])->schedule_id;
+
+        // Get all students that scheduled on requested date
+        $students_on_schedule_date = Slot::whereDate('start_time', $request->date)->pluck('student_id');
+
+        // Delete all slots and evaluators on requested date
+        Slot::where('schedule_id', '=', $schedule_id)->delete();
+        foreach($students_on_schedule_date as $student) {
+            EvaluatorList::where('student_id', '=', $student)->delete();
         }
 
-        foreach ($schedule as $i => $slot) {
-            echo $i+1 . " " . $slot[0] . " " .$slot[1] . " " . $slot[2] . " " . $slot[3] . "\n";
+        // Initiate variables for timeslots, rooms, particles num
+
+        $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
+        $rooms_available = Venue::all()->pluck('venue_id')->toArray();
+        $num_particles = 20;
+        $stud_num = 0; 
+
+        // for each research group, schedule students without slot, max 200 students overall
+
+        for ($i = 0; $i < 200; $i += $stud_num) {
+            // Getting all variables 
+            $students_had_slot = Slot::all()->pluck('student_id')->toArray();
+
+            $first_stud_no_slot = Student::whereNotIn('student_id', $students_had_slot)
+                                        ->first();
+
+            // If all students have been scheduled, break
+            if($first_stud_no_slot === null) {
+                break;
+            }
+
+            $students_pending_slot = Student::whereNotIn('student_id', $students_had_slot)
+                                ->where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                ->limit(200-$i)
+                                ->get();
+
+            $stud_num = count($students_pending_slot);
+
+            $evaluators1 = Lecturer::where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                    ->pluck('lecturer_id')
+                                    ->toArray();
+            $evaluators2 = Lecturer::where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                    ->pluck('lecturer_id')
+                                    ->toArray();
+
+            $rooms = array_slice($rooms_available, 0, ceil($stud_num/count($timeslots)));
+            array_splice($rooms_available, 0, ceil($stud_num/count($timeslots)));
+
+            // Get the schedule for a research group
+
+            $global_best_position = $this->particle_swarm_optimization($stud_num, $num_particles, $timeslots, $rooms, $evaluators1, $evaluators2);
+            $schedule = array();
+            for ($i = 0; $i < count($global_best_position); $i += 4) {
+                $timeslot = $timeslots[$global_best_position[$i]];
+                $room = $rooms[$global_best_position[$i + 1]];
+                $evaluator1 = $evaluators1[$global_best_position[$i + 2]];
+                $evaluator2 = $evaluators2[$global_best_position[$i + 3]];
+                $schedule[] = array($timeslot, $room, $evaluator1, $evaluator2);
+            }
+
+            // Foreach student, insert data into slots, and evaluator list
+
+            foreach($schedule as $i => $slot) {
+                $start_time = date('Y-m-d H:i:s', strtotime("$request->date $slot[0]"));
+                $end_time = date('Y-m-d H:i:s', strtotime("$request->date $slot[0]") + 30*60);
+
+                Slot::create([
+                    'student_id' => $students_pending_slot[$i]->student_id,
+                    'venue_id' => $slot[1],
+                    'schedule_id' => $schedule_id, 
+                    'start_time' => $start_time,
+                    'end_time' => $end_time, 
+                ]);
+
+                EvaluatorList::create([
+                    'student_id' => $students_pending_slot[$i]->student_id,
+                    'lecturer_id' => $slot[2]
+                ]);
+
+                EvaluatorList::create([
+                    'student_id' => $students_pending_slot[$i]->student_id,
+                    'lecturer_id' => $slot[3]
+                ]);
+            }
         }
+
+        return redirect('/evaluation schedule')->with('success-message', 'Schedule Created Successfully');
     }
 
-    private function evaluate($position) {
-        global $timeslots, $rooms, $evaluators1, $evaluators2;
+    private function evaluate($position, $timeslots, $rooms, $evaluators1, $evaluators2) {
         $schedule = array();
         $evaluator_student_counts = array();
     
@@ -257,12 +337,11 @@ class EvaluationScheduleController extends Controller
     }
 
     // initialize the particles
-    private function generate_particles() {
+    private function generate_particles($stud_num, $num_particles, $timeslots, $rooms, $evaluators1, $evaluators2) {
         $particles = array();
-        global $timeslots, $rooms, $evaluators1, $evaluators2, $num_particles;
         for ($i = 0; $i < $num_particles; $i++) {
             $position = array();
-            for ($j = 0; $j < 10; $j++) {
+            for ($j = 0; $j < $stud_num; $j++) {
                 $position[] = rand(0, count($timeslots) - 1);
                 $position[] = rand(0, count($rooms) - 1);
                 $position[] = rand(0, count($evaluators1) - 1);
@@ -270,39 +349,42 @@ class EvaluationScheduleController extends Controller
             }
             $particles[] = array(
                 'position' => $position,
-                'velocity' => array_fill(0, 40, 0),
+                'velocity' => array_fill(0, $stud_num*4, 0),
                 'best_position' => $position,
-                'best_fitness' => $this->evaluate($position),
-                'fitness' => $this->evaluate($position)
+                'best_fitness' => $this->evaluate($position, $timeslots, $rooms, $evaluators1, $evaluators2),
+                'fitness' => $this->evaluate($position, $timeslots, $rooms, $evaluators1, $evaluators2)
             );
         }
         return $particles; 
     }
 
-    private function particle_swarm_optimization() {
-        // initialize the global best position and fitness
-        global $num_particles, $timeslots, $rooms, $evaluators1, $evaluators2; 
-    
+    private function particle_swarm_optimization($stud_num, $num_particles, $timeslots, $rooms, $evaluators1, $evaluators2) {   
         // PSO parameters
         $c1 = 3.0;
         $c2 = 1.0;
         $w = 0.5;
-        $particles = $this->generate_particles();
+        $particles = $this->generate_particles($stud_num, $num_particles, $timeslots, $rooms, $evaluators1, $evaluators2);
         $best_position = $particles[0]['position'];
         $best_fitness = $particles[0]['fitness'];
         $iterations = 0; 
     
         // run the PSO algorithm
         while($best_fitness < 1 ) {
-            if($best_fitness < 0 && $iterations == 100) {
+            if($iterations >= 300) {
                 $iterations = 0;
-                $particles = $this->generate_particles();
+                $particles = $this->generate_particles($stud_num, $num_particles, $timeslots, $rooms, $evaluators1, $evaluators2);
                 $best_position = $particles[0]['position'];
                 $best_fitness = $particles[0]['fitness'];
             }
-            for ($i = 0; $i <$num_particles; $i++) {
+            if($w > 0.3) {
+                $w -= 0.0005;
+            }
+            else  {
+                $w = 0.5;
+            }
+            for ($i = 0; $i < $num_particles; $i++) {
                 // update the particle velocity
-                for ($j = 0; $j < 40; $j++) {
+                for ($j = 0; $j < ($stud_num * 4); $j++) {
                     $r1 = mt_rand() / mt_getrandmax();
                     $r2 = mt_rand() / mt_getrandmax();
                     $particles[$i]['velocity'][$j] = $w * $particles[$i]['velocity'][$j]
@@ -310,7 +392,7 @@ class EvaluationScheduleController extends Controller
                         + $c2 * $r2 * ($best_position[$j] - $particles[$i]['position'][$j]);
                 }
                 // update the particle position
-                for ($j = 0; $j < 40; $j++) {
+                for ($j = 0; $j < ($stud_num * 4); $j++) {
                     $particles[$i]['position'][$j] += $particles[$i]['velocity'][$j];
                     // handle out-of-bounds positions
                     if ($j % 4 == 0 && $particles[$i]['position'][$j] >= count($timeslots)) {
@@ -326,7 +408,7 @@ class EvaluationScheduleController extends Controller
                     }
                 }
                 // update the particle fitness
-                $particles[$i]['fitness'] = $this->evaluate($particles[$i]['position']);
+                $particles[$i]['fitness'] = $this->evaluate($particles[$i]['position'], $timeslots, $rooms, $evaluators1, $evaluators2);
                 // update the particle's best position and fitness
                 if ($particles[$i]['fitness'] > $particles[$i]['best_fitness']) {
                     $particles[$i]['best_position'] = $particles[$i]['position'];

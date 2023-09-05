@@ -23,9 +23,9 @@
                     <select id="name" name="name" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-700 px-4 py-2 border-0 rounded-md" required>
                         @foreach($students as $student)
                             @if($student->student_id == $selected_student->student_id)
-                                <option value="{{$student->student_id}}" class="text-primary-700 text-inherit font-semibold" selected>{{$student->name}}</option>
+                                <option value="{{$student->student_id}}" class="text-primary-700 text-inherit font-semibold" selected>{{$student->name}} @if ($student->slot !== null) (had slot) @endif</option>
                             @else
-                                <option value="{{$student->student_id}}" class="text-primary-700 text-inherit font-semibold">{{$student->name}}</option>
+                                <option value="{{$student->student_id}}" class="text-primary-700 text-inherit font-semibold">{{$student->name}} @if ($student->slot !== null) (had slot) @endif</option>
                             @endif
                         @endforeach
                     </select>
@@ -143,7 +143,7 @@
 
         {{-- Buttons --}}
         <div class="flex my-8 justify-end items-center">
-            <x-secondary-button class="ml-4" id="cancel-button"><a href="/evaluation schedule">Cancel</a></x-secondary-button>
+            <a href="/evaluation schedule"><x-secondary-button class="ml-4" id="cancel-button">Cancel</x-secondary-button></a>
             <x-button type="submit" class="ml-4" form="edit-slot-form">Create</x-button>
         </div>
     </div>

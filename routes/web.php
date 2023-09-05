@@ -39,7 +39,8 @@ Route::middleware('auth:web')->group(function () {
     
     // Route for Manage Evaluation Scheduel (Coordinator)
     Route::get('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
-    Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
+    Route::put('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
+    Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'scheduleEvaluationSchedule'])->name('evaluation schedule');
 
     // Create Slot
     Route::get('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('evaluation schedule.create_slot');
