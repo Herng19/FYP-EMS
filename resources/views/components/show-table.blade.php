@@ -3,7 +3,11 @@
         <tr class="flex self-stretch mx-8 mt-2 border-b">
             <th class="my-4 mx-4 text-primary-700 text-sm font-bold w-4">No.</th>
             @foreach ($headers as $header)
-                <th class="my-4 text-primary-700 text-sm font-bold text-left w-1/3">{{ $header }}</th>
+                @if($header == 'Action')
+                    <th class="my-4 text-primary-700 text-sm font-bold text-center w-1/3">{{ $header }}</th>
+                @else
+                    <th class="my-4 text-primary-700 text-sm font-bold text-left w-1/3">{{ $header }}</th>
+                @endif
             @endforeach
         </tr>
     </thead>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\SuperviseeListController;
 use App\Http\Controllers\EvaluationScheduleController;
 
@@ -31,7 +32,6 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
-
 });
 
 Route::middleware('auth:web')->group(function () {
@@ -57,6 +57,10 @@ Route::middleware('auth:web')->group(function () {
 
     // View Evaluation Schedule
     Route::get('/evaluation schedule/view-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('evaluation schedule.view_schedule');
+
+    // Route for Evaluation
+    Route::get('/evaluation', [EvaluationController::class, 'showEvaluateeList'])->name('evaluation');
+    Route::get('/evaluation/{student_id}', [EvaluationController::class, 'showEvaluationForm'])->name('evaluation.show_evaluation_form');
 });
 
 Route::middleware('auth:student')->group(function () {
@@ -67,13 +71,6 @@ Route::middleware('auth:student')->group(function () {
     // View Evaluation Schedule
     Route::get('/evaluation schedule/student-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('evaluation schedule.student_schedule');
 });
-
-// Route for Supervisee List
-
-Route::get('/evaluation', function () {
-    return view('evaluation.student_list');
-})->name('evaluation');
-
 
 Route::get('/rubric', function () {
     return view('rubric.rubric_list');

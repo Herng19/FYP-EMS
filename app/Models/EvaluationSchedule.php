@@ -13,6 +13,8 @@ class EvaluationSchedule extends Model
         'schedule_date',
     ];
 
+    protected $primaryKey = 'schedule_id';
+
     public function slots() {
         return $this->hasMany(Slot::class, 'schedule_id', 'schedule_id');
     }
