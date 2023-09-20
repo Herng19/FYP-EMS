@@ -1,4 +1,4 @@
-<div class="px-2 mx-8 py-4 my-4 justify-center flex-col">
+<div class="px-2 mx-8 py-4 my-4 justify-center flex-col flex">
     {{-- title --}}
     <div class="flex justify-center items-center">
         <a href="/dashboard">
@@ -8,7 +8,7 @@
     </div>
 
     {{-- available nav items --}}
-    <div class="h-5/6 mt-12">
+    <div class="mt-12 grow">
         {{-- Dashboard --}}
         <x-navbar-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
             <x-slot name="icon">
@@ -136,15 +136,17 @@
     </div>
 
     {{-- logout button --}}
-    <form method="POST" action="{{ route('logout') }}" x-data>
-        @csrf
-        <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex my-4 items-center object-fill py-2 px-8 rounded-md justify-center bg-red-500 text-white hover:bg-red-600 hover:text-white active:ring-red-800 active:ring-2 active:ring-offset-2">
-            <div name="icon" class="text-inherit">
-                <i class="fa-regular fa-arrow-right-from-bracket"></i>
-            </div>
-            <div name="title" class="text-inherit pl-2 font-semibold text-sm break-normal whitespace-nowrap">                    
-                {{ __('Log Out') }}
-            </div>
-        </a>
-    </form>
+    <div>
+        <form method="POST" action="{{ route('logout') }}" x-data>
+            @csrf
+            <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex items-center object-fill py-2 px-8 rounded-md justify-center bg-red-500 text-white hover:bg-red-600 hover:text-white active:ring-red-800 active:ring-2 active:ring-offset-2">
+                <div name="icon" class="text-inherit">
+                    <i class="fa-regular fa-arrow-right-from-bracket"></i>
+                </div>
+                <div name="title" class="text-inherit pl-2 font-semibold text-sm break-normal whitespace-nowrap">                    
+                    {{ __('Log Out') }}
+                </div>
+            </a>
+        </form>
+    </div>
 </div>

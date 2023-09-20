@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RubricController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EvaluationController;
@@ -61,6 +62,13 @@ Route::middleware('auth:web')->group(function () {
     // Route for Evaluation
     Route::get('/evaluation', [EvaluationController::class, 'showEvaluateeList'])->name('evaluation');
     Route::get('/evaluation/{student_id}', [EvaluationController::class, 'showEvaluationForm'])->name('evaluation.show_evaluation_form');
+
+    // Route for View Rubric
+    Route::get('/rubric', [RubricController::class, 'showRubric'])->name('rubric');
+
+    // Route for Create Rubric
+    Route::get('/rubric/create-rubric', [RubricController::class, 'newRubric'])->name('rubric.new_rubric');
+    Route::post('/rubric/create-rubric', [RubricController::class, 'createRubric'])->name('rubric.new_rubric');
 });
 
 Route::middleware('auth:student')->group(function () {
@@ -71,10 +79,6 @@ Route::middleware('auth:student')->group(function () {
     // View Evaluation Schedule
     Route::get('/evaluation schedule/student-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('evaluation schedule.student_schedule');
 });
-
-Route::get('/rubric', function () {
-    return view('rubric.rubric_list');
-})->name('rubric');
 
 Route::get('/top students', function () {
     return view('top_student.top_student_list');
