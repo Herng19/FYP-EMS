@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('industrial_rubric_criterias', function (Blueprint $table) {
             $table->id('industrial_criteria_id');
-            $table->foreignId('industrial_rubric_id')->constrained('industrial_evaluation_rubrics', 'industrial_rubric_id');
+            $table->foreignId('industrial_rubric_id')->constrained('industrial_evaluation_rubrics', 'industrial_rubric_id')->cascadeOnDelete();
             $table->string('criteria_name');
         });
     }

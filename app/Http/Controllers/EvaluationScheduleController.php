@@ -337,9 +337,9 @@ class EvaluationScheduleController extends Controller
         $min_student_count = min($evaluator_student_counts);
         $balance_penalty = $max_student_count - $min_student_count;
         
-        // if($balance_penalty > 2) {
-        //     $cost += 1;
-        // }
+        if($balance_penalty > 2) {
+            $cost += 1;
+        }
     
         return 1 / ($cost + 1); // minimize conflicts
     }

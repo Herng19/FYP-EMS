@@ -63,12 +63,23 @@ Route::middleware('auth:web')->group(function () {
     Route::get('/evaluation', [EvaluationController::class, 'showEvaluateeList'])->name('evaluation');
     Route::get('/evaluation/{student_id}', [EvaluationController::class, 'showEvaluationForm'])->name('evaluation.show_evaluation_form');
 
-    // Route for View Rubric
-    Route::get('/rubric', [RubricController::class, 'showRubric'])->name('rubric');
+    // Route for View Rubric List
+    Route::get('/rubric', [RubricController::class, 'showRubricList'])->name('rubric');
+
+    // Route for View Single Rubric
+    Route::get('/rubric/view/{rubric_id}', [RubricController::class, 'showRubric'])->name('rubric.view_rubric');
 
     // Route for Create Rubric
     Route::get('/rubric/create-rubric', [RubricController::class, 'newRubric'])->name('rubric.new_rubric');
     Route::post('/rubric/create-rubric', [RubricController::class, 'createRubric'])->name('rubric.new_rubric');
+
+    // Route for Edit Rubric
+
+    // Route for Delete Rubric
+    Route::delete('/rubric/delete/{rubric_id}', [RubricController::class, 'deleteRubric'])->name('rubric.delete_rubric');
+
+    // Route for Evaluation
+    Route::post('/evaluation/{student_id}', [EvaluationController::class, 'evaluateStudent'])->name('evaluation.evaluate_student');
 });
 
 Route::middleware('auth:student')->group(function () {

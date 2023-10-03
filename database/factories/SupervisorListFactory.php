@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Student;
+use App\Models\Lecturer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +19,13 @@ class SupervisorListFactory extends Factory
     public function definition(): array
     {
         static $number = 1; 
+
+        $student = Student::find($number); 
+        $lecturers = Lecturer::where('research_group_id', $student->research_group_id)->pluck('lecturer_id')->toArray();
+
         return [
             'student_id' => $number++,
-            'lecturer_id' => $this->faker->numberBetween(1, 31),
+            'lecturer_id' => $this->faker->randomElement($lecturers),
         ];
     }
 }

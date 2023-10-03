@@ -39,7 +39,6 @@ class DatabaseSeeder extends Seeder
         Student::factory()->count(79)->create();
         Project::factory()->count(80)->create();
         Venue::factory()->count(20)->create();
-        EvaluatorList::factory()->count(80)->create();
         SupervisorList::factory()->count(80)->create();
     }
 }

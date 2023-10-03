@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('industrial_criteria_scales', function (Blueprint $table) {
             $table->id('industrial_criteria_scale_id');
-            $table->foreignId('industrial_sub_criteria_id')->constrained('industrial_sub_criterias', 'industrial_sub_criteria_id');
+            $table->foreignId('industrial_sub_criteria_id')->constrained('industrial_sub_criterias', 'industrial_sub_criteria_id')->cascadeOnDelete();
             $table->integer('scale_level');
             $table->string('scale_description');
         });

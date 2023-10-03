@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rubric_criterias', function (Blueprint $table) {
             $table->id('criteria_id');
-            $table->foreignId('rubric_id')->constrained('rubrics', 'rubric_id');
+            $table->foreignId('rubric_id')->constrained('rubrics', 'rubric_id')->cascadeOnDelete();
             $table->string('criteria_name');
         });
     }

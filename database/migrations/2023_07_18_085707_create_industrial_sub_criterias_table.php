@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('industrial_sub_criterias', function (Blueprint $table) {
             $table->id('industrial_sub_criteria_id');
-            $table->foreignId('industrial_criteria_id')->constrained('industrial_rubric_criterias', 'industrial_criteria_id');
+            $table->foreignId('industrial_criteria_id')->constrained('industrial_rubric_criterias', 'industrial_criteria_id')->cascadeOnDelete();
             $table->string('sub_criteria_name');
             $table->string('sub_criteria_description');
             $table->string('co_level');

@@ -41,7 +41,7 @@ class LecturerFactory extends Factory
         }
         else{
             return [
-                'research_group_id' => $this->faker->numberBetween(1, 12), 
+                'research_group_id' => ($number++%12)+1, 
                 'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
                 'email_verified_at' => now(),

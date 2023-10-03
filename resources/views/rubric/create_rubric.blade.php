@@ -9,23 +9,39 @@
                 {{-- Rubric Basic Info --}}
                 <div class="font-bold text-gray">Rubric Info</div>
                 <div class="px-4 mt-2">
-                    <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric-name" placeholder="Rubric Name"/>
-                    <div class="flex grid grid-cols-3 gap-4 mt-2">
+                    <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ old('rubric_name')}}" required/>
+                    <div class="flex grid grid-cols-2 gap-4 mt-2">
                         <div>
-                            <select id="research-group" research-group="name" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                <option value="research group" class="text-primary-700 font-semibold" selected>Reseach Group</option>
+                            <select id="research-group" name="research_group" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
+                                <option value="" class="text-primary-700 font-semibold" default>Reseach Group</option>
+                                @foreach ($research_groups as $research_group)
+                                    @if($research_group->research_group_id == old('research_group'))
+                                        <option value="{{ $research_group->research_group_id }}" class="text-primary-700 font-semibold" selected>{{ $research_group->research_group_name }} ({{ $research_group->research_group_short_form }} )</option>
+                                    @else
+                                        <option value="{{ $research_group->research_group_id }}" class="text-primary-700 font-semibold">{{ $research_group->research_group_name }} ({{ $research_group->research_group_short_form }} )</option>
+                                    @endif
+                                @endforeach
                             </select>
                         </div>
                         <div>
-                            <select id="evaluation-type" name="evaluation-type" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                <option value="normal-evaluation" class="text-primary-700 font-semibold" selected>Normal Evaluation</option>
-                                <option value="industrial-evaluation" class="text-primary-700 font-semibold" selected>Industrial Evaluation</option>
+                            <select id="evaluation-type" name="evaluation_type" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
+                                <option value="normal-evaluation" class="text-primary-700 font-semibold" @if(old('evaluation_type') == "normal-evaluation") selected @endif>Normal Evaluation</option>
+                                <option value="industrial-evaluation" class="text-primary-700 font-semibold" @if(old('evaluation_type') == "industrial-evaluation") selected @endif>Industrial Evaluation</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex grid grid-cols-2 gap-4 mt-2" id="extra_options">
+                        <div>
+                            <select id="evaluation-number" name="evaluation_number" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
+                                <option value="evaluation1" class="text-primary-700 font-semibold" @if(old('evaluation_number') == "evaluation1") selected @endif>Evaluation 1 (by supervisor)</option>
+                                <option value="evaluation2" class="text-primary-700 font-semibold" @if(old('evaluation_number') == "evaluation2") selected @endif>Evaluation 2 (by evaluators)</option>
+                                <option value="evaluation3" class="text-primary-700 font-semibold" @if(old('evaluation_number') == "evaluation3") selected @endif>Evaluation 3 (by supervisor)</option>
                             </select>
                         </div>
                         <div>
                             <select id="PSM" name="PSM" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                <option value="1" class="text-primary-700 font-semibold" selected>PSM 1</option>
-                                <option value="2" class="text-primary-700 font-semibold" selected>PSM 2</option>
+                                <option value="1" class="text-primary-700 font-semibold" @if(old('PSM') == "1") selected @endif>PSM 1</option>
+                                <option value="2" class="text-primary-700 font-semibold" @if(old('PSM') == "2") selected @endif>PSM 2</option>
                             </select>
                         </div>
                     </div>
@@ -37,59 +53,59 @@
                     <div class="mt-4 px-4" id="criteria-0">
                         <div class="flex items-center">
                             <label id="main-numbering" class="mr-2 text-gray-500 text-sm font-semibold">1</label>
-                            <x-input id="criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][criteria-name]" placeholder="Criteria Name"/>
+                            <x-input id="criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][criteria_name]" value="{{ old('criteria[0][criteria_name]')}}" placeholder="Criteria Name" required/>
                             <button type="button" class="delete-criteria ml-2 py-2 px-3 bg-red-50 rounded-full hover:bg-red-100"><i class="fa-regular fa-trash-can text-red-500"></i></button>
                         </div>
                         {{-- Sub Criteria --}}
                         <div class="px-4 mt-2" id="criteria-0-0">
                             <div class="flex">
-                                <div class="grid grid-cols-5 gap-2">
+                                <div class="grid grid-cols-5 gap-2 w-full">
                                     <div class="col-span-3 flex items-center">
                                         <label id="sub-numbering" class="mr-2 text-gray-500 text-sm font-semibold">1.1</label>
-                                        <x-input id="sub-criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub-criteria-name]" placeholder="Sub Criteria Name"/>    
+                                        <x-input id="sub-criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub_criteria_name]" value="{{ old('criteria[0][0][sub_criteria_name]')}}" placeholder="Sub Criteria Name" required/>    
                                     </div>
                                     <div>
-                                        <x-input id="sub-criteria-weightage" class="block text-sm mt-1 w-full pl-4" type="number" name="criteria[0][0][sub-criteria-weightage]" placeholder="Weightage"/>
+                                        <x-input id="sub-criteria-weightage" class="block text-sm mt-1 w-full pl-4" type="number" name="criteria[0][0][sub_criteria_weightage]" value="{{ old('criteria[0][0][sub_criteria_weightage]')}}" placeholder="Weightage" min='1' max='100' required/>
                                     </div>
                                     <div>
-                                        <select id="sub-criteria-co-level" name="criteria[0][0][sub-criteria-co-level]" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                            <option value="co-1" class="text-primary-700 font-semibold" selected>CO 1</option>
-                                            <option value="co-2" class="text-primary-700 font-semibold" selected>CO 2</option>
-                                            <option value="co-3" class="text-primary-700 font-semibold" selected>CO 3</option>
+                                        <select id="sub-criteria-co-level" name="criteria[0][0][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
+                                            <option value="co-1" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-1") selected @endif>CO 1</option>
+                                            <option value="co-2" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-2") selected @endif>CO 2</option>
+                                            <option value="co-3" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-3") selected @endif>CO 3</option>
                                         </select>
                                     </div>
                                 </div>
                                 <button type="button" class="delete-sub-criteria ml-2 py-2 px-3 bg-red-50 rounded-full hover:bg-red-100"><i class="fa-regular fa-trash-can text-red-500"></i></button>
                             </div>
                             <div class="mt-2 pl-6">
-                                <x-input id="sub-criteria-description" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub-criteria-description]" placeholder="Sub Criteria Description"/>
+                                <x-input id="sub-criteria-description" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub_criteria_description]" value="{{ old('criteria[0][0][sub_criteria_description]')}}" placeholder="Sub Criteria Description" required/>
                             </div>
 
                             {{-- Description for each level --}}
                             <div class="pl-6">
                                 <div class="flex items-center mt-2">
                                     <label for="scale-0" class="mx-2 text-gray-400">0</label>
-                                    <x-input id="scale-0" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale-0]" placeholder="Mark Description"/>
+                                    <x-input id="scale-0" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_0]" value="{{ old('criteria[0][0][scale_0]')}}" placeholder="Mark Description" required/>
                                 </div>
                                 <div class="flex items-center mt-2">
                                     <label for="scale-1" class="mx-2 text-gray-400">1</label>
-                                    <x-input id="scale-1" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale-1]" placeholder="Mark Description"/>
+                                    <x-input id="scale-1" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_1]" value="{{ old('criteria[0][0][scale_1]')}}" placeholder="Mark Description" required/>
                                 </div>
                                 <div class="flex items-center mt-2">
                                     <label for="scale-2" class="mx-2 text-gray-400">2</label>
-                                    <x-input id="scale-2" class="block text-sm mt-1 w-full pl-4 bg-white" type="text" name="criteria[0][0][scale-2]" value="<in between>" readonly="readonly"/>
+                                    <x-input id="scale-2" class="block text-sm mt-1 w-full pl-4 bg-white" type="text" name="criteria[0][0][scale_2]" value="<in between>" readonly="readonly"/>
                                 </div>
                                 <div class="flex items-center mt-2">
                                     <label for="scale-3" class="mx-2 text-gray-400">3</label>
-                                    <x-input id="scale-3" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale-3]" placeholder="Mark Description"/>
+                                    <x-input id="scale-3" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_3]" value="{{ old('criteria[0][0][scale_3]')}}" placeholder="Mark Description" required/>
                                 </div>
                                 <div class="flex items-center mt-2">
                                     <label for="scale-4" class="mx-2 text-gray-400">4</label>
-                                    <x-input id="scale-4" class="block text-sm mt-1 w-full pl-4 bg-white " type="text" name="criteria[0][0][scale-4]" value="<in between>" readonly="readonly"/>
+                                    <x-input id="scale-4" class="block text-sm mt-1 w-full pl-4 bg-white " type="text" name="criteria[0][0][scale_4]" value="<in between>" readonly="readonly"/>
                                 </div>
                                 <div class="flex items-center mt-2">
                                     <label for="scale-5" class="mx-2 text-gray-400">5</label>
-                                    <x-input id="scale-5" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale-5]" placeholder="Mark Description"/>
+                                    <x-input id="scale-5" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_5]" value="{{ old('criteria[0][0][scale_5]')}}" placeholder="Mark Description" required/>
                                 </div>
                             </div>
                         </div>
@@ -116,6 +132,7 @@
     {{-- JQuery --}}
     <script>
         $(document).ready(function() {
+            // Add new sub criteria
             $('#criteria-form').on('click', '.add-sub-criteria-button', function(e) {
                 e.preventDefault();
 
@@ -147,6 +164,7 @@
                 $(this).parent().before(new_element);
             });
 
+            // Add new criteria
             $('#criteria-form').on('click', '.add-criteria-button', function(e) {
                 e.preventDefault();
 
@@ -183,6 +201,7 @@
                 $(this).parent().before(new_element);
             });
 
+            // Delete the criteria
             $('#criteria-form').on('click', '.delete-criteria', function(e) {
                 e.preventDefault();
 
@@ -207,6 +226,7 @@
                 $(this).parent().parent().remove();
             });
 
+            // Delete the sub criteria
             $('#criteria-form').on('click', '.delete-sub-criteria', function(e) {
                 e.preventDefault();
                 // Check if there is only one sub criteria left, if yes, do not allow deletion
@@ -223,6 +243,18 @@
 
                 // Remove the sub criteria
                 $(this).parent().parent().remove();
+            });
+
+            // Hide the extra options if the evaluation type is industrial evaluation
+            $('#evaluation-type').change(function(e) {
+                e.preventDefault();
+                var evaluation_type = $(this).val();
+
+                if(evaluation_type == "industrial-evaluation") {
+                    $('#extra_options').hide();
+                } else {
+                    $('#extra_options').show();
+                }
             });
         });
     </script>

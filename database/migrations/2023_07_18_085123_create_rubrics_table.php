@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id('rubric_id');
             $table->foreignId('research_group_id')->constrained('research_groups', 'research_group_id');
             $table->string('rubric_name');
+            $table->string('evaluation_type');
+            $table->integer('psm_year');
             $table->timestamps();
         });
     }
