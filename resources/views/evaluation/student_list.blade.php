@@ -18,7 +18,7 @@
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">{{ $evaluatee->name }}</td>
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">PSM {{ $evaluatee->psm_year }}</td>
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">{{ $evaluatee->project_title }}</td>
-                        <td class="py-2 text-gray-400 text-sm font-semibold text-left w-1/4">{{ $total_marks[$evaluatee->student_id] }}/100</td>
+                        <td class="py-2 text-gray-400 text-sm font-semibold text-left w-1/4">{{ (array_key_exists($evaluatee->student_id, $total_marks))? $total_marks[$evaluatee->student_id] : "0" }}/100</td>
                         <td class="py-2 text-gray text-sm font-semibold text-center w-1/4">
                             <a href="/evaluation/{{ $evaluatee->student_id}}">
                                 <x-button class="text-sm normal-case">

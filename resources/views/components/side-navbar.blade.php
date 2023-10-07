@@ -120,6 +120,16 @@
                         {{__("Student's Evaluation")}}
                     </x-slot>
                 </x-navbar-item>
+
+                {{-- Industrial Rubric --}}
+                <x-navbar-item href="{{ route('industrial rubric') }}" :active="request()->routeIs('industrial rubric.*') || request()->routeIs('industrial rubric')" class="pl-12">
+                    <x-slot name="icon">
+                        <i class="fa-sharp fa-regular fa-pie-chart"></i>
+                    </x-slot>
+                    <x-slot name="title">
+                        {{__("Industrial Rubric")}}
+                    </x-slot>
+                </x-navbar-item>
             </div>
         </div>
         @endrole

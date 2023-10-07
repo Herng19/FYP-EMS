@@ -17,6 +17,7 @@ class CriteriaScale extends Model
     ];
 
     public $timestamps = false;
+    public $primaryKey = 'scale_id';
 
     public function sub_criteria() {
         return $this->belongsTo(SubCriteria::class, 'sub_criteria_id', 'sub_criteria_id');

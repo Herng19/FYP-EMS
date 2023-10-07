@@ -74,9 +74,15 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/rubric/create-rubric', [RubricController::class, 'createRubric'])->name('rubric.new_rubric');
 
     // Route for Edit Rubric
+    Route::get('/rubric/edit/{rubric_id}', [RubricController::class, 'editRubric'])->name('rubric.edit_rubric');
+    Route::put('/rubric/edit/{rubric_id}', [RubricController::class, 'updateRubric'])->name('rubric.edit_rubric');
 
     // Route for Delete Rubric
     Route::delete('/rubric/delete/{rubric_id}', [RubricController::class, 'deleteRubric'])->name('rubric.delete_rubric');
+
+    // Route for Delete Criteria & Sub Criteria
+    Route::delete('/rubric/delete-criteria/{criteria_id}', [RubricController::class, 'deleteCriteria'])->name('rubric.delete_criteria');
+    Route::delete('/rubric/delete-sub-criteria/{sub_criteria_id}', [RubricController::class, 'deleteSubCriteria'])->name('rubric.delete_sub_criteria');
 
     // Route for Evaluation
     Route::post('/evaluation/{student_id}', [EvaluationController::class, 'evaluateStudent'])->name('evaluation.evaluate_student');
@@ -107,6 +113,10 @@ Route::get('/industrial schedule', function () {
 Route::get('/industrial evaluation', function () {
     return view('industrial_evaluation.industrial_evaluation.top_student_list');
 })->name('industrial evaluation');
+
+Route::get('/industrial rubric', function () {
+    return view('industrial_evaluation.industrial_rubric.industrial_rubric_list');
+})->name('industrial rubric');
 
 Route::get('/report', function () {
     return view('report.report_and_progress');

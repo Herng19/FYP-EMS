@@ -23,4 +23,7 @@ class Rubric extends Model
     public function rubric_criterias() {
         return $this->hasMany(RubricCriteria::class, 'rubric_id', 'rubric_id');
     }
+    public function research_group() {
+        return $this->belongsTo(ResearchGroup::class, 'research_group_id', 'research_group_id');
+    }
 }

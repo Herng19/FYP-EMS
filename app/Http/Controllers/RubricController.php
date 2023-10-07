@@ -21,19 +21,11 @@ class RubricController extends Controller
     public function showRubricList() {
         $user = auth()->user();
         if($user->hasRole('coordinator')) {
-            $normal_rubrics = DB::table('rubrics')
-                        ->leftJoin('research_groups', 'rubrics.research_group_id', '=', 'research_groups.research_group_id')
-                        ->select('research_groups.research_group_name', 'rubrics.rubric_name as rubric_name', 'rubrics.rubric_id as rubric_id', 'rubrics.psm_year as psm_year');
-
-            $rubrics = DB::table('industrial_evaluation_rubrics')
-                        ->leftJoin('research_groups', 'industrial_evaluation_rubrics.research_group_id', '=', 'research_groups.research_group_id')
-                        ->select('research_groups.research_group_name', 'industrial_evaluation_rubrics.rubric_name as rubric_name', 'industrial_evaluation_rubrics.industrial_rubric_id as rubric_id', 'industrial_evaluation_rubrics.created_at as psm_year')
-                        ->union($normal_rubrics)
-                        ->paginate(10);
+            $rubrics = Rubric::paginate(10);
 
         }
         else {
-            $rubrics = Rubric::where('research_group_id', auth()->user()->research_group->research_group_id)->paginate(10);
+            $rubrics = Rubric::where('research_group_id', '=', $user->research_group_id)->get()->paginate(10);
         }
 
         return view('rubric.rubric_list', [
@@ -59,79 +51,40 @@ class RubricController extends Controller
 
     // Function to create rubric
     public function createRubric(Request $request) {
-        // Insert into rubric if normal evaluation
-        if($request->evaluation_type == 'normal-evaluation') {
-            $rubric_id = Rubric::create([
-                'research_group_id' => $request->research_group, 
-                'rubric_name' => $request->rubric_name,
-                'evaluation_type' => $request->evaluation_number, 
-                'psm_year' => $request->PSM,
-            ])->rubric_id;
 
-            // Insert into rubric_criteria
-            foreach($request->criteria as $criteria => $sub_criterias) {
-                $criteria_id = RubricCriteria::create([
-                    'rubric_id' => $rubric_id,
-                    'criteria_name' => $request->criteria[$criteria]['criteria_name'],
-                ])->id;
+        $rubric_id = Rubric::create([
+            'research_group_id' => $request->research_group, 
+            'rubric_name' => $request->rubric_name,
+            'evaluation_type' => $request->evaluation_number, 
+            'psm_year' => $request->PSM,
+        ])->rubric_id;
 
-                array_shift($sub_criterias); // Remove the criteria name
-
-                // Insert into sub_criteria
-                foreach($sub_criterias as $sub_criteria => $value) {
-                    $sub_criteria_id = SubCriteria::create([
-                        'criteria_id' => $criteria_id,
-                        'sub_criteria_name' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_name"],
-                        'sub_criteria_description' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_description"],
-                        'co_level' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_co_level"],
-                        'weightage' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_weightage"],
-                    ])->id;
-
-                    // Insert into criteria_scale
-                    for($i = 0; $i < 6; $i++) {
-                        CriteriaScale::create([
-                            'sub_criteria_id' => $sub_criteria_id,
-                            'scale_level' => $i,
-                            'scale_description' => $request->criteria[$criteria][$sub_criteria]["scale_" . strval($i)],
-                        ]);
-                    }
-                }
-            }
-        }
-        // Insert into industrial_evaluation_rubric if industrial evaluation
-        else if($request->evaluation_type == 'industrial-evaluation') {
-            $industrial_rubric_id = IndustrialEvaluationRubric::create([
-                'research_group_id' => $request->research_group, 
-                'rubric_name' => $request->rubric_name,
+        // Insert into rubric_criteria
+        foreach($request->criteria as $criteria => $sub_criterias) {
+            $criteria_id = RubricCriteria::create([
+                'rubric_id' => $rubric_id,
+                'criteria_name' => $request->criteria[$criteria]['criteria_name'],
             ])->id;
 
-            // Insert into rubric_criteria
-            foreach($request->criteria as $criteria => $sub_criterias) {
-                $industrial_criteria_id = IndustrialRubricCriteria::create([
-                    'industrial_rubric_id' => $industrial_rubric_id,
-                    'criteria_name' => $request->criteria[$criteria]['criteria_name'],
+            array_shift($sub_criterias); // Remove the criteria name
+
+            // Insert into sub_criteria
+            foreach($sub_criterias as $sub_criteria => $value) {
+                $sub_criteria_id = SubCriteria::create([
+                    'criteria_id' => $criteria_id,
+                    'sub_criteria_name' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_name"],
+                    'sub_criteria_description' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_description"],
+                    'co_level' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_co_level"],
+                    'weightage' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_weightage"],
                 ])->id;
 
-                array_shift($sub_criterias); // Remove the criteria name
-
-                // Insert into sub_criteria
-                foreach($sub_criterias as $sub_criteria => $value) {
-                    $industrial_sub_criteria_id = IndustrialSubCriteria::create([
-                        'industrial_criteria_id' => $industrial_criteria_id,
-                        'sub_criteria_name' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_name"],
-                        'sub_criteria_description' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_description"],
-                        'co_level' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_co_level"],
-                        'weightage' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_weightage"],
-                    ])->id;
-
-                    // Insert into criteria_scale
-                    for($i = 0; $i < 6; $i++) {
-                        IndustrialCriteriaScale::create([
-                            'industrial_sub_criteria_id' => $industrial_sub_criteria_id,
-                            'scale_level' => $i,
-                            'scale_description' => $request->criteria[$criteria][$sub_criteria]["scale_" . strval($i)],
-                        ]);
-                    }
+                // Insert into criteria_scale
+                for($i = 0; $i < 6; $i++) {
+                    CriteriaScale::create([
+                        'sub_criteria_id' => $sub_criteria_id,
+                        'scale_level' => $i,
+                        'scale_description' => $request->criteria[$criteria][$sub_criteria]["scale_" . strval($i)],
+                    ]);
                 }
             }
         }
@@ -141,12 +94,73 @@ class RubricController extends Controller
 
     // Function to show edit rubric form
     public function editRubric($rubric_id) {
+        $rubric = Rubric::find($rubric_id);
+        $research_groups = ResearchGroup::all();
 
+        return view('rubric.edit_rubric', [
+            'rubric' => $rubric,
+            'research_groups' => $research_groups,
+        ]);
     }
 
     // Function to update rubric
     public function updateRubric($rubric_id, Request $request) {
+        Rubric::find($rubric_id)->update([
+            'research_group_id' => $request->research_group, 
+            'rubric_name' => $request->rubric_name,
+            'evaluation_type' => $request->evaluation_number, 
+            'psm_year' => $request->PSM,
+        ]);
 
+        foreach($request->criteria as $criteria => $sub_criterias) {
+            if($request->criteria[$criteria]['criteria_id'] == null) {
+                $criteria_id = RubricCriteria::create([
+                    'rubric_id' => $rubric_id,
+                    'criteria_name' => $request->criteria[$criteria]['criteria_name'],
+                ])->id;
+            }
+            else {
+                $criteria_id = $request->criteria[$criteria]['criteria_id'];
+                RubricCriteria::where('criteria_id', '=', $criteria_id)
+                            ->update(['criteria_name' => $request->criteria[$criteria]['criteria_name']]);
+            }
+
+            array_shift($sub_criterias); // Remove the criteria id
+            array_shift($sub_criterias); // Remove the criteria name
+
+            // Insert into sub_criteria
+            foreach($sub_criterias as $sub_criteria => $value) {
+                if($sub_criterias[$sub_criteria]["sub_criteria_id"] != null) {
+                    $sub_criteria_id = $sub_criterias[$sub_criteria]["sub_criteria_id"];
+                    SubCriteria::where('sub_criteria_id', '=', $sub_criteria_id)
+                                ->update([
+                                    'sub_criteria_name' => $sub_criterias[$sub_criteria]["sub_criteria_name"],
+                                    'sub_criteria_description' => $sub_criterias[$sub_criteria]["sub_criteria_description"],
+                                    'co_level' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
+                                    'weightage' => $sub_criterias[$sub_criteria]["sub_criteria_weightage"]
+                                ]);
+                }
+                else {
+                    $sub_criteria_id = SubCriteria::create([
+                        'criteria_id' => $criteria_id,
+                        'sub_criteria_name' => $sub_criterias[$sub_criteria]["sub_criteria_name"],
+                        'sub_criteria_description' => $sub_criterias[$sub_criteria]["sub_criteria_description"],
+                        'co_level' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
+                        'weightage' => $sub_criterias[$sub_criteria]["sub_criteria_weightage"]
+                    ])->id;
+                }
+
+                // Insert into criteria_scale
+                for($i = 0; $i < 6; $i++) {
+                    CriteriaScale::updateOrCreate(
+                        ['sub_criteria_id' => $sub_criteria_id, 'scale_level' => $i], 
+                        ['scale_description' => $sub_criterias[$sub_criteria]["scale_" . strval($i)]]
+                    );
+                }
+            }
+        }
+
+        return back()->with('success-message', 'Rubric updated successfully!');
     }
 
     // Function to delete rubric
@@ -154,5 +168,23 @@ class RubricController extends Controller
         Rubric::find($rubric_id)->delete();
  
         return redirect('/rubric')->with('success-message', 'Rubric deleted successfully!');
+    }
+
+    public function deleteSubCriteria($sub_criteria_id) {
+        CriteriaScale::where('sub_criteria_id', '=', $sub_criteria_id)->delete();
+        SubCriteria::where('sub_criteria_id', '=', $sub_criteria_id)->delete();
+
+        return 0;
+    }
+
+    public function deleteCriteria($criteria_id) {
+        $sub_criterias = SubCriteria::where('criteria_id', '=', $criteria_id)->get();
+        foreach($sub_criterias as $sub_criteria) {
+            CriteriaScale::where('sub_criteria_id', '=', $sub_criteria->sub_criteria_id)->delete();
+        }
+        SubCriteria::where('criteria_id', '=', $criteria_id)->delete();
+        RubricCriteria::where('criteria_id', '=', $criteria_id)->delete();
+
+        return 0;
     }
 }

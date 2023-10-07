@@ -18,4 +18,8 @@ class ResearchGroup extends Model
     public function lecturers() {
         return $this->hasMany(Student::class, 'research_group_id', 'research_group_id');
     }
+
+    public function rubrics() {
+        return $this->hasMany(Rubric::class, 'research_group_id', 'research_group_id');
+    }
 }

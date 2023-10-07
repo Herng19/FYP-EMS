@@ -75,6 +75,7 @@ class EvaluationController extends Controller
                             ->where('psm_year', '=', $student->psm_year)
                             ->where('evaluation_type', '=', 'evaluation2')
                             ->first();
+            $rubric_2 = null;
         }
 
         // If no rubric found, return

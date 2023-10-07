@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('criteria_marks', function (Blueprint $table) {
             $table->id('criteria_mark_id');
-            $table->foreignId('sub_criteria_id')->constrained('sub_criterias', 'sub_criteria_id');
+            $table->foreignId('sub_criteria_id')->constrained('sub_criterias', 'sub_criteria_id')->cascadeOnDelete();
             $table->foreignId('evaluation_id')->constrained('evaluations', 'evaluation_id');
             $table->integer('scale');
         });

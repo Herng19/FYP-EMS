@@ -10,7 +10,7 @@
                 <div class="font-bold text-gray">Rubric Info</div>
                 <div class="px-4 mt-2">
                     <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ old('rubric_name')}}" required/>
-                    <div class="flex grid grid-cols-2 gap-4 mt-2">
+                    <div class="flex grid grid-cols-3 gap-4 mt-2">
                         <div>
                             <select id="research-group" name="research_group" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
                                 <option value="" class="text-primary-700 font-semibold" default>Reseach Group</option>
@@ -23,14 +23,6 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div>
-                            <select id="evaluation-type" name="evaluation_type" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                <option value="normal-evaluation" class="text-primary-700 font-semibold" @if(old('evaluation_type') == "normal-evaluation") selected @endif>Normal Evaluation</option>
-                                <option value="industrial-evaluation" class="text-primary-700 font-semibold" @if(old('evaluation_type') == "industrial-evaluation") selected @endif>Industrial Evaluation</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="flex grid grid-cols-2 gap-4 mt-2" id="extra_options">
                         <div>
                             <select id="evaluation-number" name="evaluation_number" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
                                 <option value="evaluation1" class="text-primary-700 font-semibold" @if(old('evaluation_number') == "evaluation1") selected @endif>Evaluation 1 (by supervisor)</option>
