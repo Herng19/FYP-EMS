@@ -69,6 +69,9 @@ Route::middleware('auth:web')->group(function () {
     // Route for View Single Rubric
     Route::get('/rubric/view/{rubric_id}', [RubricController::class, 'showRubric'])->name('rubric.view_rubric');
 
+    // Route for Print Rubric
+    Route::get('/rubric/print/{rubric_id}', [RubricController::class, 'printRubric'])->name('rubric.print_rubric');
+
     // Route for Create Rubric
     Route::get('/rubric/create-rubric', [RubricController::class, 'newRubric'])->name('rubric.new_rubric');
     Route::post('/rubric/create-rubric', [RubricController::class, 'createRubric'])->name('rubric.new_rubric');
@@ -95,6 +98,12 @@ Route::middleware('auth:student')->group(function () {
 
     // View Evaluation Schedule
     Route::get('/evaluation schedule/student-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('evaluation schedule.student_schedule');
+
+    // Route for View Rubric List
+    Route::get('/rubric/student-rubric', [RubricController::class, 'showRubricList'])->name('rubric.student_rubric_list');
+
+    // Route for View Single Rubric
+    Route::get('/rubric/student-rubric/view/{rubric_id}', [RubricController::class, 'showRubric'])->name('rubric.view_rubric');
 });
 
 Route::get('/top students', function () {

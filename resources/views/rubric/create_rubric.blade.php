@@ -236,18 +236,6 @@
                 // Remove the sub criteria
                 $(this).parent().parent().remove();
             });
-
-            // Hide the extra options if the evaluation type is industrial evaluation
-            $('#evaluation-type').change(function(e) {
-                e.preventDefault();
-                var evaluation_type = $(this).val();
-
-                if(evaluation_type == "industrial-evaluation") {
-                    $('#extra_options').hide();
-                } else {
-                    $('#extra_options').show();
-                }
-            });
         });
     </script>
 </x-app-layout>

@@ -6,9 +6,11 @@
     <x-success-message/>
     
     <div class="mt-4 px-12">
+        @hasanyrole('head of research group|coordinator')
         <div class="flex justify-end">
             <a href="/rubric/create-rubric"><x-button><i class="fa-regular fa-plus mr-2"></i>New Rubric</x-button></a>
         </div>
+        @endhasanyrole
         <div class="mt-2">
             <x-show-table :headers="['Rubric', 'Evaluation', 'Research Group', 'Action']">
                 <tbody class="flex flex-col w-full" style="min-height: 60vh;">
@@ -20,13 +22,15 @@
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">Evaluation {{ $rubric->evaluation_type[-1] }}</td>
                             <td class="py-2 text-gray-400 text-sm font-semibold text-left w-1/4">{{ $rubric->research_group->research_group_name }}</td>
                             <td class="flex py-2 items-center justify-center w-1/4">
-                                <a href="/rubric/view/{{ $rubric->rubric_id }}" class="rounded-full py-2 px-3 bg-primary-100 justify-center items-center hover:bg-primary-200">
+                                <a href={{ (auth()->user()->hasrole('student'))? "/rubric/student-rubric/view/$rubric->rubric_id" : "/rubric/view/$rubric->rubric_id" }} class="rounded-full py-2 px-3 bg-primary-100 justify-center items-center hover:bg-primary-200">
                                     <i class="fa-regular fa-eye text-primary-500 fa-sm"></i>
                                 </a>
+                                @hasanyrole('head of research group|coordinator')
                                 <a href="/rubric/edit/{{ $rubric->rubric_id }}" class="rounded-full py-2 px-3 bg-green-100 justify-center items-center hover:bg-green-200 ml-2">
                                     <i class="fa-regular fa-pen text-green-500 fa-sm"></i>
                                 </a>
                                 <button type="button" data-modal-target="popup-modal-[{{ $i }}]" data-modal-toggle="popup-modal-[{{ $i }}]" class="rounded-full py-2 px-3 bg-red-50 justify-center items-center hover:bg-red-100 ml-2"><i class="fa-regular fa-trash-can text-red-500 fa-sm"></i></button>
+                                @endhasanyrole
                             </td>
                         </tr>
                         <x-delete-confirmation-modal route="/rubric/delete/{{ $rubric->rubric_id }}" title="Delete Rubric" description="Are you sure to delete {{ $rubric->rubric_name }} ? ***Deletion of this rubric will cause deletion of evaluation record associate with this rubric too." id="{{ $i }}"/>

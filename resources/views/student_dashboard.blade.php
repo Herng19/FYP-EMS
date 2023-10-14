@@ -9,7 +9,7 @@
                 <div class="text-white font-bold text-lg">
                     Evaluation Schedule
                 </div>
-                <a href="/evaluation schedule" class="text-white text-sm font-semibold">
+                <a href="/evaluation schedule/student-schedule" class="text-white text-sm font-semibold">
                     View
                 </a>
             </div>
@@ -67,7 +67,7 @@
             <div class="font-bold text-lg text-gray-700">
                 Overall Rubric
             </div>
-            <a href="/rubric" class="text-sm text-primary-700 font-semibold">
+            <a href="/rubric/student-rubric" class="text-sm text-primary-700 font-semibold">
                 View
             </a>
         </div>

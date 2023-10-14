@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rubric;
+use PDF;
 use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use App\Models\CriteriaScale;
 use App\Models\ResearchGroup;
 use App\Models\RubricCriteria;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use App\Models\IndustrialSubCriteria;
-use App\Models\IndustrialCriteriaScale;
-use App\Models\IndustrialRubricCriteria;
-use App\Models\IndustrialEvaluationRubric;
 
 class RubricController extends Controller
 {
@@ -25,7 +20,7 @@ class RubricController extends Controller
 
         }
         else {
-            $rubrics = Rubric::where('research_group_id', '=', $user->research_group_id)->get()->paginate(10);
+            $rubrics = Rubric::where('research_group_id', '=', $user->research_group_id)->paginate(10);
         }
 
         return view('rubric.rubric_list', [
@@ -40,9 +35,25 @@ class RubricController extends Controller
         return view('rubric.view_rubric', ['rubric' => $rubric]);
     }
 
+    // Function to print rubric
+    public function printRubric($rubric_id) {
+        $rubric = Rubric::find($rubric_id);
+
+        $pdf = PDF::loadView('rubric.print_rubric', compact('rubric'));
+
+        // return view('rubric.print_rubric', ['rubric' => $rubric]);
+        return $pdf->download($rubric->rubric_name.'.pdf');
+    }
+
     // Function to show create rubric form
     public function newRubric() {
-        $research_groups = ResearchGroup::all();
+        $user = auth()->user();
+        if($user->hasRole('coordinator')) {
+            $research_groups = ResearchGroup::all();
+        }
+        else {
+            $research_groups = ResearchGroup::where('research_group_id', '=', $user->research_group_id)->get();
+        }
 
         return view('rubric.create_rubric', [
             'research_groups' => $research_groups
@@ -95,7 +106,14 @@ class RubricController extends Controller
     // Function to show edit rubric form
     public function editRubric($rubric_id) {
         $rubric = Rubric::find($rubric_id);
-        $research_groups = ResearchGroup::all();
+        $user = auth()->user();
+        
+        if($user->hasRole('coordinator')) {
+            $research_groups = ResearchGroup::all();
+        }
+        else {
+            $research_groups = ResearchGroup::where('research_group_id', '=', $user->research_group_id)->get();
+        }
 
         return view('rubric.edit_rubric', [
             'rubric' => $rubric,

@@ -54,7 +54,7 @@
         </x-navbar-item>
 
         {{-- Rubric --}}
-        <x-navbar-item href="{{ route('rubric') }}" :active="request()->routeIs('rubric.*') || request()->routeIs('rubric')">
+        <x-navbar-item href="{{ (auth('web')->check()) ? route('rubric') :  route('rubric.student_rubric_list')}}" :active="request()->routeIs('rubric.*') || request()->routeIs('rubric')">
             <x-slot name="icon">
                 <i class="fa-regular fa-chart-pie"></i>
             </x-slot>

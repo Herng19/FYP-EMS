@@ -66,10 +66,10 @@
                 <div class="text-primary-700 font-bold ml-2">Precaution</div>
             </div>
             <ul class="list-disc ml-8 mt-2">
-                <li class="text-gray-500 font-bold text-sm">Please wear formal attire for presentation.</li>
-                <li class="text-gray-500 font-bold text-sm">Be prepared at the location 5 minutes before the presentation start. </li>
-                <li class="text-gray-500 font-bold text-sm">Bring your own laptop/ Use desktop in lab. </li>
-                <li class="text-gray-500 font-bold text-sm">Be polite to your evaluator. </li>
+                <li class="text-gray-500 font-semibold text-sm">Please wear formal attire for presentation.</li>
+                <li class="text-gray-500 font-semibold text-sm">Be prepared at the location 5 minutes before the presentation start. </li>
+                <li class="text-gray-500 font-semibold text-sm">Bring your own laptop/ Use desktop in lab. </li>
+                <li class="text-gray-500 font-semibold text-sm">Be polite to your evaluator. </li>
             </ul>
         </div>
     </div>
