@@ -1,5 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
+        <a href="/rubric"><i class="fa-regular fa-chevron-left fa-xs"></i></a>
         {{ $rubric->rubric_name }}
     </x-slot>
     <div class="mt-4 px-8">

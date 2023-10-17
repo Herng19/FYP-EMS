@@ -5,6 +5,7 @@ use App\Http\Controllers\RubricController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EvaluationController;
+use App\Http\Controllers\TopStudentController;
 use App\Http\Controllers\SuperviseeListController;
 use App\Http\Controllers\EvaluationScheduleController;
 
@@ -89,6 +90,13 @@ Route::middleware('auth:web')->group(function () {
 
     // Route for Evaluation
     Route::post('/evaluation/{student_id}', [EvaluationController::class, 'evaluateStudent'])->name('evaluation.evaluate_student');
+
+    // Route for Top Students List
+    Route::get('/top students', [TopStudentController::class, 'showTopStudents'])->name('top students');
+
+    // Route for edit Top Students
+    Route::get('/top students/edit', [TopStudentController::class, 'editTopStudents'])->name('top students.edit_top_student');
+    Route::post('/top students/edit', [TopStudentController::class, 'updateTopStudents'])->name('top students.edit_top_student');
 });
 
 Route::middleware('auth:student')->group(function () {
@@ -106,9 +114,7 @@ Route::middleware('auth:student')->group(function () {
     Route::get('/rubric/student-rubric/view/{rubric_id}', [RubricController::class, 'showRubric'])->name('rubric.view_rubric');
 });
 
-Route::get('/top students', function () {
-    return view('top_student.top_student_list');
-})->name('top students');
+
 
 // Industrial Evaluation
 Route::get('/industrial evaluator', function () {
