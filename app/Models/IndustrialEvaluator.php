@@ -10,4 +10,12 @@ class IndustrialEvaluator extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    protected $fillable = [
+        'evaluator_name', 
+        'company', 
+        'position',
+    ];
+
+    protected $primaryKey = 'industrial_evaluator_id';
 }

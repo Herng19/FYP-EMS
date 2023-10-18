@@ -8,6 +8,7 @@ use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\TopStudentController;
 use App\Http\Controllers\SuperviseeListController;
 use App\Http\Controllers\EvaluationScheduleController;
+use App\Http\Controllers\IndustrialEvaluationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,6 +98,20 @@ Route::middleware('auth:web')->group(function () {
     // Route for edit Top Students
     Route::get('/top students/edit', [TopStudentController::class, 'editTopStudents'])->name('top students.edit_top_student');
     Route::post('/top students/edit', [TopStudentController::class, 'updateTopStudents'])->name('top students.edit_top_student');
+
+    // Route for Industrial Evaluator
+    Route::get('/industrial evaluator', [IndustrialEvaluationController::class, 'showIndustrialEvaluators'])->name('industrial evaluator');
+
+    // Route for create Industrial Evaluator
+    Route::get('/industrial evaluator/create', [IndustrialEvaluationController::class, 'newIndustrialEvaluator'])->name('industrial evaluator.create_industrial_evaluator');
+    Route::post('/industrial evaluator/create', [IndustrialEvaluationController::class, 'createIndustrialEvaluator'])->name('industrial evaluator.create_industrial_evaluator');
+
+    // Route for edit Industrial Evaluator
+    Route::get('/industrial evaluator/edit/{industrial_evaluator_id}', [IndustrialEvaluationController::class, 'editIndustrialEvaluator'])->name('industrial evaluator.edit_industrial_evaluator');
+    Route::put('/industrial evaluator/edit/{industrial_evaluator_id}', [IndustrialEvaluationController::class, 'updateIndustrialEvaluator'])->name('industrial evaluator.edit_industrial_evaluator');
+    
+    // Route for delete Industrial Evaluator
+    Route::delete('industrial evaluator/delete/{industrial_evaluator_id}', [IndustrialEvaluationController::class, 'deleteIndustrialEvaluator'])->name('industrial evaluator.delete_industrial_evaluator');
 });
 
 Route::middleware('auth:student')->group(function () {
@@ -114,12 +129,6 @@ Route::middleware('auth:student')->group(function () {
     Route::get('/rubric/student-rubric/view/{rubric_id}', [RubricController::class, 'showRubric'])->name('rubric.view_rubric');
 });
 
-
-
-// Industrial Evaluation
-Route::get('/industrial evaluator', function () {
-    return view('industrial_evaluation.industrial_evaluator.industrial_evaluator_list');
-})->name('industrial evaluator');
 
 Route::get('/industrial schedule', function () {
     return view('industrial_evaluation.industrial_schedule.industrial_schedule');
