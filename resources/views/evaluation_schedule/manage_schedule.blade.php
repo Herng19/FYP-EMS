@@ -32,7 +32,14 @@
         <form action="/evaluation schedule" method="POST">
             @csrf
             <div class="flex justify-between w-full items-center">
-                <input type="date" name="date" id="date" class="rounded-md border-0 text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" value="{{Session::get('date')}}" required/>
+                <div class="flex">
+                    <input type="date" name="date" id="date" class="rounded-md border-0 text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" value="{{Session::get('date')}}" required/>
+                    <select name="psm_year" id="psm_year" class="ml-2 rounded-md border-0 bg-white text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" required>
+                        <option value="" class="text-gray-300" default>PSM Year</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                    </select>
+                </div>
                 <div>
                     <a href="/evaluation schedule/create-slot"><x-secondary-button class="border-primary-700 border-2 font-bold text-primary-700">NEW SLOT</x-secondary-button></a>
                     <x-button type="submit" id="submit">GENERATE</x-button>
@@ -44,7 +51,7 @@
         <div id="table">
         <table class="my-6 bg-white w-full h-2/3 rounded-lg drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]"  style="height: 70vh;">
             <thead>
-                <tr class="flex text-gray-600 text-center text-xs font-semibold border-b justify-between px-4 items-center bg-blue-50 rounded-t-lg">
+                <tr class="flex text-white text-center text-xs font-semibold border-b justify-between px-4 items-center bg-primary-700 rounded-t-lg">
                     <th class="py-4 w-14">Slot/Venue</th>
                     @foreach( $timeslots as $timeslot)
                         <th class="w-14">{{$timeslot}}</th>
@@ -52,8 +59,8 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($venues as $venue) 
-                    <tr class="flex text-gray-700 text-center text-xs font-semibold justify-between px-4 items-center border-b">
+                @foreach($venues as $i => $venue) 
+                    <tr class="flex text-gray-700 text-center text-xs font-semibold justify-between px-4 items-center border-b {{ ($i%2 == 1)? 'bg-primary-50': ''; }} {{ ($loop->last)? 'rounded-bl-lg rounded-br-lg' : ''; }}">
                         <td class="py-4 w-14 text-xs font-bold break-all">{{$venue->venue_code}}</td>
                         @foreach($timeslots as $timeslot)
                         @php $i = 0; @endphp

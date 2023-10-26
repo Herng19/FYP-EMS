@@ -16,11 +16,11 @@
                 <tbody class="flex flex-col w-full" style="min-height: 60vh;">
                     {{-- Normal Rubrics --}}
                     @foreach ($rubrics as $i => $rubric)
-                        <tr class="flex mx-8 mt-2 items-center">
+                        <tr class="flex px-8 py-2 items-center {{ ($i%2 == 0)? 'bg-primary-50' : '';}}">
                             <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ intval($i) +1 }}.</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">{{ $rubric->rubric_name }}</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">Evaluation {{ $rubric->evaluation_type[-1] }}</td>
-                            <td class="py-2 text-gray-400 text-sm font-semibold text-left w-1/4">{{ $rubric->research_group->research_group_name }}</td>
+                            <td class="py-2 text-primary-300 text-sm font-semibold text-left w-1/4">{{ $rubric->research_group->research_group_name }} ({{ $rubric->research_group->research_group_short_form }})</td>
                             <td class="flex py-2 items-center justify-center w-1/4">
                                 <a href={{ (auth()->user()->hasrole('student'))? "/rubric/student-rubric/view/$rubric->rubric_id" : "/rubric/view/$rubric->rubric_id" }} class="rounded-full py-2 px-3 bg-primary-100 justify-center items-center hover:bg-primary-200">
                                     <i class="fa-regular fa-eye text-primary-500 fa-sm"></i>
@@ -33,7 +33,7 @@
                                 @endhasanyrole
                             </td>
                         </tr>
-                        <x-delete-confirmation-modal route="/rubric/delete/{{ $rubric->rubric_id }}" title="Delete Rubric" description="Are you sure to delete {{ $rubric->rubric_name }} ? ***Deletion of this rubric will cause deletion of evaluation record associate with this rubric too." id="{{ $i }}"/>
+                        <x-delete-confirmation-modal route="/rubric/delete/{{ $rubric->rubric_id }}" title="Delete Rubric" description="Are you sure to delete '{{ $rubric->rubric_name }}' ? ***Deletion of this rubric will cause deletion of evaluation record associate with this rubric too." id="{{ $i }}"/>
                     @endforeach
                 </tbody>
             </x-show-table>

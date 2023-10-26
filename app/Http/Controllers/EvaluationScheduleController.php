@@ -18,6 +18,7 @@ use App\Rules\evaluatorCrashSupervisor;
 
 class EvaluationScheduleController extends Controller
 {
+    // Function to show evalaution schedule
     public function showEvaluationSchedule(Request $request) {
         if(auth('student')->check()) {
             return view('evaluation_schedule.student_schedule');
@@ -44,6 +45,7 @@ class EvaluationScheduleController extends Controller
         }
     }
 
+    // Function to show evaluator schedule or student schedule
     public function viewSchedule() {
         if(auth('web')->check()) {
             $evaluatees = Lecturer::find(auth('web')->user()->lecturer_id)->evaluatees()->paginate(10);
@@ -58,6 +60,7 @@ class EvaluationScheduleController extends Controller
         }
     }
 
+    // Function to show create slot form
     public function newSlot(Request $request) {
         $students = Student::all()->sortBy('name');
         (isset($request->student_id))? $selected_student = Student::find($request->student_id) : ((null !== $request->old('name'))? $selected_student = Student::find($request->old('name')) : $selected_student = Student::all()->sortBy('name')->first());
@@ -74,6 +77,7 @@ class EvaluationScheduleController extends Controller
                                                 "available_evaluators" => $available_evaluators]);
     }
 
+    // Function to create slot
     public function createSlot(Request $request) {
         $formFields = $request->validate([
             'name' => ['required', 'unique:App\Models\Slot,student_id'],
@@ -112,6 +116,7 @@ class EvaluationScheduleController extends Controller
         return redirect('/evaluation schedule')->with('success-message', 'Slot Created Successfully');
     }
 
+    // Function to show edit slot form
     public function editSlot($slot_id, Request $request) {
         $students = Student::all()->sortBy('name');
         $slot = Slot::find($slot_id);
@@ -132,6 +137,7 @@ class EvaluationScheduleController extends Controller
                                                 "available_evaluators" => $available_evaluators]);
     }
 
+    // Function to update slot
     public function updateSlot($slot_id, Request $request) { 
         $formFields = $request->validate([
             'name' => ['required'],
@@ -182,6 +188,7 @@ class EvaluationScheduleController extends Controller
         return back()->with('success-message', 'Slot Updated Successfully');
     }
 
+    // Function to delete slot
     public function deleteSlot($slot_id) {
         $slot = Slot::find($slot_id);
         EvaluatorList::where('student_id', '=', $slot->student_id)->delete();
@@ -190,6 +197,7 @@ class EvaluationScheduleController extends Controller
         return redirect('/evaluation schedule')->with('success-message', 'Slot Deleted Successfully');
     }
 
+    // Function to schedule evaluation schedule
     public function scheduleEvaluationSchedule(Request $request) {
         // Clear schdule on requested date
         $schedule_id = EvaluationSchedule::whereDate('schedule_date', $request->date)->pluck('schedule_id')->first();
@@ -220,6 +228,7 @@ class EvaluationScheduleController extends Controller
             $students_had_slot = Slot::all()->pluck('student_id')->toArray();
 
             $first_stud_no_slot = Student::whereNotIn('student_id', $students_had_slot)
+                                        ->where('psm_year', '=', '1')
                                         ->first();
 
             // If all students have been scheduled, break
@@ -229,6 +238,7 @@ class EvaluationScheduleController extends Controller
 
             $students_pending_slot = Student::whereNotIn('student_id', $students_had_slot)
                                 ->where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                ->where('psm_year', '=', '1')
                                 ->limit(200-$i)
                                 ->pluck('student_id')
                                 ->toArray();
@@ -292,6 +302,7 @@ class EvaluationScheduleController extends Controller
         return redirect('/evaluation schedule')->with('success-message', 'Schedule Created Successfully');
     }
 
+    // Evaluation function to evaluate schedule generated
     private function evaluate($position, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot) {
         $schedule = array();
         $evaluator_student_counts = array();
@@ -367,6 +378,7 @@ class EvaluationScheduleController extends Controller
         return $particles; 
     }
 
+    // PSO algorithm
     private function particle_swarm_optimization($num_particles, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot) {   
         // PSO parameters
         $c1 = 3.0;

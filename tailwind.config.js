@@ -23,21 +23,33 @@ export default {
     theme: {
         colors: {
             'primary': {
-                '900': '#1E3483',
+                '900': '#032d7c',
+                '800': '#012b7a',
                 '700': '#1A39A6', 
+                '600': '#1E3483',
                 '500': '#132FBA', 
+                '400': '#3a51c7', 
                 '300': '#99ADF5', 
                 '200': '#D3DBF8', 
                 '100': '#E8EDFF', 
+                '50': '#F0F3FF',
             }, 
             'darkblue': '#38477C', 
-            'gray': {
-                '900': '#2D2D2A',
-            }, 
+            'gray': '#2D2D2A',
             'milk': '#FFF6D2', 
             'ivory': '#FFFEFA', 
             ...colors, 
         },
+        fontSize: {
+            xs: '0.75rem',
+            sm: '0.825rem',
+            base: '1rem',
+            xl: '1.25rem',
+            '2xl': '1.563rem',
+            '3xl': '1.953rem',
+            '4xl': '2.441rem',
+            '5xl': '3.052rem',
+        }, 
         borderRadius: {
             'none': '0',
             'sm': '4px',

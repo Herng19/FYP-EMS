@@ -18,7 +18,7 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'research_group_id' => $this->faker->numberBetween(1, 11),
+            'research_group_id' => $this->faker->numberBetween(1, 12),
             'name' => $this->faker->name,
             'password' => bcrypt('test'),
             'email' => $this->faker->unique()->safeEmail,

@@ -16,7 +16,7 @@
             <x-show-table :headers="['Name', 'PSM', 'Project Title']">
                 <tbody class="flex flex-col overflow-y-auto w-full" style="height: 40vh;">
                     @foreach ($supervisees as $i => $supervisee)
-                        <tr class="flex mx-8 mt-2">
+                        <tr class="flex px-8 py-2 {{ ($i%2 == 0)? 'bg-primary-50' : '';}}">
                             <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ $i+1 }}.</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->name }}</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">PSM {{ $supervisee->psm_year }}</td>

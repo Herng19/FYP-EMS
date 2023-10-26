@@ -112,6 +112,11 @@ Route::middleware('auth:web')->group(function () {
     
     // Route for delete Industrial Evaluator
     Route::delete('industrial evaluator/delete/{industrial_evaluator_id}', [IndustrialEvaluationController::class, 'deleteIndustrialEvaluator'])->name('industrial evaluator.delete_industrial_evaluator');
+
+    // Route for Industrial Schedule
+    Route::get('/industrial schedule', [IndustrialEvaluationController::class, 'showIndustrialSchedule'])->name('industrial schedule');
+    Route::put('/industrial schedule', [IndustrialEvaluationController::class, 'showIndustrialSchedule'])->name('industrial schedule');
+    Route::post('/industrial schedule', [IndustrialEvaluationController::class, 'scheduleEvaluationSchedule'])->name('industrial schedule');
 });
 
 Route::middleware('auth:student')->group(function () {
@@ -128,11 +133,6 @@ Route::middleware('auth:student')->group(function () {
     // Route for View Single Rubric
     Route::get('/rubric/student-rubric/view/{rubric_id}', [RubricController::class, 'showRubric'])->name('rubric.view_rubric');
 });
-
-
-Route::get('/industrial schedule', function () {
-    return view('industrial_evaluation.industrial_schedule.industrial_schedule');
-})->name('industrial schedule');
 
 Route::get('/industrial evaluation', function () {
     return view('industrial_evaluation.industrial_evaluation.top_student_list');

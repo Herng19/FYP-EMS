@@ -14,7 +14,7 @@
         {{-- Rubric Description --}}
         <table class="rounded-lg mt-4 bg-white drop-shadow-[0px_0px_12px_rgba(185,185,185,0.25)] w-full">
             <thead class="w-full">
-                <tr class="flex self-stretch mx-8 mt-2 border-b">
+                <tr class="flex self-stretch px-8 pt-2 border-b-2 border-b-primary-200">
                     <th class="my-4 text-primary-700 text-sm font-bold text-left w-1/4 text-center">Elements</th>
                     <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">CO</th>
                     <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">0</th>
@@ -28,11 +28,11 @@
             </thead>
             <tbody class="flex flex-col w-full" style="min-height: 65vh;">
                 @foreach ($rubric->rubric_criterias as $i => $rubric_criteria)
-                    <tr class="flex mx-8 mt-2 items-center">
+                    <tr class="flex px-8 py-2 items-center">
                         <td class="py-2 text-gray text-sm font-bold text-left w-1/4 break-all">{{ $i+1 }} {{ $rubric_criteria->criteria_name }}</td>
                     </tr>
                     @foreach ($rubric_criteria->sub_criterias as $j => $sub_criteria)
-                        <tr class="flex mx-8 mt-2 items-center">
+                        <tr class="flex px-8 pt-2 items-center {{ ($i%2 == 0)? 'bg-primary-50' : '';}}">
                             <td class="py-2 text-gray text-xs font-semibold text-left w-1/4 pl-4 break-all">{{ $i+1 }}.{{ $j+1 }} {{ $sub_criteria->sub_criteria_name }}</td>
                             <td class="py-2 text-gray text-xs font-semibold text-center w-1/4 uppercase text-center break-all">{{ $sub_criteria->co_level }}</td>
                             @foreach ($sub_criteria->criteria_scales as $scale)

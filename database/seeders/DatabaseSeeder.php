@@ -35,10 +35,13 @@ class DatabaseSeeder extends Seeder
             'psm_year' => '1', 
             'top_student' => '0'
         ])->assignRole('student'); 
+
+        // Set total student number
+        define("STUD_NUM", 200);
         
-        Student::factory()->count(79)->create();
-        Project::factory()->count(80)->create();
+        Student::factory()->count(STUD_NUM - 1)->create();
+        Project::factory()->count(STUD_NUM)->create();
         Venue::factory()->count(20)->create();
-        SupervisorList::factory()->count(80)->create();
+        SupervisorList::factory()->count(STUD_NUM)->create();
     }
 }

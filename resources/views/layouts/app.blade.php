@@ -27,10 +27,8 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased flex min-h-screen">
+    <body class="font-sans antialiased flex min-h-screen bg-gray-50">
         <x-side-navbar />
-        {{-- seperation line --}}
-        <div class="h-auto my-8 mx-2 border-l opacity-60 rounded-lg"></div>
         <div class="min-h-screen w-full">
             <!-- Page Heading -->
             <div class="flex max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 justify-between items-center">

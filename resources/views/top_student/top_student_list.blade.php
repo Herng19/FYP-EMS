@@ -25,7 +25,7 @@
                 <tbody class="flex flex-col w-full" style="min-height: 60vh;">
                     {{-- Normal Rubrics --}}
                     @foreach ($students as $i => $student)
-                        <tr class="flex mx-8 mt-2 items-center">
+                        <tr class="flex px-8 py-2 items-center {{ ($i%2 == 0)? 'bg-primary-50' : '';}}">
                             <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ intval($i) +1 }}.</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $student->name }}</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $student->research_group->research_group_name }} ({{ $student->research_group->research_group_short_form }})</td>

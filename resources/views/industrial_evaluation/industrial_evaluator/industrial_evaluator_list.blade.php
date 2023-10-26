@@ -13,7 +13,7 @@
             <tbody class="flex flex-col w-full" style="min-height: 60vh;">
                 {{-- Normal Rubrics --}}
                 @foreach ($industrial_evaluators as $i => $industrial_evaluator)
-                    <tr class="flex mx-8 mt-2 items-center">
+                    <tr class="flex px-8 py-2 items-center {{ ($i%2 == 0)? 'bg-primary-50' : '';}}">
                         <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ $loop->iteration }}.</td>
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $industrial_evaluator->evaluator_name }}</td>
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $industrial_evaluator->company }}</td>

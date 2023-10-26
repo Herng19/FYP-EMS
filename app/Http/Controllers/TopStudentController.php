@@ -10,6 +10,7 @@ class TopStudentController extends Controller
     // Function to show top students
     public function showTopStudents() {
         $students = Student::where('top_student', '=', 1)
+                    ->where('psm_year', '=', '2')
                     ->paginate(10);
         
         return view('top_student.top_student_list', ['students' => $students]);
@@ -17,7 +18,9 @@ class TopStudentController extends Controller
 
     // Function to navigate to edit top students page
     public function editTopStudents() {
-        $students = Student::all()->sortBy('research_group_id');
+        $students = Student::where('psm_year', '=', '2')
+                    ->get()
+                    ->sortBy('research_group_id');
 
         return view('top_student.edit_top_student', ['students' => $students]);
     }
@@ -25,7 +28,7 @@ class TopStudentController extends Controller
     // Function to update top students
     public function updateTopStudents(Request $request) {
         // Get all students
-        $students = Student::all();
+        $students = Student::where('psm_year', '=', '2')->get();
 
         // If request is null, set all students to not top students
         if($request->top_students == null) {

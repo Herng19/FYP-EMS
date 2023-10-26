@@ -16,16 +16,19 @@
         }
 
         tr {
-            margin:2px 8px 8px 0px;
             align-items: center;
         }
 
         td {
-            padding:2px 0px 2px 0px;
+            padding: 4px;
             text-align: center;
-            word-break:break-all;
-            width: 12px;
+            word-break: break-word;
+            width: 32px;
+            max-width: 32px;
             font-size: 12px;
+        }
+        thead {
+            margin: 4px 8px 8px 0px;
         }
     </style>
 </head>
@@ -35,8 +38,8 @@
     <hr/>
     
     <table style="width: 100%;">
-        <thead style="border-bottom-width: 1px;">
-            <tr style="margin: 4px 8px 8px 0px; width: 100%">
+        <thead>
+            <tr>
                 <th>Elements</th>
                 <th>CO</th>
                 <th>0</th>
@@ -50,21 +53,22 @@
         </thead>
         <tbody>
             @foreach ($rubric->rubric_criterias as $i => $rubric_criteria)
+                <tr class="spacer"><td style="height: 4px;"> </td></tr>
                 <tr>
                     <td style="font-weight: bold; text-align: left; font-size: 14px;">{{ $i+1 }} {{ $rubric_criteria->criteria_name }}</td>
                 </tr>
                 @foreach ($rubric_criteria->sub_criterias as $j => $sub_criteria)
                     <tr>
-                        <td style="padding-left: 4px; text-align: left;">{{ $i+1 }}.{{ $j+1 }} {{ $sub_criteria->sub_criteria_name }}</td>
-                        <td style="text-transform: uppercase;">{{ $sub_criteria->co_level }}</td>
+                        <td style="padding-left: 12px; text-align: left; {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $i+1 }}.{{ $j+1 }} {{ $sub_criteria->sub_criteria_name }}</td>
+                        <td style="text-transform: uppercase; {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $sub_criteria->co_level }}</td>
                         @foreach ($sub_criteria->criteria_scales as $scale)
                             @if( $scale->scale_level == 2 || $scale->scale_level == 4 )
-                                <td style="color: rgb(140, 140, 140);">{{ $scale->scale_description }}</td>
+                                <td style="color: rgb(100, 100, 100); {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $scale->scale_description }}</td>
                             @else
-                                <td>{{ $scale->scale_description }}</td>
+                                <td style="{{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $scale->scale_description }}</td>
                             @endif
                         @endforeach
-                        <td>{{ $sub_criteria->weightage }}</td>
+                        <td style="{{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $sub_criteria->weightage }}</td>
                     </tr>
                 @endforeach
             @endforeach
