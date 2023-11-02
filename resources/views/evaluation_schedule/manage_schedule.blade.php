@@ -33,11 +33,11 @@
             @csrf
             <div class="flex justify-between w-full items-center">
                 <div class="flex">
-                    <input type="date" name="date" id="date" class="rounded-md border-0 text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" value="{{Session::get('date')}}" required/>
-                    <select name="psm_year" id="psm_year" class="ml-2 rounded-md border-0 bg-white text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" required>
+                    <input type="date" name="date" id="date" class="parameter rounded-md border-0 text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" value="{{Session::get('date')}}" required/>
+                    <select name="psm_year" id="psm_year" class="parameter ml-2 rounded-md border-0 bg-white text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" required>
                         <option value="" class="text-gray-300" default>PSM Year</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
+                        <option value="1" {{ (Session::get('psm_year') && Session::get('psm_year') == '1')? 'selected': ''; }}>1</option>
+                        <option value="2" {{ (Session::get('psm_year') && Session::get('psm_year') == '2')? 'selected': ''; }}>2</option>
                     </select>
                 </div>
                 <div>
@@ -52,7 +52,7 @@
         <table class="my-6 bg-white w-full h-2/3 rounded-lg drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]"  style="height: 70vh;">
             <thead>
                 <tr class="flex text-white text-center text-xs font-semibold border-b justify-between px-4 items-center bg-primary-700 rounded-t-lg">
-                    <th class="py-4 w-14">Slot/Venue</th>
+                    <th class="py-4 w-14">Venue/Slot</th>
                     @foreach( $timeslots as $timeslot)
                         <th class="w-14">{{$timeslot}}</th>
                     @endforeach
@@ -61,14 +61,14 @@
             <tbody>
                 @foreach($venues as $i => $venue) 
                     <tr class="flex text-gray-700 text-center text-xs font-semibold justify-between px-4 items-center border-b {{ ($i%2 == 1)? 'bg-primary-50': ''; }} {{ ($loop->last)? 'rounded-bl-lg rounded-br-lg' : ''; }}">
-                        <td class="py-4 w-14 text-xs font-bold break-all">{{$venue->venue_code}}</td>
+                        <td class="py-4 w-14 text-xs font-bold break-all">{{ ($venue->venue_code != null)? $venue->venue_code : $venue->booth_code }}</td>
                         @foreach($timeslots as $timeslot)
                         @php $i = 0; @endphp
                             @foreach($schedules as $schedule)
-                                @if($schedule->venue_id == $venue->venue_id && (date("H:i", strtotime($schedule->start_time))) == $timeslot)
+                                @if(($schedule->venue_id == $venue->venue_id || $schedule->venue_id == $venue->booth_id) && (date("H:i", strtotime($schedule->start_time))) == $timeslot)
                                     <td class="w-14 p-2 border-l">
                                         <a href="/evaluation schedule/edit-slot/{{$schedule->slot_id}}">
-                                            <div class="text-primary-700 font-bold text-[10px]">{{$schedule->name}}</div>
+                                            <div class="text-primary-700 font-bold text-[12px] underline">{{explode(" ", $schedule->name)[0]}}</div>
                                         </a>
                                     </td>
                                     @php $i = 1; @endphp
@@ -89,14 +89,17 @@
             }
         });
         
-        $('#date').on('change', function(e) {
+        // Whenever date or psm year changes, update the schedule data
+        $('.parameter').on('change', function(e) {
             date = $("input[name=date]").val();
+            psm_year = $("select[name=psm_year]").val();
 
             $.ajax({
                   type: "PUT",
                   url: '/evaluation schedule',
                   data: {
                     date: date,
+                    psm_year: psm_year,
                   },
                   success: function(result) {
                     $('#table').html(jQuery(result).find('#table').html());
@@ -107,25 +110,28 @@
             });
         });
 
-        $('form').on('submit', function(e) {
-            e.preventDefault();
-            date = $("input[name=date]").val();
+        // submit form when generate button is clicked
+        // $('form').on('submit', function(e) {
+        //     e.preventDefault();
+        //     date = $("input[name=date]").val();
+        //     psm_year = $("select[name=psm_year]").val();
 
-            $('#animation').removeClass('hidden');
-            $.ajax({
-                  type: "POST",
-                  url: '/evaluation schedule',
-                  data: {
-                    date: date,
-                  },
-                  success: function(result) {
-                    $('#animation').addClass('hidden');
-                    $('#content').html(jQuery(result).find('#content').html());
-                  },
-                  error: function (error) {
-                    console.log(error);
-                  }
-            });
-        });
+        //     $('#animation').removeClass('hidden');
+        //     $.ajax({
+        //           type: "POST",
+        //           url: '/evaluation schedule',
+        //           data: {
+        //             date: date,
+        //             psm_year: psm_year,
+        //           },
+        //           success: function(result) {
+        //             $('#animation').addClass('hidden');
+        //             $('#content').html(jQuery(result).find('#content').html());
+        //           },
+        //           error: function (error) {
+        //             console.log(error);
+        //           }
+        //     });
+        // });
     </script>
 </x-app-layout>

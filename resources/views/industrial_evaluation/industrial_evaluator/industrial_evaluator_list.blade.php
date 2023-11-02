@@ -18,14 +18,14 @@
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $industrial_evaluator->evaluator_name }}</td>
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $industrial_evaluator->company }}</td>
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $industrial_evaluator->position }}</td>
-                        <td class="flex py-2 items-center justify-center w-1/4">
+                        <td class="flex py-2 items-center justify-center w-1/3">
                             <a href="/industrial evaluator/edit/{{ $industrial_evaluator->industrial_evaluator_id }}" class="rounded-full py-2 px-3 bg-green-100 justify-center items-center hover:bg-green-200">
                                 <i class="fa-regular fa-pen text-green-500 fa-sm"></i>
                             </a>
                             <button type="button" data-modal-target="popup-modal-[{{ $i }}]" data-modal-toggle="popup-modal-[{{ $i }}]" class="rounded-full py-2 px-3 bg-red-50 justify-center items-center hover:bg-red-100 ml-2"><i class="fa-regular fa-trash-can text-red-500 fa-sm"></i></button>
                         </td>
                     </tr>
-                    <x-delete-confirmation-modal route="/industrial evaluator/delete/{{ $industrial_evaluator->industrial_evaluator_id }}" title="Delete Evaluator" description="Are you sure to delete {{ $industrial_evaluator->evaluator_name }} ?" id="{{ $i }}"/>
+                    <x-delete-confirmation-modal route="/industrial evaluator/delete/{{ $industrial_evaluator->industrial_evaluator_id }}" title="Delete Evaluator" description="Are you sure to delete '{{ $industrial_evaluator->evaluator_name }}' ?" id="{{ $i }}"/>
                 @endforeach
             </tbody>
         </x-show-table>

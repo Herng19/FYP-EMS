@@ -1,14 +1,14 @@
-<div class="pl-6 pr-6 py-8 justify-center flex-col flex bg-primary-800 drop-shadow-[2px_0px_24px_rgba(120,120,255,0.6)] rounded-br-md rounded-tr-md">
+<div class="justify-center flex-col flex">
     {{-- title --}}
-    <div class="flex justify-center items-center">
+    <div class="flex justify-center items-center bg-gray-50 pt-8 pb-6">
         <a href="/dashboard">
-            <i class="fa-solid fa-book text-primary-200"></i>
-            <span class="text-primary-200 pl-2 font-bold font-serif break-normal whitespace-nowrap">FYP-EMS</span>
+            <i class="fa-solid fa-book text-primary-700 fa-md"></i>
+            <span class="text-primary-700 pl-2 font-bold font-serif break-normal whitespace-nowrap text-xl">FYP-EMS</span>
         </a>
     </div>
 
     {{-- available nav items --}}
-    <div class="mt-12 grow">
+    <div class="py-3 px-4 grow bg-primary-800 rounded-lg mx-4 drop-shadow-[0px_0px_18px_rgba(200,200,255,0.8)]">
         {{-- Dashboard --}}
         <x-navbar-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
             <x-slot name="icon">
@@ -76,23 +76,23 @@
         @role('coordinator')
         {{-- Industrial Evaluation --}}
         <div x-data="{dropdown: false}" class="relative cursor-pointer" @click="dropdown = ! dropdown">
-            <div class="flex mt-4 items-center object-fill py-2 pl-9 pr-11 rounded-lg justify-center text-primary-200">
+            <div class="flex mt-4 items-center object-fill py-2 pl-5 pr-2 rounded-lg justify-start text-primary-200">
                 <div name="icon" class="text-inherit text-primary-300">
                     <i class="fa-light fa-briefcase"></i>
                 </div>
-                <div name="title" class="text-inherit pl-3 font-semibold text-sm break-normal whitespace-nowrap tracking-wider">                    
+                <div name="title" class="text-inherit ml-3 font-semibold text-sm break-normal whitespace-nowrap tracking-wider">                    
                     {{__('Industrial Evaluation')}}
                 </div>
-                <button class="ml-2 mr-1.5" x-show="!dropdown">
+                <button class="ml-8 w-2" x-show="!dropdown">
                     <i class="fa-light fa-chevron-right fa-sm"></i>
                 </button>
-                <button class="ml-2" x-show="dropdown">
+                <button class="ml-8 w-2" x-show="dropdown">
                     <i class="fa-light fa-chevron-down fa-sm"></i>
                 </button>
             </div>
-            <div x-show="dropdown">
+            <div x-show="dropdown" class="bg-primary-900 rounded-md">
                 {{-- Industrial Evaluator --}}
-                <x-navbar-item href="{{ route('industrial evaluator') }}" :active="request()->routeIs('industrial evaluator.*') || request()->routeIs('industrial evaluator')" class="pl-12">
+                <x-navbar-item href="{{ route('industrial evaluator') }}" :active="request()->routeIs('industrial evaluator.*') || request()->routeIs('industrial evaluator')" class="pl-8">
                     <x-slot name="icon">
                         <i class="fa-light fa-user-tie"></i>
                     </x-slot>
@@ -102,7 +102,7 @@
                 </x-navbar-item>
 
                 {{-- Industrial Schedule --}}
-                <x-navbar-item href="{{ route('industrial schedule') }}" :active="request()->routeIs('industrial schedule.*') || request()->routeIs('industrial schedule')" class="pl-12">
+                <x-navbar-item href="{{ route('industrial schedule') }}" :active="request()->routeIs('industrial schedule.*') || request()->routeIs('industrial schedule')" class="pl-8">
                     <x-slot name="icon">
                         <i class="fa-light fa-table-tree"></i>
                     </x-slot>
@@ -112,7 +112,7 @@
                 </x-navbar-item>
 
                 {{-- Industrial Evaluation --}}
-                <x-navbar-item href="{{ route('industrial evaluation') }}" :active="request()->routeIs('industrial evaluation.*') || request()->routeIs('industrial evaluation')" class="pl-12">
+                <x-navbar-item href="{{ route('industrial evaluation') }}" :active="request()->routeIs('industrial evaluation.*') || request()->routeIs('industrial evaluation')" class="pl-8">
                     <x-slot name="icon">
                         <i class="fa-sharp fa-light fa-graduation-cap"></i>
                     </x-slot>
@@ -122,7 +122,7 @@
                 </x-navbar-item>
 
                 {{-- Industrial Rubric --}}
-                <x-navbar-item href="{{ route('industrial rubric') }}" :active="request()->routeIs('industrial rubric.*') || request()->routeIs('industrial rubric')" class="pl-12">
+                <x-navbar-item href="{{ route('industrial rubric') }}" :active="request()->routeIs('industrial rubric.*') || request()->routeIs('industrial rubric')" class="pl-8">
                     <x-slot name="icon">
                         <i class="fa-sharp fa-light fa-pie-chart"></i>
                     </x-slot>
@@ -146,10 +146,10 @@
     </div>
 
     {{-- logout button --}}
-    <div>
+    <div class="px-6 my-4 bg-gray-50">
         <form method="POST" action="{{ route('logout') }}" x-data>
             @csrf
-            <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex items-center object-fill mt-8 py-2 px-8 rounded-md justify-center bg-red-500 text-gray-100 hover:bg-red-600 hover:text-white active:ring-red-700 active:ring-2 active:ring-offset-2">
+            <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex items-center object-fill mt-8 py-2 px-8 rounded-md justify-center bg-red-500 text-gray-100 hover:bg-red-600 hover:text-white active:ring-red-700 active:ring-2 active:ring-offset-2 drop-shadow-[0px_0px_12px_rgba(255,150,150,0.5)]">
                 <div name="icon" class="text-inherit">
                     <i class="fa-light fa-arrow-right-from-bracket"></i>
                 </div>

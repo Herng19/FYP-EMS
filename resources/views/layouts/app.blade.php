@@ -31,7 +31,7 @@
         <x-side-navbar />
         <div class="min-h-screen w-full">
             <!-- Page Heading -->
-            <div class="flex max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 justify-between items-center">
+            <div class="flex max-w-7xl mx-auto pt-3 pb-3 px-4 sm:px-6 lg:px-8 justify-between items-center border-b">
                 @if (isset($header))
                     <header>
                         <div class="font-bold text-2xl text-gray-800 leading-tight">
@@ -43,7 +43,7 @@
             </div>
 
             <!-- Page Content -->
-            <main>
+            <main class="pt-6">
                 {{ $slot }}
             </main>
         </div>

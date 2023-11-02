@@ -84,42 +84,30 @@
 
                             {{-- Description for each level --}}
                             <div class="px-12">
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-0" class="mx-2 text-gray-400">0</label>
-                                    <x-input id="scale-0" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][scale_0]" value="{{ $sub_criteria->criteria_scales[0]->scale_description }}" placeholder="Mark Description" required/>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-1" class="mx-2 text-gray-400">1</label>
-                                    <x-input id="scale-1" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][scale_1]" value="{{ $sub_criteria->criteria_scales[1]->scale_description }}" placeholder="Mark Description" required/>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-2" class="mx-2 text-gray-400">2</label>
-                                    <x-input id="scale-2" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][scale_2]" value="{{ $sub_criteria->criteria_scales[2]->scale_description }}" placeholder="Mark Description" required/>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-3" class="mx-2 text-gray-400">3</label>
-                                    <x-input id="scale-3" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][scale_3]" value="{{ $sub_criteria->criteria_scales[3]->scale_description }}" placeholder="Mark Description" required/>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-4" class="mx-2 text-gray-400">4</label>
-                                    <x-input id="scale-4" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][scale_4]" value="{{ $sub_criteria->criteria_scales[4]->scale_description }}" placeholder="Mark Description" required/>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-5" class="mx-2 text-gray-400">5</label>
-                                    <x-input id="scale-5" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][scale_5]" value="{{ $sub_criteria->criteria_scales[5]->scale_description }}" placeholder="Mark Description" required/>
+                                @foreach($sub_criteria->criteria_scales as $k => $criteria_scale)
+                                    <div class="flex items-center mt-2">
+                                        <input name="criteria[{{ $i }}][{{ $j }}][{{ $k }}][scale_id]" value="{{ ($criteria_scale->scale_id)? $criteria_scale->scale_id : null }}" hidden />
+                                        <label for="scale-{{ $k }}" class="mx-2 text-gray-400" id="scale-numbering">{{ $k }}</label>
+                                        <x-input id="scale-{{ $k }}" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][{{ $k }}][scale_description]" value="{{ $criteria_scale->scale_description }}" placeholder="Mark Description" required/>
+                                        <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                                    </div>
+                                @endforeach
+                                {{-- Add New Scale Button --}}
+                                <div class="mt-4 ml-8">
+                                    <button type="button" class="add-scale-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD SCALE</button>
                                 </div>
                             </div>
                         </div>
                         @endforeach
                         {{-- Add New Sub Criteria Button --}}
                         <div class="mt-2 pl-8">
-                            <button type="button" class="add-sub-criteria-button text-primary-700 font-bold text-xs"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>Add Sub Criteria</button>
+                            <button type="button" class="add-sub-criteria-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD SUB CRITERIA</button>
                         </div>
                     </div>
                     @endforeach
                     {{-- Add New Criteria Button --}}
                     <div class="mt-2">
-                        <button type="button" class="add-criteria-button text-primary-700 font-bold text-xs"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>Add Criteria</button>
+                        <button type="button" class="add-criteria-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD CRITERIA</button>
                     </div>
                 </div>
             </div>
@@ -211,13 +199,39 @@
                 $(this).parent().before(new_element);
             });
 
+            // Add new scale
+            $('#criteria-form').on('click', '.add-scale-button', function(e) {
+                e.preventDefault();
+
+                // Clone the last scale
+                var new_element = $(this).parent().prev().clone();
+                numbering = new_element.find("#scale-numbering").text()
+
+                // Clear all input
+                new_element.find("input").val("");
+
+                // Update the numbering of the scale
+                var main_number = new_element.find("#scale-numbering").text(parseInt(new_element.find("#scale-numbering").text()) + 1);
+
+                // Update the id and name of the criteria
+                var name = new_element.find("input#scale-"+numbering).prop("name");
+                var index = name.indexOf("][", 11);
+                var end_index = name.indexOf("]", index+1);
+                var new_name = name.substring(0, index+2) + (parseInt(name.substring(index+2, end_index)) + 1) + name.substring(end_index);
+                new_element.find("input#scale-"+numbering).prop("name", new_name).prop("id", "scale-"+(parseInt(numbering)+1));
+                new_element.find("input[name*='[scale_id]']").prop("name", new_name.replace('scale_description', 'scale_id'));
+
+                // Append the new criteria
+                $(this).parent().before(new_element);
+            });
+
             // Delete the criteria
             $('#criteria-form').on('click', '.delete-criteria', function(e) {
                 e.preventDefault();
                 criteria_id = $(this).parent().find("input[name*='[criteria_id]']").val();
 
                 // Check if there is only one criteria left, if yes, do not allow deletion
-                if($(this).parent().parent().parent().children().length == 3) {
+                if($(this).parent().parent().parent().children().length <= 3) {
                     alert("A rubric must have at least one criteria.");
                     return;
                 }
@@ -259,7 +273,7 @@
                 console.log(sub_criteria_id);
 
                 // Check if there is only one sub criteria left, if yes, do not allow deletion
-                if($(this).parent().parent().parent().children().length == 3) {
+                if($(this).parent().parent().parent().children().length <= 3) {
                     alert("A criteria must have at least one sub criteria.");
                     return;
                 }
@@ -288,7 +302,54 @@
 
                 // Remove the sub criteria
                 $(this).parent().parent().remove();
+            });
 
+            // Delete the scale
+            $('#criteria-form').on('click', '.delete-scale', function(e) {
+                e.preventDefault();
+                // Check if there is only one scale left, if yes, do not allow deletion
+                if($(this).parent().parent().children().length <= 3) {
+                    alert("A sub criteria must have at least 2 scales");
+                    return;
+                }
+
+                scale_id = $(this).parent().find("input[name*='[scale_id]']").val();
+
+                // If scale id not null, then delete the scale from database
+                if(scale_id != null) {
+                    // Make request to delete the scale
+                    $.ajax({
+                        type: "DELETE",
+                        url: '/rubric/delete-scale/' + scale_id,
+                        data: {
+                            scale_id: scale_id,
+                        },
+                        success: function(result) {
+                            console.log(result);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+
+                // Update the numbering of the scale
+                $(this).parent().nextAll("div:not(:last)").each(function() {
+                    var sub_number = $(this).find("#scale-numbering").text();
+                    
+                    $(this).find("#scale-numbering").text(sub_number - 1);
+
+                    var name = $(this).find("input#scale-"+sub_number).prop("name");
+                    var index = name.indexOf("][", 11);
+                    var end_index = name.indexOf("]", index+1);
+                    console.log(index, end_index);
+                    var new_name = name.substring(0, index+2) + (parseInt(name.substring(index+2, end_index)) - 1) + name.substring(end_index);
+                    $(this).find("input#scale-"+sub_number).prop("name", new_name).prop("id", "scale-"+(sub_number-1));
+                    $(this).find("input[name*='[scale_id]']").prop("name", new_name.replace('scale_description', 'scale_id'));
+                });
+
+                // Remove the scale
+                $(this).parent().remove();
             });
 
             // Hide the extra options if the evaluation type is industrial evaluation

@@ -31,8 +31,9 @@ class RubricController extends Controller
     // Function to show single rubric
     public function showRubric($rubric_id) {
         $rubric = Rubric::find($rubric_id);
+        $scale_num = count($rubric->rubric_criterias[0]->sub_criterias[0]->criteria_scales); 
 
-        return view('rubric.view_rubric', ['rubric' => $rubric]);
+        return view('rubric.view_rubric', ['rubric' => $rubric, 'scale_num' => $scale_num]);
     }
 
     // Function to print rubric
@@ -62,7 +63,6 @@ class RubricController extends Controller
 
     // Function to create rubric
     public function createRubric(Request $request) {
-
         $rubric_id = Rubric::create([
             'research_group_id' => $request->research_group, 
             'rubric_name' => $request->rubric_name,
@@ -89,8 +89,9 @@ class RubricController extends Controller
                     'weightage' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_weightage"],
                 ])->id;
 
+
                 // Insert into criteria_scale
-                for($i = 0; $i < 6; $i++) {
+                for($i = 0; $i < count($sub_criterias[$sub_criteria])-4; $i++) {
                     CriteriaScale::create([
                         'sub_criteria_id' => $sub_criteria_id,
                         'scale_level' => $i,
@@ -146,6 +147,7 @@ class RubricController extends Controller
             array_shift($sub_criterias); // Remove the criteria id
             array_shift($sub_criterias); // Remove the criteria name
 
+
             // Insert into sub_criteria
             foreach($sub_criterias as $sub_criteria => $value) {
                 if($sub_criterias[$sub_criteria]["sub_criteria_id"] != null) {
@@ -168,11 +170,17 @@ class RubricController extends Controller
                     ])->id;
                 }
 
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria id
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria name
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria weightage
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria co level
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria description
+
                 // Insert into criteria_scale
-                for($i = 0; $i < 6; $i++) {
-                    CriteriaScale::updateOrCreate(
-                        ['sub_criteria_id' => $sub_criteria_id, 'scale_level' => $i], 
-                        ['scale_description' => $sub_criterias[$sub_criteria]["scale_" . strval($i)]]
+                foreach($sub_criterias[$sub_criteria] as $i => $scale) {
+                    CriteriaScale::UpdateOrCreate(
+                        ['scale_id'  => $sub_criterias[$sub_criteria][$i]['scale_id']], 
+                        ['sub_criteria_id' => $sub_criteria_id, 'scale_level' => $i, 'scale_description' => $sub_criterias[$sub_criteria][$i]['scale_description']]
                     );
                 }
             }
@@ -188,13 +196,7 @@ class RubricController extends Controller
         return redirect('/rubric')->with('success-message', 'Rubric deleted successfully!');
     }
 
-    public function deleteSubCriteria($sub_criteria_id) {
-        CriteriaScale::where('sub_criteria_id', '=', $sub_criteria_id)->delete();
-        SubCriteria::where('sub_criteria_id', '=', $sub_criteria_id)->delete();
-
-        return 0;
-    }
-
+    // Function to delete sub-criteria
     public function deleteCriteria($criteria_id) {
         $sub_criterias = SubCriteria::where('criteria_id', '=', $criteria_id)->get();
         foreach($sub_criterias as $sub_criteria) {
@@ -202,6 +204,21 @@ class RubricController extends Controller
         }
         SubCriteria::where('criteria_id', '=', $criteria_id)->delete();
         RubricCriteria::where('criteria_id', '=', $criteria_id)->delete();
+
+        return 0;
+    }
+
+    // Function to delete criteria
+    public function deleteSubCriteria($sub_criteria_id) {
+        CriteriaScale::where('sub_criteria_id', '=', $sub_criteria_id)->delete();
+        SubCriteria::where('sub_criteria_id', '=', $sub_criteria_id)->delete();
+
+        return 0;
+    }
+
+    // Function to delete scale\
+    public function deleteScale($scale_id) {
+        CriteriaScale::where('scale_id', '=', $scale_id)->delete();
 
         return 0;
     }

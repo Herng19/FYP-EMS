@@ -17,12 +17,9 @@
                 <tr class="flex self-stretch px-8 pt-2 border-b-2 border-b-primary-200">
                     <th class="my-4 text-primary-700 text-sm font-bold text-left w-1/4 text-center">Elements</th>
                     <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">CO</th>
-                    <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">0</th>
-                    <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">1</th>
-                    <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">2</th>
-                    <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">3</th>
-                    <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">4</th>
-                    <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">5</th>
+                    @for($i = 0; $i < $scale_num; $i++)
+                        <th class="my-4 text-primary-700 text-sm font-bold w-1/4 text-center">{{ $i }}</th>
+                    @endfor
                     <th class="my-4 text-primary-700 text-sm font-bold text-left w-1/4 text-center">Weightage</th>
                 </tr>
             </thead>
@@ -32,11 +29,11 @@
                         <td class="py-2 text-gray text-sm font-bold text-left w-1/4 break-all">{{ $i+1 }} {{ $rubric_criteria->criteria_name }}</td>
                     </tr>
                     @foreach ($rubric_criteria->sub_criterias as $j => $sub_criteria)
-                        <tr class="flex px-8 pt-2 items-center {{ ($i%2 == 0)? 'bg-primary-50' : '';}}">
+                        <tr class="flex px-8 pt-2 items-center {{ ($j%2 == 0)? 'bg-primary-50' : '';}}">
                             <td class="py-2 text-gray text-xs font-semibold text-left w-1/4 pl-4 break-all">{{ $i+1 }}.{{ $j+1 }} {{ $sub_criteria->sub_criteria_name }}</td>
                             <td class="py-2 text-gray text-xs font-semibold text-center w-1/4 uppercase text-center break-all">{{ $sub_criteria->co_level }}</td>
                             @foreach ($sub_criteria->criteria_scales as $scale)
-                                @if( $scale->scale_level == 2 || $scale->scale_level == 4 )
+                                @if( $scale->scale_level % 2 == 1 )
                                     <td class="py-2 text-gray-400 text-xs font-semibold text-center w-1/4 break-all">{{ $scale->scale_description }}</td>
                                 @else
                                     <td class="py-2 text-gray text-xs font-semibold text-center w-1/4 break-all">{{ $scale->scale_description }}</td>

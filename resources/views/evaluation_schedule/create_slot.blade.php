@@ -68,10 +68,18 @@
                     <label for="venue" class="text-gray text-xs font-bold">Venue</label>
                     <select id="venue" name="venue" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-700 px-4 py-2 border-0 rounded-md" required>
                         @foreach($venues as $venue)
-                            @if($venue->venue_id == old('venue'))
-                                <option value="{{$venue->venue_id}}" class="text-primary-700 text-inherit font-semibold" selected>{{$venue->venue_code}} {{$venue->venue_name}}</option>
+                            @if(isset($venue->venue_id))
+                                @if($venue->venue_id == old('venue'))
+                                    <option value="{{$venue->venue_id}}" class="text-primary-700 text-inherit font-semibold" selected>{{$venue->venue_code}} {{$venue->venue_name}}</option>
+                                @else
+                                    <option value="{{$venue->venue_id}}" class="text-primary-700 text-inherit font-semibold">{{$venue->venue_code}} {{$venue->venue_name}}</option>
+                                @endif
                             @else
-                                <option value="{{$venue->venue_id}}" class="text-primary-700 text-inherit font-semibold">{{$venue->venue_code}} {{$venue->venue_name}}</option>
+                                @if($venue->booth_id == old('venue'))
+                                    <option value="{{$venue->booth_id}}" class="text-primary-700 text-inherit font-semibold" selected>{{$venue->booth_code}} {{$venue->booth_name}}</option>
+                                @else
+                                    <option value="{{$venue->booth_id}}" class="text-primary-700 text-inherit font-semibold">{{$venue->booth_code}} {{$venue->booth_name}}</option>
+                                @endif
                             @endif
                         @endforeach
                     </select>

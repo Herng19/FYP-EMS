@@ -85,9 +85,10 @@ Route::middleware('auth:web')->group(function () {
     // Route for Delete Rubric
     Route::delete('/rubric/delete/{rubric_id}', [RubricController::class, 'deleteRubric'])->name('rubric.delete_rubric');
 
-    // Route for Delete Criteria & Sub Criteria
+    // Route for Delete Criteria, Sub Criteria, and Scale
     Route::delete('/rubric/delete-criteria/{criteria_id}', [RubricController::class, 'deleteCriteria'])->name('rubric.delete_criteria');
     Route::delete('/rubric/delete-sub-criteria/{sub_criteria_id}', [RubricController::class, 'deleteSubCriteria'])->name('rubric.delete_sub_criteria');
+    Route::delete('/rubric/delete-scale/{scale_id}', [RubricController::class, 'deleteScale'])->name('rubric.delete_scale');
 
     // Route for Evaluation
     Route::post('/evaluation/{student_id}', [EvaluationController::class, 'evaluateStudent'])->name('evaluation.evaluate_student');

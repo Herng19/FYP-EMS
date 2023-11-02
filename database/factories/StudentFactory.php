@@ -24,7 +24,7 @@ class StudentFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'course' => $this->faker->randomElement(['Software Engineering', 'Graphics Design & Animation', 'Data & Networking']),
             'psm_year' => $this->faker->randomElement(['1', '2']),
-            'top_student' => $this->faker->boolean(),
+            'top_student' => $this->faker->boolean(0),
         ];
     }
 
