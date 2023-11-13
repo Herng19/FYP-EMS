@@ -6,6 +6,12 @@
         <form action="/rubric/create-rubric" method="POST">
             @csrf
             <div>
+                @error('criteria.0.0.sub_criteria_weightage')
+                    <div x-data="{show:true}" x-init="setTimeout(() => show = false, 3000)" x-show="show" class="flex bg-red-50 text-start py-2 font-semibold text-sm text-red-600 rounded-md items-center justify-start my-2 mx-2">
+                        <i class="fa-regular fa-circle-xmark fa-lg mx-4"></i>
+                        {{ $message }}
+                    </div>
+                @enderror
                 {{-- Rubric Basic Info --}}
                 <div class="font-bold text-gray">Rubric Info</div>
                 <div class="px-4 mt-2">
@@ -291,6 +297,35 @@
 
                 // Remove the scale
                 $(this).parent().remove();
+            });
+
+            // Validate total weightage == 100 when submitting form
+            $('form').on('submit', function(e) {
+                // Check if the number of scales is same for all sub criteria
+                var number_of_scales = 0;
+                $('input[name*="sub_criteria_name"]').each(function() {
+                    var scales = 0;
+                    $(this).parent().parent().parent().parent().find('input[name*="scale_"]').each(function() {
+                        scales += 1;
+                    });
+                    if(number_of_scales == 0) {
+                        number_of_scales = scales;
+                    }
+                    if(scales != number_of_scales) {
+                        alert("Number of scales must be same for all sub criteria.");
+                        e.preventDefault();
+                    }
+                });
+
+                // Check if total weightage == 100
+                var total_weightage = 0;
+                $('input[name*="sub_criteria_weightage"]').each(function() {
+                    total_weightage += parseInt($(this).val());
+                });
+                if(total_weightage != 100) {
+                    alert("Total weightage must be 100.");
+                    e.preventDefault();
+                }
             });
         });
     </script>

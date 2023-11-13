@@ -133,6 +133,9 @@ Route::middleware('auth:student')->group(function () {
 
     // Route for View Single Rubric
     Route::get('/rubric/student-rubric/view/{rubric_id}', [RubricController::class, 'showRubric'])->name('rubric.view_rubric');
+
+    // Route for Top Students List
+    Route::get('/top students/student-view', [TopStudentController::class, 'showTopStudents'])->name('top students.student_top_student_list');
 });
 
 Route::get('/industrial evaluation', function () {

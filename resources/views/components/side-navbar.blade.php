@@ -64,7 +64,7 @@
         </x-navbar-item>
 
         {{-- Top Students --}}
-        <x-navbar-item href="{{ route('top students') }}" :active="request()->routeIs('top students.*') || request()->routeIs('top students')">
+        <x-navbar-item href="{{ (auth('web')->check()) ? route('top students') :  route('top students.student_top_student_list')}}" :active="request()->routeIs('top students.*') || request()->routeIs('top students')">
             <x-slot name="icon">
                 <i class="fa-light fa-crown"></i>
             </x-slot>

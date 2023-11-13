@@ -363,6 +363,34 @@
                     $('#extra_options').show();
                 }
             });
+
+            // Validate the total weightage == 100 when submitting form
+            $('form').on('submit', function(e) {
+                // Check if total weightage == 100
+                var total_weightage = 0;
+                $('input[name*="sub_criteria_weightage"]').each(function() {
+                    total_weightage += parseInt($(this).val());
+                });
+                if(total_weightage != 100) {
+                    alert("Total weightage must be 100.");
+                }
+
+                // Check if the number of scales is same for all sub criteria
+                var number_of_scales = 0;
+                $('input[name*="sub_criteria_name"]').each(function() {
+                    var scales = 0;
+                    $(this).parent().parent().parent().parent().find('input[name*="scale_description"]').each(function() {
+                        scales++;
+                    });
+                    if(number_of_scales == 0) {
+                        number_of_scales = scales;
+                    }
+                    if(scales != number_of_scales) {
+                        alert("Number of scales must be same for all sub criteria.");
+                        e.preventDefault();
+                    }
+                });
+            });
         });
     </script>
 </x-app-layout>

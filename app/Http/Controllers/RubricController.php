@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Rubric;
 use PDF;
+use App\Models\Rubric;
 use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use App\Models\CriteriaScale;
 use App\Models\ResearchGroup;
 use App\Models\RubricCriteria;
+use App\Rules\rubricWeightageTotal;
 
 class RubricController extends Controller
 {
