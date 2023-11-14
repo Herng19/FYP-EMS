@@ -7,6 +7,9 @@
         {{-- Action Message --}}
         <x-success-message/>
 
+        {{-- Error Message --}}
+        <x-error-message/>
+
         {{-- Scheduling Animation --}}   
         <div id="animation" class="fixed top-0 left-0 h-full w-full z-10 hidden">
             <div role="status" class="fixed top-0 left-0 h-full w-full opacity-30 bg-black">
@@ -23,12 +26,12 @@
         </div>
 
         {{-- Evaluation Schedule Actions --}}
-        <form action="/evaluation schedule" method="POST">
+        <form action="/industrial schedule" method="POST">
             @csrf
             <div class="flex justify-between w-full items-center">
                 <input type="date" name="date" id="date" class="rounded-md border-0 text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" value="{{Session::get('date')}}" required/>
                 <div>
-                    <a href="/evaluation schedule/create-slot"><x-secondary-button class="border-primary-700 border-2 font-bold text-primary-700">NEW SLOT</x-secondary-button></a>
+                    <a href="/industrial schedule/create-slot"><x-secondary-button class="border-primary-700 border-2 font-bold text-primary-700">NEW SLOT</x-secondary-button></a>
                     <x-button type="submit" id="submit">GENERATE</x-button>
                 </div>
             </div>
@@ -54,8 +57,8 @@
                             @foreach($schedules as $schedule)
                                 @if($schedule->venue_id == $venue->venue_id && (date("H:i", strtotime($schedule->start_time))) == $timeslot)
                                     <td class="w-14 p-2 border-l">
-                                        <a href="/evaluation schedule/edit-slot/{{$schedule->industrial_slot_id}}">
-                                            <div class="text-primary-700 font-bold text-[10px]">{{$schedule->name}}</div>
+                                        <a href="/industrial schedule/edit-slot/{{$schedule->industrial_slot_id}}">
+                                            <div class="text-primary-700 font-bold text-[11px] underline">{{explode(" ", $schedule->name)[0]}}</div>
                                         </a>
                                     </td>
                                     @php $i = 1; @endphp
@@ -76,9 +79,9 @@
             }
         });
         
+        // update table when date is changed
         $('#date').on('change', function(e) {
             date = $("input[name=date]").val();
-            console.log(date);
 
             $.ajax({
                   type: "PUT",
@@ -96,25 +99,26 @@
             });
         });
 
-        $('form').on('submit', function(e) {
-            e.preventDefault();
-            date = $("input[name=date]").val();
+        // submit form when generate button is clicked
+        // $('form').on('submit', function(e) {
+        //     e.preventDefault();
+        //     date = $("input[name=date]").val();
 
-            $('#animation').removeClass('hidden');
-            $.ajax({
-                  type: "POST",
-                  url: '/industrial schedule',
-                  data: {
-                    date: date,
-                  },
-                  success: function(result) {
-                    $('#animation').addClass('hidden');
-                    $('#content').html(jQuery(result).find('#content').html());
-                  },
-                  error: function (error) {
-                    console.log(error);
-                  }
-            });
-        });
+        //     $('#animation').removeClass('hidden');
+        //     $.ajax({
+        //           type: "POST",
+        //           url: '/industrial schedule',
+        //           data: {
+        //             date: date,
+        //           },
+        //           success: function(result) {
+        //             $('#animation').addClass('hidden');
+        //             $('#content').html(jQuery(result).find('#content').html());
+        //           },
+        //           error: function (error) {
+        //             console.log(error);
+        //           }
+        //     });
+        // });
     </script>
 </x-app-layout>

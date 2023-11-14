@@ -45,20 +45,20 @@ Route::middleware('auth:web')->group(function () {
     Route::put('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
     Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'scheduleEvaluationSchedule'])->name('evaluation schedule');
 
-    // Create Slot
+    // Route for Create Slot
     Route::get('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('evaluation schedule.create_slot');
     Route::put('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('evaluation schedule.create_slot');
     Route::post('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'createSlot'])->name('evaluation schedule.create_slot');
 
-    // Edit Slot
+    // Route for Edit Slot
     Route::get('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot'])->name('evaluation schedule.edit_slot');
     Route::post('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot'])->name('evaluation schedule.edit_slot');
     Route::put('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'updateSlot']);
 
-    // Delete Slot
+    // Route for Delete Slot
     Route::delete('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'deleteSlot']);
 
-    // View Evaluation Schedule
+    // Route for View Evaluation Schedule
     Route::get('/evaluation schedule/view-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('evaluation schedule.view_schedule');
 
     // Route for Evaluation
@@ -117,7 +117,20 @@ Route::middleware('auth:web')->group(function () {
     // Route for Industrial Schedule
     Route::get('/industrial schedule', [IndustrialEvaluationController::class, 'showIndustrialSchedule'])->name('industrial schedule');
     Route::put('/industrial schedule', [IndustrialEvaluationController::class, 'showIndustrialSchedule'])->name('industrial schedule');
-    Route::post('/industrial schedule', [IndustrialEvaluationController::class, 'scheduleEvaluationSchedule'])->name('industrial schedule');
+    Route::post('/industrial schedule', [IndustrialEvaluationController::class, 'scheduleIndustrialSchedule'])->name('industrial schedule');
+
+    // Route for create industrial slot
+    Route::get('/industrial schedule/create-slot', [IndustrialEvaluationController::class, 'newIndustrialSlot'])->name('industrial schedule.create_slot');
+    Route::put('/industrial schedule/create-slot', [IndustrialEvaluationController::class, 'newIndustrialSlot'])->name('industrial schedule.create_slot');
+    Route::post('/industrial schedule/create-slot', [IndustrialEvaluationController::class, 'createIndustrialSlot'])->name('industrial schedule.create_slot');
+
+    // Route for update industrial slot
+    Route::get('/industrial schedule/edit-slot/{slot_id}', [IndustrialEvaluationController::class, 'editIndustrialSlot'])->name('industrial schedule.edit_slot');
+    Route::post('/industrial schedule/edit-slot/{slot_id}', [IndustrialEvaluationController::class, 'editIndustrialSlot'])->name('industrial schedule.edit_slot');
+    Route::put('/industrial schedule/edit-slot/{slot_id}', [IndustrialEvaluationController::class, 'updateIndustrialSlot']);
+
+    // Route for Delete Slot
+    Route::delete('/industrial schedule/edit-slot/{slot_id}', [IndustrialEvaluationController::class, 'deleteIndustrialSlot']);
 });
 
 Route::middleware('auth:student')->group(function () {
@@ -125,7 +138,7 @@ Route::middleware('auth:student')->group(function () {
     Route::get('/fyp', [ProfileController::class, 'showFYP'])->name('showFYP');
     Route::put('/fyp', [ProfileController::class, 'updateFYP']);
 
-    // View Evaluation Schedule
+    // Route for View Evaluation Schedule
     Route::get('/evaluation schedule/student-schedule', [EvaluationScheduleController::class, 'viewSchedule'])->name('evaluation schedule.student_schedule');
 
     // Route for View Rubric List

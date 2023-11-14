@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\IndustrialSlotEvaluator;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class IndustrialEvaluator extends Model
 {
@@ -18,4 +19,8 @@ class IndustrialEvaluator extends Model
     ];
 
     protected $primaryKey = 'industrial_evaluator_id';
+
+    public function industrial_slot_evaluators() {
+        return $this->hasMany(IndustrialSlotEvaluator::class, 'industrial_evaluator_id', 'industrial_evaluator_id');
+    }
 }

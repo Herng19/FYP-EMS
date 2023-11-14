@@ -6,6 +6,8 @@ use App\Models\Evaluation;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\IndustrialSlotEvaluator;
+use App\Models\IndustrialEvaluationSlot;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Testing\Fluent\Concerns\Has;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -90,5 +92,9 @@ class Student extends Authenticatable
 
     public function evaluations() {
         return $this->hasMany(Evaluation::class, 'student_id', 'student_id');
+    }
+
+    public function industrial_evaluation_slot() {
+        return $this->hasOne(IndustrialEvaluationSlot::class, 'student_id', 'student_id');
     }
 }

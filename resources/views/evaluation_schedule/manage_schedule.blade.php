@@ -68,7 +68,7 @@
                                 @if(($schedule->venue_id == $venue->venue_id || $schedule->venue_id == $venue->booth_id) && (date("H:i", strtotime($schedule->start_time))) == $timeslot)
                                     <td class="w-14 p-2 border-l">
                                         <a href="/evaluation schedule/edit-slot/{{$schedule->slot_id}}">
-                                            <div class="text-primary-700 font-bold text-[12px] underline">{{explode(" ", $schedule->name)[0]}}</div>
+                                            <div class="text-primary-700 font-bold text-[11px] underline">{{explode(" ", $schedule->name)[0]}}</div>
                                         </a>
                                     </td>
                                     @php $i = 1; @endphp
@@ -111,27 +111,27 @@
         });
 
         // submit form when generate button is clicked
-        // $('form').on('submit', function(e) {
-        //     e.preventDefault();
-        //     date = $("input[name=date]").val();
-        //     psm_year = $("select[name=psm_year]").val();
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+            date = $("input[name=date]").val();
+            psm_year = $("select[name=psm_year]").val();
 
-        //     $('#animation').removeClass('hidden');
-        //     $.ajax({
-        //           type: "POST",
-        //           url: '/evaluation schedule',
-        //           data: {
-        //             date: date,
-        //             psm_year: psm_year,
-        //           },
-        //           success: function(result) {
-        //             $('#animation').addClass('hidden');
-        //             $('#content').html(jQuery(result).find('#content').html());
-        //           },
-        //           error: function (error) {
-        //             console.log(error);
-        //           }
-        //     });
-        // });
+            $('#animation').removeClass('hidden');
+            $.ajax({
+                  type: "POST",
+                  url: '/evaluation schedule',
+                  data: {
+                    date: date,
+                    psm_year: psm_year,
+                  },
+                  success: function(result) {
+                    $('#animation').addClass('hidden');
+                    $('#content').html(jQuery(result).find('#content').html());
+                  },
+                  error: function (error) {
+                    console.log(error);
+                  }
+            });
+        });
     </script>
 </x-app-layout>

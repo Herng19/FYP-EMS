@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\IndustrialEvaluationSlot;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Venue extends Model
 {
@@ -13,5 +14,9 @@ class Venue extends Model
 
     public function slots() {
         return $this->hasMany(Slot::class, 'venue_id', 'venue_id');
+    }
+
+    public function industrial_evaluation_slots() {
+        return $this->hasMany(IndustrialEvaluationSlot::class, 'venue_id', 'venue_id');
     }
 }

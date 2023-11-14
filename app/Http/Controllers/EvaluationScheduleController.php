@@ -253,6 +253,7 @@ class EvaluationScheduleController extends Controller
 
         // Initiate variables for timeslots, particles num
         $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
+        $rooms_available = Venue::all()->pluck('venue_id')->toArray();
         $num_particles = 20;
         $stud_num = 0; 
 
@@ -294,7 +295,6 @@ class EvaluationScheduleController extends Controller
             
             // If psm year == 1, schedule as the way of psm 1
             if($request->psm_year == '1') {
-                $rooms_available = Venue::all()->pluck('venue_id')->toArray();
                 $rooms = array_slice($rooms_available, 0, ceil($stud_num/count($timeslots)));
                 array_splice($rooms_available, 0, ceil($stud_num/count($timeslots)));
 
@@ -312,7 +312,6 @@ class EvaluationScheduleController extends Controller
                 }
 
                 // Foreach student, insert data into slots, and evaluator list
-
                 foreach($schedule as $slot) {
                     $start_time = date('Y-m-d H:i:s', strtotime("$request->date $slot[0]"));
                     $end_time = date('Y-m-d H:i:s', strtotime("$request->date $slot[0]") + 30*60);
@@ -429,7 +428,7 @@ class EvaluationScheduleController extends Controller
         $min_student_count = min($evaluator_student_counts);
         $balance_penalty = $max_student_count - $min_student_count;
         
-        if($balance_penalty > 2) {
+        if($balance_penalty > 3) {
             $cost += 1;
         }
     
