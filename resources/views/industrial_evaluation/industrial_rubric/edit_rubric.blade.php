@@ -1,96 +1,85 @@
 <x-app-layout>
     <x-slot name="header">
-        Create Industrial Rubric
+        Edit Industrial Rubric
     </x-slot>
+
+    {{-- Success message --}}
+    <x-success-message/>
+
     <div class="my-4 px-8">
-        <form action="/industrial rubric/create-rubric" method="POST">
+        <form action="/industrial rubric/edit/{{ $rubric->industrial_rubric_id }}" method="POST">
+            @method('PUT')
             @csrf
             <div>
                 {{-- Rubric Basic Info --}}
                 <div class="font-bold text-gray">Rubric Info</div>
                 <div class="px-4 mt-2">
-                    <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ old('rubric_name')}}" required/>
+                    <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ $rubric->rubric_name }}" required/>
                 </div>
                 <div class="mt-6 mx-4" id="criteria-form">
                     {{-- Rubric Elements --}}
                     <div class="font-bold text-gray text-sm">Elements</div>
+                    @foreach( $rubric->industrial_rubric_criterias as $i => $rubric_criteria )
                     {{-- Main Criteria --}}
                     <div class="mt-4 px-4" id="criteria-0">
                         <div class="flex items-center">
-                            <label id="main-numbering" class="mr-2 text-gray-500 text-sm font-semibold">1</label>
-                            <x-input id="criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][criteria_name]" value="{{ old('criteria[0][criteria_name]')}}" placeholder="Criteria Name" required/>
+                            <label id="main-numbering" class="mr-2 text-gray-500 text-sm font-semibold">{{ $i+1 }}</label>
+                            <input name="criteria[{{ $i }}][criteria_id]" value="{{ ($rubric_criteria->industrial_criteria_id)? $rubric_criteria->industrial_criteria_id : null }}" hidden />
+                            <x-input id="criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][criteria_name]" value="{{ $rubric_criteria->criteria_name }}" placeholder="Criteria Name" required/>
                             <button type="button" class="delete-criteria ml-2 py-2 px-3 bg-red-50 rounded-full hover:bg-red-100"><i class="fa-regular fa-trash-can text-red-500"></i></button>
                         </div>
+                        @foreach( $rubric_criteria->industrial_sub_criterias as $j => $sub_criteria)
                         {{-- Sub Criteria --}}
                         <div class="px-8 mt-2" id="criteria-0-0">
                             <div class="flex">
                                 <div class="grid grid-cols-5 gap-2 w-full">
                                     <div class="col-span-3 flex items-center">
-                                        <label id="sub-numbering" class="mr-2 text-gray-500 text-sm font-semibold">1.1</label>
-                                        <x-input id="sub-criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub_criteria_name]" value="{{ old('criteria[0][0][sub_criteria_name]')}}" placeholder="Sub Criteria Name" required/>    
+                                        <input name="criteria[{{ $i }}][{{ $j }}][sub_criteria_id]" value="{{ ($sub_criteria->industrial_sub_criteria_id)? $sub_criteria->industrial_sub_criteria_id : null }}" hidden />
+                                        <label id="sub-numbering" class="mr-2 text-gray-500 text-sm font-semibold">{{ $i+1 }}.{{ $j+1 }}</label>
+                                        <x-input id="sub-criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][sub_criteria_name]" value="{{ $sub_criteria->sub_criteria_name}}" placeholder="Sub Criteria Name" required/>    
                                     </div>
                                     <div>
-                                        <x-input id="sub-criteria-weightage" class="block text-sm mt-1 w-full pl-4" type="number" name="criteria[0][0][sub_criteria_weightage]" value="{{ old('criteria[0][0][sub_criteria_weightage]')}}" placeholder="Weightage(%)" min='1' max='100' required/>
+                                        <x-input id="sub-criteria-weightage" class="block text-sm mt-1 w-full pl-4" type="number" name="criteria[{{ $i }}][{{ $j }}][sub_criteria_weightage]" value="{{ $sub_criteria->weightage }}" placeholder="Weightage(%)" min='1' max='100' required/>
                                     </div>
                                     <div>
-                                        <select id="sub-criteria-co-level" name="criteria[0][0][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                            <option value="co-1" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-1") selected @endif>CO 1</option>
-                                            <option value="co-2" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-2") selected @endif>CO 2</option>
-                                            <option value="co-3" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-3") selected @endif>CO 3</option>
+                                        <select id="sub-criteria-co-level" name="criteria[{{ $i }}][{{ $j }}][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
+                                            <option value="co-1" class="text-primary-700 font-semibold" {{ ($sub_criteria->co_level == "co-1")? "selected" : "" }}>CO 1</option>
+                                            <option value="co-2" class="text-primary-700 font-semibold" {{ ($sub_criteria->co_level == "co-2")? "selected" : "" }}>CO 2</option>
+                                            <option value="co-3" class="text-primary-700 font-semibold" {{ ($sub_criteria->co_level == "co-3")? "selected" : "" }}>CO 3</option>
                                         </select>
                                     </div>
                                 </div>
                                 <button type="button" class="delete-sub-criteria ml-2 my-1 py-2 px-3 bg-red-50 rounded-full hover:bg-red-100"><i class="fa-regular fa-trash-can text-red-500"></i></button>
                             </div>
                             <div class="mt-2 pl-6 pr-12">
-                                <x-input id="sub-criteria-description" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub_criteria_description]" value="{{ old('criteria[0][0][sub_criteria_description]')}}" placeholder="Sub Criteria Description" required/>
+                                <x-input id="sub-criteria-description" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][sub_criteria_description]" value="{{ $sub_criteria->sub_criteria_description }}" placeholder="Sub Criteria Description" required/>
                             </div>
 
                             {{-- Description for each level --}}
                             <div class="px-12">
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-0" class="mx-2 text-gray-400" id="scale-numbering">0</label>
-                                    <x-input id="scale-0" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_0]" value="{{ old('criteria[0][0][scale_0]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-1" class="mx-2 text-gray-400" id="scale-numbering">1</label>
-                                    <x-input id="scale-1" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_1]" value="{{ old('criteria[0][0][scale_1]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-2" class="mx-2 text-gray-400" id="scale-numbering">2</label>
-                                    <x-input id="scale-2" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_2]" value="{{ old('criteria[0][0][scale_2]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-3" class="mx-2 text-gray-400" id="scale-numbering">3</label>
-                                    <x-input id="scale-3" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_3]" value="{{ old('criteria[0][0][scale_3]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-4" class="mx-2 text-gray-400" id="scale-numbering">4</label>
-                                    <x-input id="scale-4" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_4]" value="{{ old('criteria[0][0][scale_4]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-5" class="mx-2 text-gray-400" id="scale-numbering">5</label>
-                                    <x-input id="scale-5" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_5]" value="{{ old('criteria[0][0][scale_5]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
+                                @foreach($sub_criteria->industrial_criteria_scales as $k => $criteria_scale)
+                                    <div class="flex items-center mt-2">
+                                        <input name="criteria[{{ $i }}][{{ $j }}][{{ $k }}][scale_id]" value="{{ ($criteria_scale->industrial_criteria_scale_id)? $criteria_scale->industrial_criteria_scale_id : null }}" hidden />
+                                        <label for="scale-{{ $k }}" class="mx-2 text-gray-400" id="scale-numbering">{{ $k }}</label>
+                                        <x-input id="scale-{{ $k }}" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[{{ $i }}][{{ $j }}][{{ $k }}][scale_description]" value="{{ $criteria_scale->scale_description }}" placeholder="Mark Description" required/>
+                                        <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                                    </div>
+                                @endforeach
                                 {{-- Add New Scale Button --}}
                                 <div class="mt-4 ml-8">
                                     <button type="button" class="add-scale-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD SCALE</button>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
                         {{-- Add New Sub Criteria Button --}}
-                        <div class="mt-4 ml-16">
+                        <div class="mt-2 pl-8">
                             <button type="button" class="add-sub-criteria-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD SUB CRITERIA</button>
                         </div>
                     </div>
+                    @endforeach
                     {{-- Add New Criteria Button --}}
-                    <div class="mt-4 ml-8">
+                    <div class="mt-2">
                         <button type="button" class="add-criteria-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD CRITERIA</button>
                     </div>
                 </div>
@@ -98,15 +87,22 @@
 
             {{-- Action Buttons --}}
             <div class="flex justify-end mt-8 mx-8">
-                <a href="/industrial rubric"><x-secondary-button class="mr-2">Cancel</x-secondary-button></a>
-                <x-button>Create</x-button>
+                <a href="/rubric"><x-secondary-button class="mr-2">Cancel</x-secondary-button></a>
+                <x-button>Update</x-button>
             </div>
         </form>
     </div>
 
     {{-- JQuery --}}
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
+            // CSRF Token for submit form request
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             // Add new sub criteria
             $('#criteria-form').on('click', '.add-sub-criteria-button', function(e) {
                 e.preventDefault();
@@ -116,7 +112,9 @@
 
                 // Clear all the input except for "<in between>"
                 new_element.find("input").each(function() {
-                    $(this).val("");
+                    if($(this).val() != "<in between>") {
+                        $(this).val("");
+                    }
                 });
                 new_element.find("select").val("co-1");
 
@@ -151,7 +149,9 @@
 
                 // Clear all the input except for "<in between>"
                 new_element.find("input").each(function() {
-                    $(this).val("");
+                    if($(this).val() != "<in between>") {
+                        $(this).val("");
+                    }
                 });
                 new_element.find("select").val("co-1");
 
@@ -178,6 +178,7 @@
 
                 // Clone the last scale
                 var new_element = $(this).parent().prev().clone();
+                numbering = new_element.find("#scale-numbering").text()
 
                 // Clear all input
                 new_element.find("input").val("");
@@ -185,12 +186,13 @@
                 // Update the numbering of the scale
                 var main_number = new_element.find("#scale-numbering").text(parseInt(new_element.find("#scale-numbering").text()) + 1);
 
-                // Update the id of the criteria
-                var name = new_element.find("input").prop("name");
-                var index = name.indexOf("_");
-                var end_index = name.indexOf("]", index);
-                var new_name = name.substring(0, index+1) + (parseInt(name.substring(index+1, end_index)) + 1) + name.substring(end_index);
-                new_element.find("input").prop("name", new_name);
+                // Update the id and name of the criteria
+                var name = new_element.find("input#scale-"+numbering).prop("name");
+                var index = name.indexOf("][", 11);
+                var end_index = name.indexOf("]", index+1);
+                var new_name = name.substring(0, index+2) + (parseInt(name.substring(index+2, end_index)) + 1) + name.substring(end_index);
+                new_element.find("input#scale-"+numbering).prop("name", new_name).prop("id", "scale-"+(parseInt(numbering)+1));
+                new_element.find("input[name*='[scale_id]']").prop("name", new_name.replace('scale_description', 'scale_id'));
 
                 // Append the new criteria
                 $(this).parent().before(new_element);
@@ -199,12 +201,28 @@
             // Delete the criteria
             $('#criteria-form').on('click', '.delete-criteria', function(e) {
                 e.preventDefault();
+                criteria_id = $(this).parent().find("input[name*='[criteria_id]']").val();
 
                 // Check if there is only one criteria left, if yes, do not allow deletion
                 if($(this).parent().parent().parent().children().length <= 3) {
                     alert("A rubric must have at least one criteria.");
                     return;
                 }
+
+                // Make request to delete the criteria
+                $.ajax({
+                    type: "DELETE",
+                    url: '/industrial rubric/delete-criteria/' + criteria_id,
+                    data: {
+                        criteria_id: criteria_id,
+                    },
+                    success: function(result) {
+                        console.log(result);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
 
                 // Update the numbering of the criteria
                 $(this).parent().parent().nextAll("div").each(function() {
@@ -224,17 +242,36 @@
             // Delete the sub criteria
             $('#criteria-form').on('click', '.delete-sub-criteria', function(e) {
                 e.preventDefault();
+                sub_criteria_id = $(this).parent().find("input[name*='[sub_criteria_id]']").val();
+                console.log(sub_criteria_id);
+
                 // Check if there is only one sub criteria left, if yes, do not allow deletion
                 if($(this).parent().parent().parent().children().length <= 3) {
                     alert("A criteria must have at least one sub criteria.");
                     return;
                 }
 
+                // Make request to delete the criteria
+                $.ajax({
+                    type: "DELETE",
+                    url: '/industrial rubric/delete-sub-criteria/' + sub_criteria_id,
+                    data: {
+                        sub_criteria_id: sub_criteria_id,
+                    },
+                    success: function(result) {
+                        console.log(result);
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+
                 // Update the numbering of the sub criteria
                 $(this).parent().parent().nextAll("div").each(function() {
                     var sub_number = $(this).find("#sub-numbering").text();
                     $(this).find("#sub-numbering").text(sub_number.substring(0, sub_number.indexOf(".") + 1) + (parseInt(sub_number.substring(sub_number.indexOf(".") + 1)) - 1));
                 });
+
 
                 // Remove the sub criteria
                 $(this).parent().parent().remove();
@@ -249,31 +286,74 @@
                     return;
                 }
 
+                scale_id = $(this).parent().find("input[name*='[scale_id]']").val();
+
+                // If scale id not null, then delete the scale from database
+                if(scale_id != null) {
+                    // Make request to delete the scale
+                    $.ajax({
+                        type: "DELETE",
+                        url: '/industrial rubric/delete-scale/' + scale_id,
+                        data: {
+                            scale_id: scale_id,
+                        },
+                        success: function(result) {
+                            console.log(result);
+                        },
+                        error: function (error) {
+                            console.log(error);
+                        }
+                    });
+                }
+
                 // Update the numbering of the scale
                 $(this).parent().nextAll("div:not(:last)").each(function() {
                     var sub_number = $(this).find("#scale-numbering").text();
                     
                     $(this).find("#scale-numbering").text(sub_number - 1);
 
-                    var name = $(this).find("input").prop("name");
-                    var index = name.indexOf("_");
-                    var end_index = name.indexOf("]", index);
-                    var new_name = name.substring(0, index+1) + (parseInt(name.substring(index+1, end_index)) - 1) + name.substring(end_index);
-                    $(this).find("input").prop("name", new_name);
+                    var name = $(this).find("input#scale-"+sub_number).prop("name");
+                    var index = name.indexOf("][", 11);
+                    var end_index = name.indexOf("]", index+1);
+                    console.log(index, end_index);
+                    var new_name = name.substring(0, index+2) + (parseInt(name.substring(index+2, end_index)) - 1) + name.substring(end_index);
+                    $(this).find("input#scale-"+sub_number).prop("name", new_name).prop("id", "scale-"+(sub_number-1));
+                    $(this).find("input[name*='[scale_id]']").prop("name", new_name.replace('scale_description', 'scale_id'));
                 });
 
                 // Remove the scale
                 $(this).parent().remove();
             });
 
-            // Validate total weightage == 100 when submitting form
+            // Hide the extra options if the evaluation type is industrial evaluation
+            $('#evaluation-type').change(function(e) {
+                e.preventDefault();
+                var evaluation_type = $(this).val();
+
+                if(evaluation_type == "industrial-evaluation") {
+                    $('#extra_options').hide();
+                } else {
+                    $('#extra_options').show();
+                }
+            });
+
+            // Validate the total weightage == 100 when submitting form
             $('form').on('submit', function(e) {
+                // Check if total weightage == 100
+                var total_weightage = 0;
+                $('input[name*="sub_criteria_weightage"]').each(function() {
+                    total_weightage += parseInt($(this).val());
+                });
+                if(total_weightage != 100) {
+                    alert("Total weightage must be 100.");
+                }
+
                 // Check if the number of scales is same for all sub criteria
                 var number_of_scales = 0;
                 $('input[name*="sub_criteria_name"]').each(function() {
                     var scales = 0;
-                    $(this).parent().parent().parent().parent().find('input[name*="scale_"]').each(function() {
-                        scales += 1;
+                    $(this).parent().parent().parent().parent().find('input[name*="scale_description"]').each(function() {
+                        scales++;
                     });
                     if(number_of_scales == 0) {
                         number_of_scales = scales;
@@ -283,16 +363,6 @@
                         e.preventDefault();
                     }
                 });
-
-                // Check if total weightage == 100
-                var total_weightage = 0;
-                $('input[name*="sub_criteria_weightage"]').each(function() {
-                    total_weightage += parseInt($(this).val());
-                });
-                if(total_weightage != 100) {
-                    alert("Total weightage must be 100.");
-                    e.preventDefault();
-                }
             });
         });
     </script>

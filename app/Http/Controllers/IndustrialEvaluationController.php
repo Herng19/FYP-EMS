@@ -7,9 +7,13 @@ use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\IndustrialEvaluator;
+use App\Models\IndustrialSubCriteria;
+use App\Models\IndustrialCriteriaScale;
 use App\Models\IndustrialSlotEvaluator;
 use App\Rules\industrialSlotCrashVenue;
 use App\Models\IndustrialEvaluationSlot;
+use App\Models\IndustrialRubricCriteria;
+use App\Models\IndustrialEvaluationRubric;
 use App\Models\IndustrialEvaluationSchedule;
 use App\Rules\industrialEvaluatorCrashTimeslot;
 
@@ -107,9 +111,8 @@ class IndustrialEvaluationController extends Controller
     // Function to show create industrial slot form
     public function newIndustrialSlot(Request $request) {
         $students = Student::where('top_student', '=', '1')->get()->sortBy('name');
-        (isset($request->student_id))? $selected_student = Student::find($request->student_id) : ((null !== $request->old('name'))? $selected_student = Student::find($request->old('name')) : $selected_student = Student::all()->sortBy('name')->first());
+        (isset($request->student_id))? $selected_student = Student::find($request->student_id) : ((null !== $request->old('name'))? $selected_student = Student::find($request->old('name')) : $selected_student = Student::where('top_student', '=', '1')->first());
  
-
         $venues = Venue::all();
         $timeslots = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
         $available_evaluators = IndustrialEvaluator::all();
@@ -239,8 +242,8 @@ class IndustrialEvaluationController extends Controller
         return redirect("/industrial schedule")->with('success-message', 'Slot Deleted Successfully');
     }
 
-     // Function to schedule industrial evaluation schedule
-     public function scheduleIndustrialSchedule(Request $request) {
+    // Function to schedule industrial evaluation schedule
+    public function scheduleIndustrialSchedule(Request $request) {
         // If industrial evaluators < 2, return error
         if(IndustrialEvaluator::all()->count() < 2) {
             return redirect('/industrial schedule')->with('error-message', 'Please add at least 2 industrial evaluators before scheduling.');
@@ -501,7 +504,171 @@ class IndustrialEvaluationController extends Controller
 
     // Function to show industrial rubric list
     public function showIndustrialRubricList() {
+        $rubrics = IndustrialEvaluationRubric::paginate(10);
 
+        return view('industrial_evaluation.industrial_rubric.industrial_rubric_list', ["rubrics" => $rubrics]);
+    }
+
+    // Function to show single rubric
+    public function showIndustrialRubric($rubric_id) {
+        $rubric = IndustrialEvaluationRubric::find($rubric_id);
+        $scale_num = count($rubric->industrial_rubric_criterias[0]->industrial_sub_criterias[0]->industrial_criteria_scales);
+
+        return view('industrial_evaluation.industrial_rubric.view_rubric', [
+            'rubric' => $rubric, 
+            'scale_num' => $scale_num, 
+        ]);
+    }
+
+    // Function to show create industrial rubric form
+    public function newIndustrialRubric() {
+        return view('industrial_evaluation.industrial_rubric.create_rubric');
+    }
+
+    // Function to create industrial rubric
+    public function createIndustrialRubric(Request $request) {
+        $rubric_id = IndustrialEvaluationRubric::create([
+            'research_group_id' => 1, 
+            'rubric_name' => $request->rubric_name,
+        ])->industrial_rubric_id;
+
+        // Insert into rubric_criteria
+        foreach($request->criteria as $criteria => $sub_criterias) {
+            $criteria_id = IndustrialRubricCriteria::create([
+                'industrial_rubric_id' => $rubric_id,
+                'criteria_name' => $request->criteria[$criteria]['criteria_name'],
+            ])->id;
+
+            array_shift($sub_criterias); // Remove the criteria name
+
+            // Insert into sub_criteria
+            foreach($sub_criterias as $sub_criteria => $value) {
+                $sub_criteria_id = IndustrialSubCriteria::create([
+                    'industrial_criteria_id' => $criteria_id,
+                    'sub_criteria_name' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_name"],
+                    'sub_criteria_description' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_description"],
+                    'co_level' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_co_level"],
+                    'weightage' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_weightage"],
+                ])->id;
+
+
+                // Insert into criteria_scale
+                for($i = 0; $i < count($sub_criterias[$sub_criteria])-4; $i++) {
+                    IndustrialCriteriaScale::create([
+                        'industrial_sub_criteria_id' => $sub_criteria_id,
+                        'scale_level' => $i,
+                        'scale_description' => $request->criteria[$criteria][$sub_criteria]["scale_" . strval($i)],
+                    ]);
+                }
+            }
+        }
+
+        return redirect('/industrial rubric')->with('success-message', 'Rubric created successfully!');
+    }
+
+    // Function to show edit industrial rubric form
+    public function editIndustrialRubric($rubric_id, Request $request) {
+        $rubric = IndustrialevaluationRubric::find($rubric_id);
+
+        return view('industrial_evaluation.industrial_rubric.edit_rubric', ['rubric' => $rubric]);
+    }
+
+    // Function to update industrial rubric
+    public function updateIndustrialRubric($rubric_id, Request $request) {
+        IndustrialEvaluationRubric::find($rubric_id)->update([
+            'research_group_id' => 1, 
+            'rubric_name' => $request->rubric_name,
+        ]);
+
+        foreach($request->criteria as $criteria => $sub_criterias) {
+            if($request->criteria[$criteria]['criteria_id'] == null) {
+                $criteria_id = IndustrialRubricCriteria::create([
+                    'industrial_rubric_id' => $rubric_id,
+                    'criteria_name' => $request->criteria[$criteria]['criteria_name'],
+                ])->id;
+            }
+            else {
+                $criteria_id = $request->criteria[$criteria]['criteria_id'];
+                IndustrialRubricCriteria::where('industrial_criteria_id', '=', $criteria_id)
+                            ->update(['criteria_name' => $request->criteria[$criteria]['criteria_name']]);
+            }
+
+            array_shift($sub_criterias); // Remove the criteria id
+            array_shift($sub_criterias); // Remove the criteria name
+
+
+            // Insert into sub_criteria
+            foreach($sub_criterias as $sub_criteria => $value) {
+                if($sub_criterias[$sub_criteria]["sub_criteria_id"] != null) {
+                    $sub_criteria_id = $sub_criterias[$sub_criteria]["sub_criteria_id"];
+                    IndustrialSubCriteria::where('industrial_sub_criteria_id', '=', $sub_criteria_id)
+                                ->update([
+                                    'sub_criteria_name' => $sub_criterias[$sub_criteria]["sub_criteria_name"],
+                                    'sub_criteria_description' => $sub_criterias[$sub_criteria]["sub_criteria_description"],
+                                    'co_level' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
+                                    'weightage' => $sub_criterias[$sub_criteria]["sub_criteria_weightage"]
+                                ]);
+                }
+                else {
+                    $sub_criteria_id = IndustrialSubCriteria::create([
+                        'industrial_criteria_id' => $criteria_id,
+                        'sub_criteria_name' => $sub_criterias[$sub_criteria]["sub_criteria_name"],
+                        'sub_criteria_description' => $sub_criterias[$sub_criteria]["sub_criteria_description"],
+                        'co_level' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
+                        'weightage' => $sub_criterias[$sub_criteria]["sub_criteria_weightage"]
+                    ])->id;
+                }
+
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria id
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria name
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria weightage
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria co level
+                array_shift($sub_criterias[$sub_criteria]); // Remove the sub criteria description
+
+                // Insert into criteria_scale
+                foreach($sub_criterias[$sub_criteria] as $i => $scale) {
+                    IndustrialCriteriaScale::UpdateOrCreate(
+                        ['industrial_criteria_scale_id'  => $sub_criterias[$sub_criteria][$i]['scale_id']], 
+                        ['industrial_sub_criteria_id' => $sub_criteria_id, 'scale_level' => $i, 'scale_description' => $sub_criterias[$sub_criteria][$i]['scale_description']]
+                    );
+                }
+            }
+        }
+        return back()->with('success-message', 'Rubric updated successfully!');
+    }
+
+    // Function to delete industrial rubric
+    public function deleteIndustrialRubric($rubric_id) {
+        IndustrialEvaluationRubric::find($rubric_id)->delete();
+
+        return redirect('/industrial rubric')->with('success-message', 'Rubric deleted successfully.');
+    }
+
+    // Function to delete sub-criteria
+    public function deleteCriteria($criteria_id) {
+        $sub_criterias = IndustrialSubCriteria::where('industrial_criteria_id', '=', $criteria_id)->get();
+        foreach($sub_criterias as $sub_criteria) {
+            IndustrialCriteriaScale::where('industrial_sub_criteria_id', '=', $sub_criteria->industrial_sub_criteria_id)->delete();
+        }
+        IndustrialSubCriteria::where('industrial_criteria_id', '=', $criteria_id)->delete();
+        IndustrialRubricCriteria::where('industrial_criteria_id', '=', $criteria_id)->delete();
+
+        return 0;
+    }
+
+    // Function to delete criteria
+    public function deleteSubCriteria($sub_criteria_id) {
+        IndustrialCriteriaScale::where('industrial_sub_criteria_id', '=', $sub_criteria_id)->delete();
+        IndustrialSubCriteria::where('industrial_sub_criteria_id', '=', $sub_criteria_id)->delete();
+
+        return 0;
+    }
+
+    // Function to delete scale\
+    public function deleteScale($scale_id) {
+        IndustrialCriteriaScale::where('industrial_criteria_scale_id', '=', $scale_id)->delete();
+
+        return 0;
     }
 
     /**

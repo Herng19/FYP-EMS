@@ -37,6 +37,7 @@
 
                 {{-- Print out every criteria for rurbic 1--}}
                 <input name="evaluation_type" value="{{ $rubric->evaluation_type }}" hidden/>
+                <input name="scale_num" value="{{ count($rubric->rubric_criterias[0]->sub_criterias[0]->criteria_scales) }}" hidden/>
                 @foreach($rubric->rubric_criterias as $criteria)
                 <div class="mt-4 grow">
                     <div class="font-bold">{{ $criteria->criteria_name }}</div>
@@ -48,7 +49,7 @@
                         <div>
                             <select id="sub_criteria_scale" name="scale[]" class="block text-sm font-semibold mt-1 w-full px-4 py-2 border-0 rounded-md drop-shadow" required>
                                 {{-- Check if recorded marks exist, if yes display, else display 0 --}}
-                                @for($i = 0; $i <= 5; $i++)
+                                @for($i = 0; $i <= count($sub_criteria->criteria_scales)-1; $i++)
                                 {{$is_this_criteria = 0}}
                                     @foreach( $marks as $mark )
                                         @if( $mark->sub_criteria_id == $sub_criteria->sub_criteria_id && $mark->scale == $i)
@@ -85,6 +86,7 @@
                         
                     {{-- Print out every criteria for evaluation 3--}}
                     <input name="evaluation_type_2" value="{{ $rubric_2->evaluation_type }}" hidden/>
+                    <input name="scale_num_2" value="{{ $rubric_2->criterias[0]->sub_criterias[0]->criteria_scales }}" hidden/>
                     @foreach($rubric_2->rubric_criterias as $criteria)
                     <div class="mt-4 grow">
                         <div class="font-bold">{{ $criteria->criteria_name }}</div>
@@ -95,7 +97,7 @@
                             <input name="weightage_2[]" class="bg-white text-gray-400 font-semibold" readonly="readonly" value="{{ $sub_criteria->weightage }}"/>
                             <div>
                                 <select id="sub_criteria_scale" name="scale_2[]" class="block text-sm font-semibold mt-1 w-full px-4 py-2 border-0 rounded-md drop-shadow" required>
-                                    @for($i = 0; $i <= 5; $i++)
+                                    @for($i = 0; $i <= count($sub_criteria->criteria_scales)-1; $i++)
                                     {{$is_this_criteria = 0}}
                                         @foreach( $marks_2 as $mark )
                                             @if( $mark->sub_criteria_id == $sub_criteria->sub_criteria_id && $mark->scale == $i)

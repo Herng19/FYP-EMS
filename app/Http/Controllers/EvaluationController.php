@@ -29,7 +29,7 @@ class EvaluationController extends Controller
                     ->where('supervisor_lists.lecturer_id', '=', auth()->user()->lecturer_id);
 
         // Union both queries
-        $all_evaluatees = $evaluatees->unionAll($supervisees)->paginate(10);
+        $all_evaluatees = $supervisees->unionAll($evaluatees)->paginate(10);
 
         // Get all marks that given by this lecturer
         $all_marks = Evaluation::where('lecturer_id', '=', auth()->user()->lecturer_id)->get();
@@ -126,7 +126,7 @@ class EvaluationController extends Controller
         // Calculate total marks
         $marks = 0; 
         foreach($request->scale as $i => $mark) {
-            $marks += $mark*($request->weightage[$i]/5);
+            $marks += ($request->weightage[$i])*($mark/($request->scale_num-1));
         }
 
         // Insert evaluation record
@@ -148,7 +148,7 @@ class EvaluationController extends Controller
             // Calculate total marks
             $marks_2 = 0; 
             foreach($request->scale_2 as $i => $mark) {
-                $marks_2 += $mark*($request->weightage_2[$i]/5);
+                $marks_2 += ($request->weightage_2[$i])*($mark/($request->scale_num_2-1));
             }
 
             // Insert evaluation record

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        {{__('Edit Slot')}}
+        {{__('Create Industrial Slot')}}
     </x-slot>
 
     {{-- Edit Slot Form --}}

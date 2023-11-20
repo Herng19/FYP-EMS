@@ -6,12 +6,6 @@
         <form action="/rubric/create-rubric" method="POST">
             @csrf
             <div>
-                @error('criteria.0.0.sub_criteria_weightage')
-                    <div x-data="{show:true}" x-init="setTimeout(() => show = false, 3000)" x-show="show" class="flex bg-red-50 text-start py-2 font-semibold text-sm text-red-600 rounded-md items-center justify-start my-2 mx-2">
-                        <i class="fa-regular fa-circle-xmark fa-lg mx-4"></i>
-                        {{ $message }}
-                    </div>
-                @enderror
                 {{-- Rubric Basic Info --}}
                 <div class="font-bold text-gray">Rubric Info</div>
                 <div class="px-4 mt-2">
@@ -19,7 +13,7 @@
                     <div class="flex grid grid-cols-3 gap-4 mt-2">
                         <div>
                             <select id="research-group" name="research_group" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                <option value="" class="text-primary-700 font-semibold" default>Reseach Group</option>
+                                <option value="" class="text-primary-700 font-semibold" default>Research Group</option>
                                 @foreach ($research_groups as $research_group)
                                     @if($research_group->research_group_id == old('research_group'))
                                         <option value="{{ $research_group->research_group_id }}" class="text-primary-700 font-semibold" selected>{{ $research_group->research_group_name }} ({{ $research_group->research_group_short_form }} )</option>

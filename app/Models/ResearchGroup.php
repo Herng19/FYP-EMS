@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\IndustrialEvaluationRubric;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ResearchGroup extends Model
 {
@@ -21,5 +22,9 @@ class ResearchGroup extends Model
 
     public function rubrics() {
         return $this->hasMany(Rubric::class, 'research_group_id', 'research_group_id');
+    }
+
+    public function industrial_rubrics() {
+        return $this->hasMany(IndustrialEvaluationRubric::class, 'research_group_id', 'research_group_id');
     }
 }

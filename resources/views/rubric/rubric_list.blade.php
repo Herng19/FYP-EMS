@@ -37,7 +37,7 @@
                     @endforeach
                 </tbody>
             </x-show-table>
-            <div class="my-8">
+            <div class="my-4">
                 {{ $rubrics->links() }}
             </div>
         </div>

@@ -28,7 +28,7 @@
                 @endforeach
             </tbody>
         </x-show-table>
-        <div clasblue"5
+        <div class="my-4">
             {{ $evaluatees->links() }}
         </div>
     </div>

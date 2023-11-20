@@ -22,25 +22,11 @@ class LecturerFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
     public function definition(): array
     {
         static $number = 1;
-        if($number <= 12){
-            return [
-                'research_group_id' => $number++, 
-                'name' => $this->faker->name(),
-                'email' => $this->faker->unique()->safeEmail(),
-                'email_verified_at' => now(),
-                'password' => bcrypt('test'), // password
-                'two_factor_secret' => null,
-                'two_factor_recovery_codes' => null,
-                'remember_token' => Str::random(10),
-                'profile_photo_path' => null,
-                'current_team_id' => null,
-            ];
-        }
-        else{
-            return [
+        return [
                 'research_group_id' => ($number++%12)+1, 
                 'name' => $this->faker->name(),
                 'email' => $this->faker->unique()->safeEmail(),
@@ -52,23 +38,13 @@ class LecturerFactory extends Factory
                 'profile_photo_path' => null,
                 'current_team_id' => null,
             ];
-        }
     }
 
     public function configure(){
-        static $number = 1;
-        if($number <= 12) {
-            $number++;
-            return $this->afterCreating(function (Lecturer $lecturer) {
-                $lecturer->assignRole('supervisor', 'evaluator', "head of research group");
-            });
-        }
-        else{
-            $number++;
-            return $this->afterCreating(function (Lecturer $lecturer) {
-                $lecturer->assignRole('supervisor', 'evaluator');
-            });
-        }
+        return $this->afterCreating(function (Lecturer $lecturer) {
+            $lecturer->assignRole('supervisor', 'evaluator');
+        });
+
     }
 
     /**
