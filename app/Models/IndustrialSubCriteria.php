@@ -28,4 +28,8 @@ class IndustrialSubCriteria extends Model
     public function industrial_criteria_scales() {
         return $this->hasMany(IndustrialCriteriaScale::class, 'industrial_sub_criteria_id', 'industrial_sub_criteria_id');
     }
+
+    public function industrial_criteria_marks() {
+        return $this->hasMany(IndustrialCriteriaMark::class, 'industrial_sub_criteria_id', 'industrial_sub_criteria_id');
+    }
 }

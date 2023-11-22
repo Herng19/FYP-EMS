@@ -199,11 +199,6 @@ class RubricController extends Controller
 
     // Function to delete sub-criteria
     public function deleteCriteria($criteria_id) {
-        $sub_criterias = SubCriteria::where('criteria_id', '=', $criteria_id)->get();
-        foreach($sub_criterias as $sub_criteria) {
-            CriteriaScale::where('sub_criteria_id', '=', $sub_criteria->sub_criteria_id)->delete();
-        }
-        SubCriteria::where('criteria_id', '=', $criteria_id)->delete();
         RubricCriteria::where('criteria_id', '=', $criteria_id)->delete();
 
         return 0;
@@ -211,7 +206,6 @@ class RubricController extends Controller
 
     // Function to delete criteria
     public function deleteSubCriteria($sub_criteria_id) {
-        CriteriaScale::where('sub_criteria_id', '=', $sub_criteria_id)->delete();
         SubCriteria::where('sub_criteria_id', '=', $sub_criteria_id)->delete();
 
         return 0;

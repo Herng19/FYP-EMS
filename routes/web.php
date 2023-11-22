@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RubricController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
@@ -137,6 +138,9 @@ Route::middleware('auth:web')->group(function () {
 
     // Route for View Single Rubric
     Route::get('/industrial rubric/view/{rubric_id}', [IndustrialEvaluationController::class, 'showIndustrialRubric'])->name('industrial rubric.view_rubric');
+    
+    // Route for Print Rubric
+    Route::get('/industrial rubric/print/{rubric_id}', [IndustrialEvaluationController::class, 'printIndustrialRubric'])->name('industrial rubric.print_rubric');
 
     // Route for Create Industrial Rubric
     Route::get('/industrial rubric/create-rubric', [IndustrialEvaluationController::class, 'newIndustrialRubric'])->name('industrial rubric.new_rubric');
@@ -153,6 +157,16 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/industrial rubric/delete-criteria/{criteria_id}', [IndustrialEvaluationController::class, 'deleteCriteria'])->name('industrial rubric.delete_criteria');
     Route::delete('/industrial rubric/delete-sub-criteria/{sub_criteria_id}', [IndustrialEvaluationController::class, 'deleteSubCriteria'])->name('industrial rubric.delete_sub_criteria');
     Route::delete('/industrial rubric/delete-scale/{scale_id}', [IndustrialEvaluationController::class, 'deleteScale'])->name('industrial rubric.delete_scale');
+
+    // Route for Industrial Evaluation
+    Route::get('/industrial evaluation', [IndustrialEvaluationController::class, 'showTopStudentList'])->name('industrial evaluation');
+
+    // Route for Edit Industrial Evaluation
+    Route::get('/industrial evaluation/{student_id}', [IndustrialEvaluationController::class, 'showIndustrialEvaluationForm'])->name('industrial evaluation.show_evaluation_form');
+    Route::post('/industrial evaluation/{student_id}', [IndustrialEvaluationController::class, 'evaluateIndustrialStudent'])->name('industrial evaluation.evaluate_student');
+
+    // Route for View Report
+    Route::get('/report', [ReportController::class, 'showReport'])->name('report');
 });
 
 Route::middleware('auth:student')->group(function () {
@@ -172,11 +186,3 @@ Route::middleware('auth:student')->group(function () {
     // Route for Top Students List
     Route::get('/top students/student-view', [TopStudentController::class, 'showTopStudents'])->name('top students.student_top_student_list');
 });
-
-Route::get('/industrial evaluation', function () {
-    return view('industrial_evaluation.industrial_evaluation.top_student_list');
-})->name('industrial evaluation');
-
-Route::get('/report', function () {
-    return view('report.report_and_progress');
-})->name('report');

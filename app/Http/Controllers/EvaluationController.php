@@ -90,7 +90,7 @@ class EvaluationController extends Controller
                                     ->pluck('evaluation_id')
                                     ->toArray();
 
-        // If there if only 1 evaluation, then it is evaluation 1 or evaluation 2
+        // If there is only 1 evaluation, then it is evaluation 1 or evaluation 2
         if( count($evaluation_ids) == 1 ) {
             $evaluation_id = $evaluation_ids[0];
             $evaluation_id_2 = null;

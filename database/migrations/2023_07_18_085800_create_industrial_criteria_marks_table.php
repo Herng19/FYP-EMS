@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('industrial_criteria_marks', function (Blueprint $table) {
             $table->id('industrial_criteria_mark_id');
-            $table->foreignId('industrial_sub_criteria_id')->constrained('industrial_sub_criterias', 'industrial_sub_criteria_id');
-            $table->foreignId('industrial_evaluation_id')->constrained('industrial_evaluations', 'industrial_evaluation_id');
+            $table->foreignId('industrial_sub_criteria_id')->constrained('industrial_sub_criterias', 'industrial_sub_criteria_id')->cascadeOnDelete();
+            $table->foreignId('industrial_evaluation_id')->constrained('industrial_evaluations', 'industrial_evaluation_id')->cascadeOnDelete();
             $table->integer('scale');
         });
     }

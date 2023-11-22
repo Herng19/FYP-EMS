@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Models\Venue;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\IndustrialEvaluator;
+use App\Models\IndustrialEvaluation;
 use App\Models\IndustrialSubCriteria;
+use App\Models\IndustrialCriteriaMark;
 use App\Models\IndustrialCriteriaScale;
 use App\Models\IndustrialSlotEvaluator;
 use App\Rules\industrialSlotCrashVenue;
@@ -520,6 +523,15 @@ class IndustrialEvaluationController extends Controller
         ]);
     }
 
+    // Function to print rubric
+    public function printIndustrialRubric($rubric_id) {
+        $rubric = IndustrialEvaluationRubric::find($rubric_id);
+
+        $pdf = PDF::loadView('industrial_evaluation.industrial_rubric.print_rubric', compact('rubric'));
+
+        return $pdf->download($rubric->rubric_name.'.pdf');
+    }
+
     // Function to show create industrial rubric form
     public function newIndustrialRubric() {
         return view('industrial_evaluation.industrial_rubric.create_rubric');
@@ -646,11 +658,6 @@ class IndustrialEvaluationController extends Controller
 
     // Function to delete sub-criteria
     public function deleteCriteria($criteria_id) {
-        $sub_criterias = IndustrialSubCriteria::where('industrial_criteria_id', '=', $criteria_id)->get();
-        foreach($sub_criterias as $sub_criteria) {
-            IndustrialCriteriaScale::where('industrial_sub_criteria_id', '=', $sub_criteria->industrial_sub_criteria_id)->delete();
-        }
-        IndustrialSubCriteria::where('industrial_criteria_id', '=', $criteria_id)->delete();
         IndustrialRubricCriteria::where('industrial_criteria_id', '=', $criteria_id)->delete();
 
         return 0;
@@ -658,7 +665,6 @@ class IndustrialEvaluationController extends Controller
 
     // Function to delete criteria
     public function deleteSubCriteria($sub_criteria_id) {
-        IndustrialCriteriaScale::where('industrial_sub_criteria_id', '=', $sub_criteria_id)->delete();
         IndustrialSubCriteria::where('industrial_sub_criteria_id', '=', $sub_criteria_id)->delete();
 
         return 0;
@@ -679,6 +685,73 @@ class IndustrialEvaluationController extends Controller
 
     // Function to show all evaluatable top students list
     public function showTopStudentList() {
+        $top_students = Student::orderBy('name')->where('top_student', '=', 1)->where('psm_year', '=', 2)->paginate(10);
 
+        // Get all marks that given by this lecturer
+        $all_marks = IndustrialEvaluation::all();
+        $all_marks_converted = array(); 
+
+        // Convert the marks to an array with student_id as key and marks as value, if same student exist, average the marks to 100%
+        foreach($all_marks as $mark) {
+            if(array_key_exists($mark->student_id, $all_marks_converted)) {
+                $all_marks_converted[$mark->student_id] = ($all_marks_converted[$mark->student_id] + $mark->marks)/2 ;
+            }else {
+                $all_marks_converted[$mark->student_id] = $mark->marks; 
+            }
+        }
+
+        return view('industrial_evaluation.industrial_evaluation.top_student_list', [
+            'top_students' => $top_students, 
+            'total_marks' => $all_marks_converted
+        ]);
+    }
+
+    // Function to show the industrial evaluation form
+    public function showIndustrialEvaluationForm($student_id) {
+        $student = Student::find($student_id);
+
+        // Get the Industrial Rubric
+        $rubric = IndustrialEvaluationRubric::orderBy('updated_at')->first();
+
+        // If no rubric found, return
+        if($rubric == null) {
+            return redirect()->route('industrial evaluation')->with('error-message', 'Rubric not found');
+        }
+
+        // Get industrial evaluation of the student being evaluate
+        $evaluation = IndustrialEvaluation::where('student_id', '=', $student_id)->first();
+
+        // Get all recorded marks for the student's evaluation
+        ($student->industrial_evaluation != null)? $marks = IndustrialCriteriaMark::where('industrial_evaluation_id', '=', $evaluation->industrial_evaluation_id)->get() : $marks = array();
+        
+        return view('industrial_evaluation.industrial_evaluation.edit_evaluation', [
+            'student' => $student,
+            'rubric' => $rubric, 
+            'marks' => $marks, 
+        ]);
+    }
+
+    public function evaluateIndustrialStudent($student_id, Request $request) {
+        // Calculate total marks
+        $marks = 0; 
+        foreach($request->scale as $i => $mark) {
+            $marks += ($request->weightage[$i])*($mark/($request->scale_num-1));
+        }
+
+        // Insert evaluation record
+        $industrial_evaluation_id = IndustrialEvaluation::updateOrCreate(
+            ['student_id' => $student_id], 
+            ['marks' => $marks]
+        )->industrial_evaluation_id;
+
+        // insert each sub criteria scale
+        foreach($request->sub_criteria_id as $i => $criteria_id ) {
+            IndustrialCriteriaMark::updateOrCreate(
+                ['industrial_sub_criteria_id' => $criteria_id, 'industrial_evaluation_id' => $industrial_evaluation_id], 
+                ['scale' => $request->scale[$i]], 
+            );
+        }
+
+        return redirect()->route('industrial evaluation')->with('success-message', 'Evaluation recorded successfully.');
     }
 }

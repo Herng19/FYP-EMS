@@ -42,23 +42,23 @@
             <tr>
                 <th>Elements</th>
                 <th>CO</th>
-                @for($i = 0; $i < count($rubric->rubric_criterias[0]->sub_criterias[0]->criteria_scales); $i++)
+                @for($i = 0; $i < count($rubric->industrial_rubric_criterias[0]->industrial_sub_criterias[0]->industrial_criteria_scales); $i++)
                     <th>{{ $i }}</th>
                 @endfor
                 <th>Weightage</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($rubric->rubric_criterias as $i => $rubric_criteria)
+            @foreach ($rubric->industrial_rubric_criterias as $i => $rubric_criteria)
                 <tr class="spacer"><td style="height: 4px;"> </td></tr>
                 <tr>
                     <td style="font-weight: bold; text-align: left; font-size: 14px;">{{ $i+1 }} {{ $rubric_criteria->criteria_name }}</td>
                 </tr>
-                @foreach ($rubric_criteria->sub_criterias as $j => $sub_criteria)
+                @foreach ($rubric_criteria->industrial_sub_criterias as $j => $sub_criteria)
                     <tr>
                         <td style="padding-left: 12px; text-align: left; {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $i+1 }}.{{ $j+1 }} {{ $sub_criteria->sub_criteria_name }}</td>
                         <td style="text-transform: uppercase; {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $sub_criteria->co_level }}</td>
-                        @foreach ($sub_criteria->criteria_scales as $scale)
+                        @foreach ($sub_criteria->industrial_criteria_scales as $scale)
                             @if( $scale->scale_level == 2 || $scale->scale_level == 4 )
                                 <td style="color: rgb(100, 100, 100); {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $scale->scale_description }}</td>
                             @else

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Evaluation;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\IndustrialEvaluation;
 use Laravel\Jetstream\HasProfilePhoto;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\IndustrialSlotEvaluator;
@@ -96,5 +97,9 @@ class Student extends Authenticatable
 
     public function industrial_evaluation_slot() {
         return $this->hasOne(IndustrialEvaluationSlot::class, 'student_id', 'student_id');
+    }
+
+    public function industrial_evaluation() {
+        return $this->hasOne(IndustrialEvaluation::class, 'student_id', 'student_id');
     }
 }

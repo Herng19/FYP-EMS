@@ -87,7 +87,7 @@
 
             {{-- Action Buttons --}}
             <div class="flex justify-end mt-8 mx-8">
-                <a href="/rubric"><x-secondary-button class="mr-2">Cancel</x-secondary-button></a>
+                <a href="/industrial rubric"><x-secondary-button class="mr-2">Cancel</x-secondary-button></a>
                 <x-button>Update</x-button>
             </div>
         </form>
@@ -202,6 +202,7 @@
             $('#criteria-form').on('click', '.delete-criteria', function(e) {
                 e.preventDefault();
                 criteria_id = $(this).parent().find("input[name*='[criteria_id]']").val();
+                console.log(criteria_id);
 
                 // Check if there is only one criteria left, if yes, do not allow deletion
                 if($(this).parent().parent().parent().children().length <= 3) {
