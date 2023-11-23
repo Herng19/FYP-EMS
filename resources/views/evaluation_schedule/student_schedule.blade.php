@@ -5,6 +5,7 @@
     <div class="mx-12">
         {{-- Normal Evaluation --}}
         <div class="justify-start px-4 py-4 shadow-md rounded-lg bg-white">
+            @if(null != $student->slot)
             <div class="text-primary-700 font-bold text-xl">Evaluation 1</div>
             <div class="grid grid-cols-6 gap-4 ml-8 mt-4">
                 <div class="inline-block text-gray-500 font-bold text-sm text-end">Evaluation Date : </div>
@@ -28,6 +29,9 @@
                     <div class=""></div>
                 @endforeach
             </div>
+            @else
+            <div class="font-semibold">No Slot Found</div>
+            @endif
         </div>
 
         {{-- Industrial Evaluation --}}

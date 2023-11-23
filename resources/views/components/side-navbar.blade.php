@@ -64,7 +64,7 @@
         </x-navbar-item>
 
         {{-- Top Students --}}
-        <x-navbar-item href="{{ (auth('web')->check()) ? route('top students') :  route('top students.student_top_student_list')}}" :active="request()->routeIs('top students.*') || request()->routeIs('top students')">
+        <x-navbar-item href="{{ (auth('web')->check()) ? route('top students') :  route('top students.student_top_student_list') }}" :active="request()->routeIs('top students.*') || request()->routeIs('top students')">
             <x-slot name="icon">
                 <i class="fa-light fa-crown"></i>
             </x-slot>
@@ -135,7 +135,7 @@
         @endrole
 
         {{-- Report --}}
-        <x-navbar-item href="{{ route('report') }}" :active="request()->routeIs('report.*') || request()->routeIs('report')">
+        <x-navbar-item href="{{ (auth('web')->check()) ? route('report') :  route('report.student_report') }}" :active="request()->routeIs('report.*') || request()->routeIs('report')">
             <x-slot name="icon">
                 <i class="fa-light fa-chart-mixed"></i>
             </x-slot>

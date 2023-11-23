@@ -14,19 +14,24 @@
                 </a>
             </div>
             <div class="py-8 px-4">
-                <div class="mt-4 flex">
+                <div class="mt-4 flex items-center">
                     <i class="fa-regular fa-calendar-minus text-primary-700 p-4 bg-primary-100 rounded-full h-12 w-12"></i>
+                    @if(null != $student->slot)
                     <div class="ml-4 items-center">
                         <div class="text-primary-100 text-xs font-semibold">
-                            {{ strtoupper(date("d M Y", strtotime($student->slot->start_time))) }}, {{ strtoupper(date("l", strtotime($student->slot->start_time))) }}
+                            {{ strtoupper(date("d M Y", strtotime($student->slot->start_time))), strtoupper(date("l", strtotime($student->slot->start_time))) }}
                         </div>
                         <div class="text-md font-bold text-white">
                             {{(date("H:i", strtotime($student->slot->start_time)))}} - {{(date("H:i", strtotime($student->slot->end_time)))}}
                         </div>
                     </div>
+                    @else
+                    <div class="text-primary-100 ml-4">No Slot</div>
+                    @endif
                 </div>
-                <div class="mt-4 flex">
+                <div class="mt-4 flex items-center">
                     <i class="fa-regular fa-location-dot text-primary-700 p-4 bg-primary-100 rounded-full h-12 w-12 text-center "></i>
+                    @if($student->slot != null)
                     <div class="ml-4 items-center">
                         <div class="text-primary-100 text-xs font-semibold">
                             {{ $student->slot->venues->venue_name }}
@@ -35,6 +40,9 @@
                             {{ $student->slot->venues->venue_code }}
                         </div>
                     </div>
+                    @else
+                    <div class="text-primary-100 ml-4">No Slot</div>
+                    @endif
                 </div>
             </div>
         </div>

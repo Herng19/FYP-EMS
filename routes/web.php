@@ -185,4 +185,7 @@ Route::middleware('auth:student')->group(function () {
 
     // Route for Top Students List
     Route::get('/top students/student-view', [TopStudentController::class, 'showTopStudents'])->name('top students.student_top_student_list');
+
+    // Route for Report
+    Route::get('/report/student-report', [ReportController::class, 'showReport'])->name('report.student_report');
 });
