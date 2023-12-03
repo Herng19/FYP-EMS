@@ -32,7 +32,7 @@
                   borderWidth: 1, 
                   borderRadius: 20,
                   backgroundColor: [
-                    'rgba(22, 77, 166, 0.8)',
+                    'rgba(0, 170, 160, 0.8)',
                   ],
                   width: 10, 
                 }]

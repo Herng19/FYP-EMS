@@ -108,16 +108,22 @@ class EvaluationController extends Controller
 
         // Get all recorded marks for the first evaluation (1/2)
         $marks = CriteriaMark::where('evaluation_id', '=', $evaluation_id)->get();
+        $marks_keyed = $marks->mapWithKeys(function ($item) {
+            return [$item['sub_criteria_id'] => $item['scale']];
+        });
 
         // Get all recorded marks for the evaluation 3
         $marks_2 = CriteriaMark::where('evaluation_id', '=', $evaluation_id_2)->get();
+        $marks_2_keyed = $marks_2->mapWithKeys(function ($item) {
+            return [$item['sub_criteria_id'] => $item['scale']];
+        });
         
         return view('evaluation.edit_evaluation', [
             'student' => $student,
             'rubric' => $rubric_1, 
             'rubric_2' => $rubric_2, 
-            'marks' => $marks, 
-            'marks_2' => $marks_2,
+            'marks' => $marks_keyed, 
+            'marks_2' => $marks_2_keyed,
         ]);
     }
 

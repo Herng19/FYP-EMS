@@ -33,8 +33,8 @@ class industrialSlotCrashVenue implements ValidationRule, DataAwareRule
 
         // For each slot, if the time and venue if same as current data, then it is not available
         foreach ($slots as $slot) {
-            if ($slot->venue_id == $value && $date_time == $slot->start_time) {
-                $fail('This venue is not available at this timeslot');
+            if ($slot->booth_id == $value && $date_time == $slot->start_time) {
+                $fail('This booth is not available at this timeslot');
             }
         }
     }

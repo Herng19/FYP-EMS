@@ -15,8 +15,4 @@ class Venue extends Model
     public function slots() {
         return $this->hasMany(Slot::class, 'venue_id', 'venue_id');
     }
-
-    public function industrial_evaluation_slots() {
-        return $this->hasMany(IndustrialEvaluationSlot::class, 'venue_id', 'venue_id');
-    }
 }

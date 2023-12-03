@@ -4,9 +4,12 @@
         Add Industrial Evaluator
     </x-slot>
 
-    <div class="mt-2 mb-4 mx-12">
-        <div class="flex font-bold">
-            <div>Evaluator's Information</div>
+    <div class="mt-2 mb-4 mx-12 bg-white rounded-md py-6 px-8">
+        <div class="flex items-center">
+            <i class="fa-sharp fa-solid fa-user-tie text-primary-700"></i>
+            <div class="flex font-bold text-primary-700 ml-2">
+                <div>Evaluator's Information</div>
+            </div>
         </div>
         <div class="mt-2 mx-4">
             <form action="/industrial evaluator/create" method="POST">
@@ -33,8 +36,9 @@
                     @enderror
                 </div>
 
-                <div class="flex justify-end">
-                    <x-button type="submit" class="mt-4">Add</x-button>
+                <div class="flex justify-end items-center mt-4">
+                    <a href="/industrial evaluator"><x-secondary-button class="mr-2">back</x-secondary-button></a>
+                    <x-button type="submit">Add</x-button>
                 </div>
             </form>
         </div>

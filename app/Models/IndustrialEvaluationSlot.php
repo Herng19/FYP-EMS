@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Venue;
+use App\Models\Booth;
 use App\Models\Student;
 use App\Models\IndustrialSlotEvaluator;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +20,7 @@ class IndustrialEvaluationSlot extends Model
     protected $fillable = [
         'industrial_schedule_id',
         'student_id',
-        'venue_id',
+        'booth_id',
         'start_time', 
         'end_time',
     ];
@@ -29,8 +29,8 @@ class IndustrialEvaluationSlot extends Model
         return $this->belongsTo(Student::class, 'student_id', 'student_id');
     }
 
-    public function venues() {
-        return $this->belongsTo(Venue::class, 'venue_id', 'venue_id');
+    public function booths() {
+        return $this->belongsTo(Booth::class, 'booth_id', 'booth_id');
     }
 
     public function industrial_evaluation_schedule() {

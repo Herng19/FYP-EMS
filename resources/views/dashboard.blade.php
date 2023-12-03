@@ -3,9 +3,39 @@
         {{ __('Dashboard') }}
     </x-slot>
     <div class="flex items-stretch mx-12 w-auto">
-        <x-dashboard-item title="PSM 1 Supervisee" data="{{ $psm1_students }}"/>
-        <x-dashboard-item title="PSM 2 Supervisee" data="{{ $psm2_students }}"/>
-        <x-dashboard-item title="Evaluatees" data="{{ $evaluatees }}"/>
+        <x-dashboard-item>
+            <x-slot name="icon">
+                <div class="flex items-center rounded-md bg-[#efe9f7] px-8">
+                    <i class="fas fa-users fa-xl text-[#6f518c]"></i>
+                </div>
+            </x-slot>
+            <x-slot name="title">
+                PSM 1 Supervisee
+            </x-slot>
+            <x-slot name="data">{{ $psm1_students }}</x-slot>
+        </x-dashboard-item>
+        <x-dashboard-item>
+            <x-slot name="icon">
+                <div class="flex items-center rounded-md bg-[#f5ece6] px-8">
+                    <i class="fas fa-users fa-xl text-[#ab541f]"></i>
+                </div>
+            </x-slot>
+            <x-slot name="title">
+                PSM 2 Supervisee
+            </x-slot>
+            <x-slot name="data">{{ $psm2_students }}</x-slot>
+        </x-dashboard-item>
+        <x-dashboard-item>
+            <x-slot name="icon">
+                <div class="flex items-center rounded-md bg-[#faebef] px-8">
+                    <i class="fas fa-users fa-xl text-[#a63353]"></i>
+                </div>
+            </x-slot>
+            <x-slot name="title">
+                Evaluatees
+            </x-slot>
+            <x-slot name="data">{{ $evaluatees }}</x-slot>
+        </x-dashboard-item>
     </div>
     <div class="grid grid-cols-3 gap-12 mx-20 my-12">
         <div class="col-span-2">
@@ -27,17 +57,17 @@
             </x-show-table>
         </div>
         <div class="p-4">
-            <div class="bg-primary-700 rounded-lg text-white p-8 h-full text-left justify-center drop-shadow-[0px_1px_18px_rgba(113,144,255,0.85)]">
+            <div class="bg-gray-100 rounded-lg p-8 h-full text-left justify-center drop-shadow-[0px_1px_18px_rgba(120,120,120,0.15)]">
                 <div class="h-5/6">
-                    <p class="font-bold text-xl text-white">Next Evaluation</p>
-                    <p class="font-semibold text-md text-white mt-4">First Evaluation (30%)</p>
-                    <p class="font-thin text-sm text-white">Submit until chapter 3, requirement part. </p>
-                    <p class="font-bold text-sm text-white mt-4">Due on 26/5/2023</p>
+                    <p class="font-bold text-xl text-primary-700">Next Evaluation</p>
+                    <p class="font-semibold text-md text-gray mt-4">First Evaluation (30%)</p>
+                    <p class="font-semibold text-sm text-gray-500">Submit until chapter 3, requirement part. </p>
+                    <p class="font-bold text-sm text-primary-900 mt-4">Due on 26/5/2023</p>
                 </div>
                 <a href="{{ route('evaluation') }}">
-                    <button class="w-full bg-white text-primary-700 font-bold text-md justify-center rounded-md px-8 py-2">
+                    <x-button class="w-full font-bold text-md justify-center rounded-md px-8 py-2">
                         Evaluate
-                    </button>
+                    </x-button>
                 </a>
             </div>
         </div>

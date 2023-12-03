@@ -12,13 +12,21 @@
             @csrf
             <div>
                 {{-- Rubric Basic Info --}}
-                <div class="font-bold text-gray">Rubric Info</div>
-                <div class="px-4 mt-2">
-                    <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ $rubric->rubric_name }}" required/>
+                <div class="bg-white rounded-md py-6 px-8">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-table text-primary-700"></i>
+                        <div class="font-bold text-primary-700 ml-2">Rubric Info</div>
+                    </div>
+                    <div class="px-4 mt-2">
+                        <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ $rubric->rubric_name }}" required/>
+                    </div>
                 </div>
-                <div class="mt-6 mx-4" id="criteria-form">
+                <div class="mt-6 bg-white rounded-md px-8 py-6" id="criteria-form">
                     {{-- Rubric Elements --}}
-                    <div class="font-bold text-gray text-sm">Elements</div>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-bars text-primary-700"></i>
+                        <div class="font-bold text-primary-700 text-md ml-2">Elements</div>
+                    </div>
                     @foreach( $rubric->industrial_rubric_criterias as $i => $rubric_criteria )
                     {{-- Main Criteria --}}
                     <div class="mt-4 px-4" id="criteria-0">
@@ -42,7 +50,7 @@
                                         <x-input id="sub-criteria-weightage" class="block text-sm mt-1 w-full pl-4" type="number" name="criteria[{{ $i }}][{{ $j }}][sub_criteria_weightage]" value="{{ $sub_criteria->weightage }}" placeholder="Weightage(%)" min='1' max='100' required/>
                                     </div>
                                     <div>
-                                        <select id="sub-criteria-co-level" name="criteria[{{ $i }}][{{ $j }}][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
+                                        <select id="sub-criteria-co-level" name="criteria[{{ $i }}][{{ $j }}][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-white text-gray-700 border border-slate-200 focus:ring-primary-400 focus:border-0 px-4 py-2 rounded-md" required>
                                             <option value="co-1" class="text-primary-700 font-semibold" {{ ($sub_criteria->co_level == "co-1")? "selected" : "" }}>CO 1</option>
                                             <option value="co-2" class="text-primary-700 font-semibold" {{ ($sub_criteria->co_level == "co-2")? "selected" : "" }}>CO 2</option>
                                             <option value="co-3" class="text-primary-700 font-semibold" {{ ($sub_criteria->co_level == "co-3")? "selected" : "" }}>CO 3</option>

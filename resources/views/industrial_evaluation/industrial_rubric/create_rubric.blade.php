@@ -5,94 +5,100 @@
     <div class="my-4 px-8">
         <form action="/industrial rubric/create-rubric" method="POST">
             @csrf
-            <div>
-                {{-- Rubric Basic Info --}}
-                <div class="font-bold text-gray">Rubric Info</div>
+            {{-- Rubric Basic Info --}}
+            <div class="bg-white rounded-md py-6 px-8">
+                <div class="flex items-center">
+                    <i class="fa-solid fa-table text-primary-700"></i>
+                    <div class="font-bold text-primary-700 ml-2">Rubric Info</div>
+                </div>
                 <div class="px-4 mt-2">
                     <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ old('rubric_name')}}" required/>
                 </div>
-                <div class="mt-6 mx-4" id="criteria-form">
-                    {{-- Rubric Elements --}}
-                    <div class="font-bold text-gray text-sm">Elements</div>
-                    {{-- Main Criteria --}}
-                    <div class="mt-4 px-4" id="criteria-0">
-                        <div class="flex items-center">
-                            <label id="main-numbering" class="mr-2 text-gray-500 text-sm font-semibold">1</label>
-                            <x-input id="criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][criteria_name]" value="{{ old('criteria[0][criteria_name]')}}" placeholder="Criteria Name" required/>
-                            <button type="button" class="delete-criteria ml-2 py-2 px-3 bg-red-50 rounded-full hover:bg-red-100"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                        </div>
-                        {{-- Sub Criteria --}}
-                        <div class="px-8 mt-2" id="criteria-0-0">
-                            <div class="flex">
-                                <div class="grid grid-cols-5 gap-2 w-full">
-                                    <div class="col-span-3 flex items-center">
-                                        <label id="sub-numbering" class="mr-2 text-gray-500 text-sm font-semibold">1.1</label>
-                                        <x-input id="sub-criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub_criteria_name]" value="{{ old('criteria[0][0][sub_criteria_name]')}}" placeholder="Sub Criteria Name" required/>    
-                                    </div>
-                                    <div>
-                                        <x-input id="sub-criteria-weightage" class="block text-sm mt-1 w-full pl-4" type="number" name="criteria[0][0][sub_criteria_weightage]" value="{{ old('criteria[0][0][sub_criteria_weightage]')}}" placeholder="Weightage(%)" min='1' max='100' required/>
-                                    </div>
-                                    <div>
-                                        <select id="sub-criteria-co-level" name="criteria[0][0][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                            <option value="co-1" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-1") selected @endif>CO 1</option>
-                                            <option value="co-2" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-2") selected @endif>CO 2</option>
-                                            <option value="co-3" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-3") selected @endif>CO 3</option>
-                                        </select>
-                                    </div>
+            </div>
+            <div class="mt-6 bg-white rounded-md py-6 px-8" id="criteria-form">
+                {{-- Rubric Elements --}}
+                <div class="flex items-center">
+                    <i class="fa-solid fa-bars text-primary-700"></i>
+                    <div class="font-bold text-primary-700 text-md ml-2">Elements</div>
+                </div>
+                {{-- Main Criteria --}}
+                <div class="mt-4 px-4" id="criteria-0">
+                    <div class="flex items-center">
+                        <label id="main-numbering" class="mr-2 text-gray-500 text-sm font-semibold">1</label>
+                        <x-input id="criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][criteria_name]" value="{{ old('criteria[0][criteria_name]')}}" placeholder="Criteria Name" required/>
+                        <button type="button" class="delete-criteria ml-2 py-2 px-3 bg-red-50 rounded-full hover:bg-red-100"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                    </div>
+                    {{-- Sub Criteria --}}
+                    <div class="px-8 mt-2" id="criteria-0-0">
+                        <div class="flex">
+                            <div class="grid grid-cols-5 gap-2 w-full">
+                                <div class="col-span-3 flex items-center">
+                                    <label id="sub-numbering" class="mr-2 text-gray-500 text-sm font-semibold">1.1</label>
+                                    <x-input id="sub-criteria-name" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub_criteria_name]" value="{{ old('criteria[0][0][sub_criteria_name]')}}" placeholder="Sub Criteria Name" required/>    
                                 </div>
-                                <button type="button" class="delete-sub-criteria ml-2 my-1 py-2 px-3 bg-red-50 rounded-full hover:bg-red-100"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                                <div>
+                                    <x-input id="sub-criteria-weightage" class="block text-sm mt-1 w-full pl-4" type="number" name="criteria[0][0][sub_criteria_weightage]" value="{{ old('criteria[0][0][sub_criteria_weightage]')}}" placeholder="Weightage(%)" min='1' max='100' required/>
+                                </div>
+                                <div>
+                                    <select id="sub-criteria-co-level" name="criteria[0][0][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-white text-gray-700 border border-slate-200 focus:ring-primary-400 focus:border-0 px-4 py-2 rounded-md" required>
+                                        <option value="co-1" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-1") selected @endif>CO 1</option>
+                                        <option value="co-2" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-2") selected @endif>CO 2</option>
+                                        <option value="co-3" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-3") selected @endif>CO 3</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="mt-2 pl-6 pr-12">
-                                <x-input id="sub-criteria-description" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub_criteria_description]" value="{{ old('criteria[0][0][sub_criteria_description]')}}" placeholder="Sub Criteria Description" required/>
-                            </div>
+                            <button type="button" class="delete-sub-criteria ml-2 my-1 py-2 px-3 bg-red-50 rounded-full hover:bg-red-100"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                        </div>
+                        <div class="mt-2 pl-6 pr-12">
+                            <x-input id="sub-criteria-description" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][sub_criteria_description]" value="{{ old('criteria[0][0][sub_criteria_description]')}}" placeholder="Sub Criteria Description" required/>
+                        </div>
 
-                            {{-- Description for each level --}}
-                            <div class="px-12">
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-0" class="mx-2 text-gray-400" id="scale-numbering">0</label>
-                                    <x-input id="scale-0" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_0]" value="{{ old('criteria[0][0][scale_0]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-1" class="mx-2 text-gray-400" id="scale-numbering">1</label>
-                                    <x-input id="scale-1" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_1]" value="{{ old('criteria[0][0][scale_1]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-2" class="mx-2 text-gray-400" id="scale-numbering">2</label>
-                                    <x-input id="scale-2" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_2]" value="{{ old('criteria[0][0][scale_2]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-3" class="mx-2 text-gray-400" id="scale-numbering">3</label>
-                                    <x-input id="scale-3" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_3]" value="{{ old('criteria[0][0][scale_3]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-4" class="mx-2 text-gray-400" id="scale-numbering">4</label>
-                                    <x-input id="scale-4" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_4]" value="{{ old('criteria[0][0][scale_4]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                <div class="flex items-center mt-2">
-                                    <label for="scale-5" class="mx-2 text-gray-400" id="scale-numbering">5</label>
-                                    <x-input id="scale-5" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_5]" value="{{ old('criteria[0][0][scale_5]')}}" placeholder="Mark Description" required/>
-                                    <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
-                                </div>
-                                {{-- Add New Scale Button --}}
-                                <div class="mt-4 ml-8">
-                                    <button type="button" class="add-scale-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD SCALE</button>
-                                </div>
+                        {{-- Description for each level --}}
+                        <div class="px-12">
+                            <div class="flex items-center mt-2">
+                                <label for="scale-0" class="mx-2 text-gray-400" id="scale-numbering">0</label>
+                                <x-input id="scale-0" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_0]" value="{{ old('criteria[0][0][scale_0]')}}" placeholder="Mark Description" required/>
+                                <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <label for="scale-1" class="mx-2 text-gray-400" id="scale-numbering">1</label>
+                                <x-input id="scale-1" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_1]" value="{{ old('criteria[0][0][scale_1]')}}" placeholder="Mark Description" required/>
+                                <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <label for="scale-2" class="mx-2 text-gray-400" id="scale-numbering">2</label>
+                                <x-input id="scale-2" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_2]" value="{{ old('criteria[0][0][scale_2]')}}" placeholder="Mark Description" required/>
+                                <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <label for="scale-3" class="mx-2 text-gray-400" id="scale-numbering">3</label>
+                                <x-input id="scale-3" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_3]" value="{{ old('criteria[0][0][scale_3]')}}" placeholder="Mark Description" required/>
+                                <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <label for="scale-4" class="mx-2 text-gray-400" id="scale-numbering">4</label>
+                                <x-input id="scale-4" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_4]" value="{{ old('criteria[0][0][scale_4]')}}" placeholder="Mark Description" required/>
+                                <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <label for="scale-5" class="mx-2 text-gray-400" id="scale-numbering">5</label>
+                                <x-input id="scale-5" class="block text-sm mt-1 w-full pl-4" type="text" name="criteria[0][0][scale_5]" value="{{ old('criteria[0][0][scale_5]')}}" placeholder="Mark Description" required/>
+                                <button type="button" class="delete-scale mx-2"><i class="fa-regular fa-trash-can text-red-500"></i></button>
+                            </div>
+                            {{-- Add New Scale Button --}}
+                            <div class="mt-4 ml-8">
+                                <button type="button" class="add-scale-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD SCALE</button>
                             </div>
                         </div>
-                        {{-- Add New Sub Criteria Button --}}
-                        <div class="mt-4 ml-16">
-                            <button type="button" class="add-sub-criteria-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD SUB CRITERIA</button>
-                        </div>
                     </div>
-                    {{-- Add New Criteria Button --}}
-                    <div class="mt-4 ml-8">
-                        <button type="button" class="add-criteria-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD CRITERIA</button>
+                    {{-- Add New Sub Criteria Button --}}
+                    <div class="mt-4 ml-16">
+                        <button type="button" class="add-sub-criteria-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD SUB CRITERIA</button>
                     </div>
+                </div>
+                {{-- Add New Criteria Button --}}
+                <div class="mt-4 ml-8">
+                    <button type="button" class="add-criteria-button text-primary-700 font-bold text-[11px] border-gray-200 border-2 rounded-md px-3 py-2 hover:bg-gray-100"><i class="fa-regular fa-circle-plus fa-lg mr-2"></i>ADD CRITERIA</button>
                 </div>
             </div>
 

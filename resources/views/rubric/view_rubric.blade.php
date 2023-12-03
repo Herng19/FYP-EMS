@@ -1,9 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
-        <a href={{ (auth('student')->check())? "/rubric/student-rubric" : "/rubric" }}><i class="fa-regular fa-chevron-left fa-xs"></i></a>
-        {{ $rubric->rubric_name }}
     </x-slot>
-    <div class="mt-4 px-8">
+    <div class="mb-4 px-8">
+        <a href={{ (auth('student')->check())? "/rubric/student-rubric" : "/rubric" }} class="font-semibold text-primary-700 text-lg"><i class="fa-regular fa-chevron-left mr-2"></i>{{ $rubric->rubric_name }}</a>
         {{-- Download rubric function --}}
         @hasanyrole('supervisor|evaluator|head of research group|coordinator')
         <div class="flex justify-end">

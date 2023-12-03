@@ -49,9 +49,9 @@
 
         {{-- Evaluation Schedule --}}
         <div id="table">
-        <table class="my-6 bg-white w-full h-2/3 rounded-lg drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]"  style="height: 70vh;">
+        <table class="my-6 bg-white w-full h-2/3 rounded-md drop-shadow-[0px_1px_12px_rgba(120,120,120,0.15)]"  style="height: 70vh;">
             <thead>
-                <tr class="flex text-white text-center text-xs font-semibold border-b justify-between px-4 items-center bg-primary-700 rounded-t-lg">
+                <tr class="flex text-white text-center text-xs font-semibold border-b justify-between px-4 items-center bg-primary-700 rounded-t-md">
                     <th class="py-4 w-14">Venue/Slot</th>
                     @foreach( $timeslots as $timeslot)
                         <th class="w-14">{{$timeslot}}</th>
@@ -60,7 +60,7 @@
             </thead>
             <tbody>
                 @foreach($venues as $i => $venue) 
-                    <tr class="flex text-gray-700 text-center text-xs font-semibold justify-between px-4 items-center border-b {{ ($i%2 == 1)? 'bg-primary-50': ''; }} {{ ($loop->last)? 'rounded-bl-lg rounded-br-lg' : ''; }}">
+                    <tr class="flex text-gray-700 text-center text-xs font-semibold justify-between px-4 items-center border-b {{ ($i%2 == 1)? 'bg-primary-50': ''; }} {{ ($loop->last)? 'rounded-b-md' : ''; }}">
                         <td class="py-4 w-14 text-xs font-bold break-all">{{ ($venue->venue_code != null)? $venue->venue_code : $venue->booth_code }}</td>
                         @foreach($timeslots as $timeslot)
                         @php $i = 0; @endphp

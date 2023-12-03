@@ -39,23 +39,23 @@
 
         {{-- Evaluation Schedule --}}
         <div id="table">
-        <table class="my-6 bg-white w-full h-2/3 rounded-lg drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]"  style="height: 70vh;">
+        <table class="my-6 bg-white w-full h-2/3 rounded-md drop-shadow-[0px_1px_12px_rgba(120,120,120,0.15)]"  style="height: 70vh;">
             <thead>
-                <tr class="flex text-white text-center text-xs font-semibold border-b justify-between px-4 items-center bg-primary-700 rounded-t-lg">
-                    <th class="py-4 w-14">Slot/Venue</th>
+                <tr class="flex text-white text-center text-xs font-semibold border-b justify-between px-4 items-center bg-primary-700 rounded-t-md">
+                    <th class="py-4 w-14">Slot/Booth</th>
                     @foreach( $timeslots as $timeslot)
                         <th class="w-14">{{$timeslot}}</th>
                     @endforeach
                 </tr>
             </thead>
             <tbody>
-                @foreach($venues as $i => $venue) 
-                    <tr class="flex text-gray-700 text-center text-xs font-semibold justify-between px-4 items-center border-b  {{ ($i%2 == 1)? 'bg-primary-50' : '';}} {{ ($loop->last)? 'rounded-bl-lg rounded-br-lg' : ''; }}">
-                        <td class="py-4 w-14 text-xs font-bold break-all">{{$venue->venue_code}}</td>
+                @foreach($booths as $i => $booth) 
+                    <tr class="flex text-gray-700 text-center text-xs font-semibold justify-between px-4 items-center border-b  {{ ($i%2 == 1)? 'bg-primary-50' : '';}} {{ ($loop->last)? 'rounded-b-md' : ''; }}">
+                        <td class="py-4 w-14 text-xs font-bold break-all">{{$booth->booth_code}}</td>
                         @foreach($timeslots as $timeslot)
                         @php $i = 0; @endphp
                             @foreach($schedules as $schedule)
-                                @if($schedule->venue_id == $venue->venue_id && (date("H:i", strtotime($schedule->start_time))) == $timeslot)
+                                @if($schedule->booth_id == $booth->booth_id && (date("H:i", strtotime($schedule->start_time))) == $timeslot)
                                     <td class="w-14 p-2 border-l">
                                         <a href="/industrial schedule/edit-slot/{{$schedule->industrial_slot_id}}">
                                             <div class="text-primary-700 font-bold text-[11px] underline">{{explode(" ", $schedule->name)[0]}}</div>
@@ -100,25 +100,25 @@
         });
 
         // submit form when generate button is clicked
-        // $('form').on('submit', function(e) {
-        //     e.preventDefault();
-        //     date = $("input[name=date]").val();
+        $('form').on('submit', function(e) {
+            e.preventDefault();
+            date = $("input[name=date]").val();
 
-        //     $('#animation').removeClass('hidden');
-        //     $.ajax({
-        //           type: "POST",
-        //           url: '/industrial schedule',
-        //           data: {
-        //             date: date,
-        //           },
-        //           success: function(result) {
-        //             $('#animation').addClass('hidden');
-        //             $('#content').html(jQuery(result).find('#content').html());
-        //           },
-        //           error: function (error) {
-        //             console.log(error);
-        //           }
-        //     });
-        // });
+            $('#animation').removeClass('hidden');
+            $.ajax({
+                  type: "POST",
+                  url: '/industrial schedule',
+                  data: {
+                    date: date,
+                  },
+                  success: function(result) {
+                    $('#animation').addClass('hidden');
+                    $('#content').html(jQuery(result).find('#content').html());
+                  },
+                  error: function (error) {
+                    console.log(error);
+                  }
+            });
+        });
     </script>
 </x-app-layout>

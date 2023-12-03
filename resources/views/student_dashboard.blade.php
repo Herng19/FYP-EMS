@@ -4,7 +4,7 @@
     </x-slot>
     <div class="mx-20 grid grid-cols-2 gap-20">
         {{-- Evaluation Schedule --}}
-        <div class="bg-primary-700 rounded-lg py-4 px-8 drop-shadow-[0px_1px_18px_rgba(113,144,255,0.85)]">
+        <div class="bg-primary-700 rounded-lg py-4 px-8 drop-shadow-[0px_1px_18px_rgba(0,160,161,0.5)]">
             <div class="flex justify-between items-center">
                 <div class="text-white font-bold text-lg">
                     Evaluation Schedule
@@ -47,7 +47,7 @@
             </div>
         </div>
         {{-- Project Information --}}
-        <div class="rounded-lg py-4 px-8 shadow-md">
+        <div class="rounded-lg py-4 px-8 shadow-md bg-white">
             <div class="flex justify-between items-center">
                 <div class="font-bold text-lg text-gray">
                     Project
@@ -58,7 +58,7 @@
             </div>
             <div class="py-8 px-4">
                 <div class="flex">
-                    <div class="text-md font-semibold">
+                    <div class="text-md font-bold text-primary-700">
                         {{ $student->project->project_title }}
                     </div>
                 </div>

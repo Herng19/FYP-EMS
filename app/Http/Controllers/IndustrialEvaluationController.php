@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use PDF;
+use App\Models\Booth;
 use App\Models\Venue;
 use App\Models\Student;
 use Illuminate\Http\Request;
@@ -96,33 +97,36 @@ class IndustrialEvaluationController extends Controller
         $schedules = DB::table('students')
                     ->join('projects', 'students.student_id', '=', 'projects.student_id')
                     ->join('industrial_evaluation_slots', 'students.student_id', 'industrial_evaluation_slots.student_id')
-                    ->join('venues', 'industrial_evaluation_slots.venue_id', 'venues.venue_id')
+                    ->join('booths', 'industrial_evaluation_slots.booth_id', 'booths.booth_id')
                     ->join('industrial_evaluation_schedules', 'industrial_evaluation_slots.industrial_schedule_id', '=', 'industrial_evaluation_schedules.industrial_schedule_id')
-                    ->select('students.student_id', 'students.name', 'projects.project_title', 'industrial_evaluation_schedules.schedule_date', 'industrial_evaluation_slots.industrial_slot_id', 'industrial_evaluation_slots.start_time', 'venues.venue_id', 'venues.venue_name')
+                    ->select('students.student_id', 'students.name', 'projects.project_title', 'industrial_evaluation_schedules.schedule_date', 'industrial_evaluation_slots.industrial_slot_id', 'industrial_evaluation_slots.start_time', 'booths.booth_id', 'booths.booth_name')
                     ->where('industrial_evaluation_schedules.schedule_date', '=', session('date'))
-                    ->orderBy('venues.venue_id')
+                    ->orderBy('booths.booth_id')
                     ->get();
-        $venues = Venue::all(); 
+        $booths = Booth::all(); 
 
         return view('industrial_evaluation.industrial_schedule.industrial_schedule', [
             'timeslots' => $timeslots,
             'schedules' => $schedules,
-            'venues' => $venues, 
+            'booths' => $booths, 
         ]);
     }
 
     // Function to show create industrial slot form
     public function newIndustrialSlot(Request $request) {
         $students = Student::where('top_student', '=', '1')->get()->sortBy('name');
+        if(count($students) == 0) {
+            return redirect('/industrial schedule')->with('error-message', 'Please set top students before scheduling.');
+        }
         (isset($request->student_id))? $selected_student = Student::find($request->student_id) : ((null !== $request->old('name'))? $selected_student = Student::find($request->old('name')) : $selected_student = Student::where('top_student', '=', '1')->first());
  
-        $venues = Venue::all();
+        $booths = Booth::all();
         $timeslots = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
         $available_evaluators = IndustrialEvaluator::all();
 
         return view('industrial_evaluation.industrial_schedule.create_slot', ["students" => $students, 
                                                 "selected_student" => $selected_student, 
-                                                "venues" => $venues, 
+                                                "booths" => $booths, 
                                                 "timeslots" => $timeslots, 
                                                 "available_evaluators" => $available_evaluators]);
     }
@@ -147,7 +151,7 @@ class IndustrialEvaluationController extends Controller
 
         $slot_id = IndustrialEvaluationSlot::create([
             'student_id' => $formFields['name'],
-            'venue_id' => $formFields['venue'],
+            'booth_id' => $formFields['venue'],
             'industrial_schedule_id' => $schedule->industrial_schedule_id, 
             'start_time' => $start_time,
             'end_time' => $end_time, 
@@ -174,14 +178,14 @@ class IndustrialEvaluationController extends Controller
         $students = Student::where('top_student', '=', 1)->get()->sortBy('name');
 
         $evaluators = $slot->industrial_slot_evaluators()->get()->pluck('industrial_evaluator_id')->toArray();
-        $venues = Venue::all();
+        $booths = Booth::all();
         $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
         $available_evaluators = IndustrialEvaluator::all();
 
         return view('industrial_evaluation.industrial_schedule.edit_slot', ["students" => $students, 
                                                 "slot" => $slot,
                                                 "selected_student" => $selected_student, 
-                                                "venues" => $venues, 
+                                                "booths" => $booths, 
                                                 "timeslots" => $timeslots, 
                                                 "evaluators" => $evaluators, 
                                                 "available_evaluators" => $available_evaluators]);
@@ -229,7 +233,7 @@ class IndustrialEvaluationController extends Controller
 
         $slot->update([
             'student_id' => $formFields['name'],
-            'venue_id' => $formFields['venue'],
+            'booth_id' => $formFields['venue'],
             'industrial_schedule_id' => $schedule->industrial_schedule_id, 
             'start_time' => $start_time,
             'end_time' => $end_time, 
@@ -268,7 +272,7 @@ class IndustrialEvaluationController extends Controller
 
         // Initiate variables for timeslots, particles num
         $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
-        $rooms_available = Venue::all()->pluck('venue_id')->toArray();
+        $rooms_available = Booth::all()->pluck('booth_id')->toArray();
         $num_particles = 20;
         $stud_num = 0; 
 
@@ -319,11 +323,11 @@ class IndustrialEvaluationController extends Controller
 
             $slot_id = IndustrialEvaluationSlot::create([
                 'student_id' => $slot[4],
-                'venue_id' => $slot[1],
+                'booth_id' => $slot[1],
                 'industrial_schedule_id' => $schedule_id, 
                 'start_time' => $start_time,
                 'end_time' => $end_time, 
-            ])->id;
+            ])->industrial_slot_id;
 
             IndustrialSlotEvaluator::create([
                 'industrial_slot_id' => $slot_id,
@@ -372,10 +376,14 @@ class IndustrialEvaluationController extends Controller
             // count the number of students assigned to each evaluator
             $evaluator_student_counts[$schedule[$i][2]]++;
             $evaluator_student_counts[$schedule[$i][3]]++;
+
+            if($schedule[$i][2] == $schedule[$i][3]){
+                $conflicts++;
+            }
             
             for ($j = $i + 1; $j < count($schedule); $j++) {
                 // check for timeslot/venue/evaluators conflicts
-                if($schedule[$i][2] == $schedule[$i][3] || $schedule[$j][2] == $schedule[$j][3]){
+                if($schedule[$j][2] == $schedule[$j][3]){
                     $conflicts++;
                 }
                 else if ($schedule[$i][2] == $schedule[$j][3] || $schedule[$i][3] == $schedule[$j][2] || $schedule[$i][2] == $schedule[$j][2] || $schedule[$i][3] == $schedule[$j][3] || $schedule[$i][1] == $schedule[$j][1]) {
@@ -722,12 +730,15 @@ class IndustrialEvaluationController extends Controller
         $evaluation = IndustrialEvaluation::where('student_id', '=', $student_id)->first();
 
         // Get all recorded marks for the student's evaluation
-        ($student->industrial_evaluation != null)? $marks = IndustrialCriteriaMark::where('industrial_evaluation_id', '=', $evaluation->industrial_evaluation_id)->get() : $marks = array();
+        $marks = IndustrialCriteriaMark::where('industrial_evaluation_id', '=', $evaluation->industrial_evaluation_id)->get(); 
+        $marks_keyed = $marks->mapWithKeys(function ($item) {
+            return [$item['industrial_sub_criteria_id'] => $item['scale']];
+        });
         
         return view('industrial_evaluation.industrial_evaluation.edit_evaluation', [
             'student' => $student,
             'rubric' => $rubric, 
-            'marks' => $marks, 
+            'marks' => $marks_keyed, 
         ]);
     }
 

@@ -1,4 +1,4 @@
-<table class="rounded-lg mt-4 bg-white drop-shadow-[0px_0px_12px_rgba(185,185,185,0.25)] w-full">
+<table class="rounded-md mt-4 bg-white drop-shadow-[0px_0px_12px_rgba(120,120,120,0.15)] w-full">
     <thead class="w-full">
         <tr class="flex self-stretch px-8 mt-2 border-b-2 border-b-primary-200">
             <th class="my-4 mx-4 text-primary-700 text-sm font-bold w-4">No.</th>

@@ -27,18 +27,14 @@
         <!-- Styles -->
         @livewireStyles
     </head>
-    <body class="font-sans antialiased flex min-h-screen bg-gray-50">
+    <body class="font-sans antialiased flex min-h-screen bg-gray-100">
         <x-side-navbar />
         <div class="min-h-screen w-full">
             <!-- Page Heading -->
-            <div class="flex max-w-7xl mx-auto pt-3 pb-3 px-4 sm:px-6 lg:px-8 justify-between items-center border-b">
-                @if (isset($header))
-                    <header>
-                        <div class="font-bold text-2xl text-gray-800 leading-tight">
-                            {{ $header }}
-                        </div>
-                    </header>
-                @endif                    
+            <div class="flex max-w-7xl mx-auto pt-3 pb-3 mx-4 sm:mx-6 lg:mx-8 justify-between items-center border-b">
+                <a href="/dashboard">
+                    <img src="{{ asset('img/logo.png') }}" alt="logo" class="w-20 h-20">
+                </a>    
                 @include('navigation-menu')
             </div>
 

@@ -1,14 +1,12 @@
-<div class="justify-center flex-col flex">
+<div class="justify-center flex-col flex bg-[#1e1e1e]">
     {{-- title --}}
-    <div class="flex justify-center items-center bg-gray-50 pt-8 pb-6">
-        <a href="/dashboard">
-            <i class="fa-solid fa-book text-primary-700 fa-md"></i>
-            <span class="text-primary-700 pl-2 font-bold font-serif break-normal whitespace-nowrap text-xl">FYP-EMS</span>
-        </a>
+    <div class="flex justify-center items-center pt-6 pb-2">
+        <img src="{{asset('img/umpsa_logo-removebg-preview.png')}}" alt="umpsa-logo" class="w-24 h-18">
+        <img src="{{asset('img/petakom_logo-removebg-preview.png')}}" alt="petakom-logo" class="w-16 h-16">
     </div>
 
     {{-- available nav items --}}
-    <div class="py-3 px-4 grow bg-primary-800 rounded-lg mx-4 drop-shadow-[0px_0px_18px_rgba(200,200,255,0.8)]">
+    <div class="py-3 px-4 grow">
         {{-- Dashboard --}}
         <x-navbar-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
             <x-slot name="icon">
@@ -76,8 +74,8 @@
         @role('coordinator')
         {{-- Industrial Evaluation --}}
         <div x-data="{dropdown: false}" class="relative cursor-pointer" @click="dropdown = ! dropdown">
-            <div class="flex mt-4 items-center object-fill py-2 pl-5 pr-2 rounded-lg justify-start text-primary-200">
-                <div name="icon" class="text-inherit text-primary-300">
+            <div class="flex mt-4 items-center object-fill py-2 pl-5 pr-2 rounded-md justify-start text-[#a4a8a3]">
+                <div name="icon" class="text-inherit text-[#a4a8a3]">
                     <i class="fa-light fa-briefcase"></i>
                 </div>
                 <div name="title" class="text-inherit ml-3 font-semibold text-sm break-normal whitespace-nowrap tracking-wider">                    
@@ -90,7 +88,7 @@
                     <i class="fa-light fa-chevron-down fa-sm"></i>
                 </button>
             </div>
-            <div x-show="dropdown" class="bg-primary-900 rounded-md">
+            <div x-show="dropdown" class="bg-white bg-opacity-10 rounded-sm">
                 {{-- Industrial Evaluator --}}
                 <x-navbar-item href="{{ route('industrial evaluator') }}" :active="request()->routeIs('industrial evaluator.*') || request()->routeIs('industrial evaluator')" class="pl-8">
                     <x-slot name="icon">
@@ -146,10 +144,10 @@
     </div>
 
     {{-- logout button --}}
-    <div class="px-6 my-4 bg-gray-50">
+    <div class="px-6 my-4 bg-transparent">
         <form method="POST" action="{{ route('logout') }}" x-data>
             @csrf
-            <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex items-center object-fill mt-8 py-2 px-8 rounded-md justify-center bg-red-500 text-gray-100 hover:bg-red-600 hover:text-white active:ring-red-700 active:ring-2 active:ring-offset-2 drop-shadow-[0px_0px_12px_rgba(255,150,150,0.5)]">
+            <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex items-center object-fill mt-8 py-2 rounded-sm justify-center bg-red-500 text-gray-100 hover:bg-red-600 hover:text-white active:ring-red-700 active:ring-2 active:ring-offset-2 drop-shadow-[0px_0px_12px_rgba(255,150,150,0.2)]">
                 <div name="icon" class="text-inherit">
                     <i class="fa-light fa-arrow-right-from-bracket"></i>
                 </div>

@@ -1,11 +1,17 @@
 <x-guest-layout>
     <div class="relative">
-        <div class="w-[496px] h-[863px] bg-[#5C75CD] fixed -translate-y-1/2 translate-x-40 rotate-[59deg] rounded-[40px]"></div>
-        <div class="w-[496px] h-[863px] bg-[#5C75CD] fixed translate-y-[300px] translate-x-[990px] rotate-[59deg] rounded-[40px]"></div>
+        <div class="w-[496px] h-[863px] bg-primary-700 fixed -translate-y-1/2 translate-x-40 rotate-[59deg] rounded-[40px]"></div>
+        <div class="w-[496px] h-[863px] bg-primary-700 fixed translate-y-[300px] translate-x-[990px] rotate-[59deg] rounded-[40px]"></div>
     </div>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo />
+            <div class="flex justify-around items-center pt-6 px-8">
+                <img src="{{asset('img/umpsa_logo-removebg-preview.png')}}" alt="umpsa-logo" class="w-24 h-18">
+                <img src="{{asset('img/petakom_logo-removebg-preview.png')}}" alt="petakom-logo" class="w-20 h-20">
+                <a href="/">
+                    <img src="{{asset('img/logo.png')}}" alt="logo" class="w-20 h-20">
+                </a>
+            </div>
         </x-slot>
 
         @if (session('status'))
@@ -15,15 +21,15 @@
         @endif
 
         {{-- Login phrase word --}}
-        <div class="my-14">
+        <div class="my-10">
             <div class="flex my-2 items-center">
                 <div class="border-4 border-primary-700 rounded-full bg-primary-700 h-8 w-2"></div>
                 <div class="text-4xl font-bold text-primary-700 ml-2">Login</div>
             </div>
-            <div class="text-xs text-gray-400 font-semibold">Login with your email and password. </div>
+            <div class="text-sm text-gray-400 font-semibold">Login with your email and password. </div>
         </div>
 
-        <x-validation-errors class="mb-4" />
+        <x-validation-errors class="mb-4"/>
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
@@ -43,7 +49,7 @@
             </div>
 
             <div class="mt-4">
-                <select id="role" name="role" class="block mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
+                <select id="role" name="role" class="block mt-1 w-full bg-primary-50 text-primary-300 px-4 py-2 border border-slate-200 focus:ring-primary-400 focus:border-0 rounded-md" required>
                     <option value="" selected disabled>Role</option>
                     <option value="student" class="text-primary-700">Student</option>
                     <option value="lecturer" class="text-primary-700">Lecturer</option>
@@ -57,7 +63,7 @@
                 </label> --}}
 
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-primary-700 hover:text-primary-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                    <a class="underline text-sm text-primary-700 hover:text-primary-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500" href="{{ route('password.request') }}">
                         {{ __('Forgot password') }}
                     </a>
                 @endif

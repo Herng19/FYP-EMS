@@ -18,14 +18,26 @@ class ReportController extends Controller
             $supervisees = $lecturer->supervisees->pluck('student_id'); 
 
             foreach($supervisees as $supervisee) {
+                $total_mark = 0; 
+
                 // Get student name
                 $student_name = Student::where('student_id', $supervisee)->first()->name;
 
                 // Get total marks for that student
-                $supervisee_marks = Evaluation::where('student_id', $supervisee)->get()->sum('marks');
+                $supervisee_marks = Evaluation::where('student_id', $supervisee)->get();
+
+                // Calculate the total marks for the student
+                foreach($supervisee_marks as $mark) {
+                    if($mark->evaluation_type == 'evaluation2') {
+                        $total_mark += $mark->marks * 0.4;
+                    }
+                    else {
+                        $total_mark += $mark->marks * 0.3;
+                    }
+                }
 
                 // Insert into array
-                $data[$student_name] = $supervisee_marks;
+                $data[$student_name] = $total_mark;
             }
             
             return view('report.report_and_progress', compact('data')); 

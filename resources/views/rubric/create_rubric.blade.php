@@ -2,45 +2,55 @@
     <x-slot name="header">
         Create Rubric
     </x-slot>
-    <div class="my-4 px-8">
+    <div class="px-8 mb-4">
         <form action="/rubric/create-rubric" method="POST">
             @csrf
             <div>
                 {{-- Rubric Basic Info --}}
-                <div class="font-bold text-gray">Rubric Info</div>
-                <div class="px-4 mt-2">
-                    <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ old('rubric_name')}}" required/>
-                    <div class="flex grid grid-cols-3 gap-4 mt-2">
-                        <div>
-                            <select id="research-group" name="research_group" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                <option value="" class="text-primary-700 font-semibold" default>Research Group</option>
-                                @foreach ($research_groups as $research_group)
-                                    @if($research_group->research_group_id == old('research_group'))
-                                        <option value="{{ $research_group->research_group_id }}" class="text-primary-700 font-semibold" selected>{{ $research_group->research_group_name }} ({{ $research_group->research_group_short_form }} )</option>
-                                    @else
-                                        <option value="{{ $research_group->research_group_id }}" class="text-primary-700 font-semibold">{{ $research_group->research_group_name }} ({{ $research_group->research_group_short_form }} )</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <select id="evaluation-number" name="evaluation_number" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                <option value="evaluation1" class="text-primary-700 font-semibold" @if(old('evaluation_number') == "evaluation1") selected @endif>Evaluation 1 (by supervisor)</option>
-                                <option value="evaluation2" class="text-primary-700 font-semibold" @if(old('evaluation_number') == "evaluation2") selected @endif>Evaluation 2 (by evaluators)</option>
-                                <option value="evaluation3" class="text-primary-700 font-semibold" @if(old('evaluation_number') == "evaluation3") selected @endif>Evaluation 3 (by supervisor)</option>
-                            </select>
-                        </div>
-                        <div>
-                            <select id="PSM" name="PSM" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                <option value="1" class="text-primary-700 font-semibold" @if(old('PSM') == "1") selected @endif>PSM 1</option>
-                                <option value="2" class="text-primary-700 font-semibold" @if(old('PSM') == "2") selected @endif>PSM 2</option>
-                            </select>
-                        </div>
+                <div class="bg-white rounded-md py-6 px-8">
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-table text-primary-700"></i>
+                        <div class="font-bold text-primary-700 ml-2">Rubric Info</div>
                     </div>
+                    <div class="px-4 mt-2">
+                        <x-input id="rubric-name" class="block text-sm mt-1 w-full pl-4" type="text" name="rubric_name" placeholder="Rubric Name" value="{{ old('rubric_name')}}" required/>
+                        <div class="flex grid grid-cols-3 gap-4 mt-2">
+                            <div>
+                                <select id="research-group" name="research_group" class="block text-sm font-semibold mt-1 w-full bg-white border border-slate-200 text-gray-700 focus:ring-primary-400 focus:border-0 px-4 py-2 rounded-md" required>
+                                    <option value="" class="text-gray-400 font-semibold" default>--Research Group--</option>
+                                    @foreach ($research_groups as $research_group)
+                                        @if($research_group->research_group_id == old('research_group'))
+                                            <option value="{{ $research_group->research_group_id }}" class="text-gray-500 font-semibold" selected>{{ $research_group->research_group_name }} ({{ $research_group->research_group_short_form }} )</option>
+                                        @else
+                                            <option value="{{ $research_group->research_group_id }}" class="text-gray-500 font-semibold">{{ $research_group->research_group_name }} ({{ $research_group->research_group_short_form }} )</option>
+                                        @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <select id="evaluation-number" name="evaluation_number" class="block text-sm font-semibold mt-1 w-full bg-white border border-slate-200 text-gray-700 focus:ring-primary-400 focus:border-0 px-4 py-2 rounded-md" required>
+                                    <option value="" class="text-gray-400 font-semibold" default>--Evaluation Type--</option>
+                                    <option value="evaluation1" class="text-gray-500 font-semibold" @if(old('evaluation_number') == "evaluation1") selected @endif>Evaluation 1 (by supervisor)</option>
+                                    <option value="evaluation2" class="text-gray-500 font-semibold" @if(old('evaluation_number') == "evaluation2") selected @endif>Evaluation 2 (by evaluators)</option>
+                                    <option value="evaluation3" class="text-gray-500 font-semibold" @if(old('evaluation_number') == "evaluation3") selected @endif>Evaluation 3 (by supervisor)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <select id="PSM" name="PSM" class="block text-sm font-semibold mt-1 w-full bg-white border border-slate-200 text-gray-700 focus:ring-primary-400 focus:border-0 px-4 py-2 rounded-md" required>
+                                    <option value="" class="text-gray-400 font-semibold" default>--PSM Year--</option>
+                                    <option value="2" class="text-gray-500 font-semibold" @if(old('PSM') == "2") selected @endif>PSM 2</option>
+                                    <option value="1" class="text-gray-500 font-semibold" @if(old('PSM') == "1") selected @endif>PSM 1</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>            
                 </div>
-                <div class="mt-6 mx-4" id="criteria-form">
+                <div class="mt-4 py-4 px-6 bg-white rounded-md" id="criteria-form">
                     {{-- Rubric Elements --}}
-                    <div class="font-bold text-gray text-sm">Elements</div>
+                    <div class="flex items-center">
+                        <i class="fa-solid fa-bars text-primary-700"></i>
+                        <div class="font-bold text-primary-700 text-md ml-2">Elements</div>
+                    </div>
                     {{-- Main Criteria --}}
                     <div class="mt-4 px-4" id="criteria-0">
                         <div class="flex items-center">
@@ -60,10 +70,11 @@
                                         <x-input id="sub-criteria-weightage" class="block text-sm mt-1 w-full pl-4" type="number" name="criteria[0][0][sub_criteria_weightage]" value="{{ old('criteria[0][0][sub_criteria_weightage]')}}" placeholder="Weightage(%)" min='1' max='100' required/>
                                     </div>
                                     <div>
-                                        <select id="sub-criteria-co-level" name="criteria[0][0][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-primary-100 text-primary-300 px-4 py-2 border-0 rounded-md" required>
-                                            <option value="co-1" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-1") selected @endif>CO 1</option>
-                                            <option value="co-2" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-2") selected @endif>CO 2</option>
-                                            <option value="co-3" class="text-primary-700 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-3") selected @endif>CO 3</option>
+                                        <select id="sub-criteria-co-level" name="criteria[0][0][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-white border border-slate-200 text-gray-700 focus:ring-primary-400 focus:border-0 px-4 py-2 rounded-md" required>
+                                            <option value="" class="text-gray-400 font-semibold" default>--CO Level--</option>
+                                            <option value="co-1" class="text-gray-500 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-1") selected @endif>CO 1</option>
+                                            <option value="co-2" class="text-gray-500 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-2") selected @endif>CO 2</option>
+                                            <option value="co-3" class="text-gray-500 font-semibold" @if(old('criteria[0][0][sub_criteria_co_level]') == "co-3") selected @endif>CO 3</option>
                                         </select>
                                     </div>
                                 </div>

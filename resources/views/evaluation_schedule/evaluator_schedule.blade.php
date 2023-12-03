@@ -3,9 +3,12 @@
         <a href="/evaluation schedule"><i class="fa-regular fa-chevron-left fa-xs"></i></a>
         {{__('My Schedule')}}
     </x-slot>
+    @role('coordinator')
+        <a href="/evaluation schedule" class="ml-8 flex items-center"><i class="fa-regular fa-chevron-left mr-2"></i><div>BACK</div></a>
+    @endrole
     <div class="px-8">
         <x-show-table :headers="['Evaluatee Name', 'PSM Year', 'Project Title', 'Date', 'Timeslot', 'Venue']">
-            <tbody class="flex flex-col w-full" style="height: 70vh;">
+            <tbody class="flex flex-col w-full" style="min-height: 70vh;">
                 @foreach ($evaluatees as $i => $evaluatee)
                     <tr class="flex px-8 py-2 {{ ($i%2 == 0)? 'bg-primary-50' : '';}}">
                         <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ $i+1 }}.</td>
