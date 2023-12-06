@@ -19,6 +19,8 @@ class ReportController extends Controller
             // Get lecturer's supervisees
             $lecturer = auth()->user();
             $supervisees = $lecturer->supervisees->pluck('student_id'); 
+            $all_students_grade = [];
+            $all_students_co = [];
 
             // Get all supervisee marks
             foreach($supervisees as $supervisee) {
@@ -143,7 +145,7 @@ class ReportController extends Controller
             // Get each evaluation marks for that student
             $all_marks = Evaluation::where('student_id', auth()->user()->student_id)->get();
 
-            $data = $all_marks->mapWithKeys(function($item) {
+            $all_supervisee_marks = $all_marks->mapWithKeys(function($item) {
                 return [$item['evaluation_type'] => $item['marks']];
             });
             
@@ -152,10 +154,13 @@ class ReportController extends Controller
                 $industrial_mark = $industrial_evaluation->mapWithKeys(function($item) {
                     return ['Industrial Evaluation' => $item['marks']];
                 });
-                $data = $data->merge($industrial_mark);
+                $all_supervisee_marks = $all_supervisee_marks->merge($industrial_mark);
             }
 
-            return view('report.report_and_progress', compact('data'));
+            $all_students_grade = []; 
+            $all_students_co = [];
+
+            return view('report.report_and_progress', compact('all_supervisee_marks', 'all_students_grade', 'all_students_co'));
         }
         else {
             return redirect()->route('login');
