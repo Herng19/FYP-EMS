@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CriteriaMark;
 use App\Models\CriteriaScale;
 use App\Models\RubricCriteria;
 use Illuminate\Database\Eloquent\Model;
@@ -27,5 +28,9 @@ class SubCriteria extends Model
 
     public function criteria_scales() {
         return $this->hasMany(CriteriaScale::class, 'sub_criteria_id', 'sub_criteria_id');
+    }
+
+    public function criteria_marks() {
+        return $this->hasMany(CriteriaMark::class, 'sub_criteria_id', 'sub_criteria_id');
     }
 }

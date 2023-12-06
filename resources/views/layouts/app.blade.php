@@ -39,7 +39,7 @@
             </div>
 
             <!-- Page Content -->
-            <main class="pt-6">
+            <main class="pt-4">
                 {{ $slot }}
             </main>
         </div>

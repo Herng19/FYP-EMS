@@ -56,8 +56,8 @@
                 </tbody>
             </x-show-table>
         </div>
-        <div class="p-4">
-            <div class="bg-gray-100 rounded-lg p-8 h-full text-left justify-center drop-shadow-[0px_1px_18px_rgba(120,120,120,0.15)]">
+        <div class="pt-4 pl-4">
+            <div class="bg-white rounded-lg p-8 h-full text-left justify-center drop-shadow-[0px_1px_18px_rgba(120,120,120,0.15)]">
                 <div class="h-5/6">
                     <p class="font-bold text-xl text-primary-700">Next Evaluation</p>
                     <p class="font-semibold text-md text-gray mt-4">First Evaluation (30%)</p>
