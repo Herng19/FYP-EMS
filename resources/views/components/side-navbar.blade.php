@@ -2,7 +2,7 @@
     {{-- title --}}
     <div class="flex justify-center items-center pt-6 pb-2">
         <img src="{{asset('img/umpsa_logo-removebg-preview.png')}}" alt="umpsa-logo" class="w-24 h-18">
-        <img src="{{asset('img/petakom_logo-removebg-preview.png')}}" alt="petakom-logo" class="w-16 h-16">
+        <img src="{{asset('img/FK_logo-removebg.png')}}" alt="FK-logo" class="w-20 h-20">
     </div>
 
     {{-- available nav items --}}
@@ -11,7 +11,7 @@
         <x-navbar-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
             <x-slot name="icon">
                 <i class="fa-light fa-objects-column"></i>
-            </x-slot>
+            </x-slot>   
             <x-slot name="title">
                 {{ __('Dashboard') }}
             </x-slot>

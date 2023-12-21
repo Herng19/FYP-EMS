@@ -38,8 +38,8 @@
                             <div>
                                 <select id="PSM" name="PSM" class="block text-sm font-semibold mt-1 w-full bg-white border border-slate-200 text-gray-700 focus:ring-primary-400 focus:border-0 px-4 py-2 rounded-md" required>
                                     <option value="" class="text-gray-400 font-semibold" default>--PSM Year--</option>
-                                    <option value="2" class="text-gray-500 font-semibold" @if(old('PSM') == "2") selected @endif>PSM 2</option>
                                     <option value="1" class="text-gray-500 font-semibold" @if(old('PSM') == "1") selected @endif>PSM 1</option>
+                                    <option value="2" class="text-gray-500 font-semibold" @if(old('PSM') == "2") selected @endif>PSM 2</option>
                                 </select>
                             </div>
                         </div>

@@ -29,7 +29,7 @@
                 <!-- FYP Description -->
                 <div class="mt-4">
                     <x-label for="project_description" value="project_description" />
-                    <textarea name="project_description" class="mt-1 block w-full rounded-lg border-0 bg-primary-100 text-primary-700 font-semibold text-sm" rows='8' cols='50' required>{{ $fyp->project_description }}</textarea>
+                    <textarea name="project_description" class="mt-1 block w-full rounded-lg bg-white border-gray-200 focus:border-2 focus:border-primary-200 focus:ring-0 text-gray font-semibold text-sm" rows='8' cols='50' required>{{ $fyp->project_description }}</textarea>
                     <input-error for="project_description" class="mt-2" />
                 </div>
                 

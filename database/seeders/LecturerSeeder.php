@@ -157,6 +157,6 @@ class LecturerSeeder extends Seeder
         'profile_photo_path' => null,
         'current_team_id' => null,])->assignRole('supervisor', 'evaluator', 'head of research group');
 
-        Lecturer::factory()->count(67)->create();
+        Lecturer::factory()->count(87)->create();
     }
 }

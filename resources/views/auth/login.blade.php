@@ -7,7 +7,7 @@
         <x-slot name="logo">
             <div class="flex justify-around items-center pt-6 px-8">
                 <img src="{{asset('img/umpsa_logo-removebg-preview.png')}}" alt="umpsa-logo" class="w-24 h-18">
-                <img src="{{asset('img/petakom_logo-removebg-preview.png')}}" alt="petakom-logo" class="w-20 h-20">
+                <img src="{{asset('img/FK_logo-removebg.png')}}" alt="FK-logo" class="w-20 h-20">
                 <a href="/">
                     <img src="{{asset('img/logo.png')}}" alt="logo" class="w-20 h-20">
                 </a>
