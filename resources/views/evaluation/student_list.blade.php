@@ -18,7 +18,7 @@
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">{{ $evaluatee->name }}</td>
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">PSM {{ $evaluatee->psm_year }}</td>
                         <td class="py-2 text-gray text-sm font-semibold text-left w-1/4">{{ $evaluatee->project_title }}</td>
-                        <td class="py-2 text-gray-400 text-sm font-semibold text-left w-1/4">{{ (array_key_exists($evaluatee->student_id, $total_marks))? $total_marks[$evaluatee->student_id] : "0" }}/100</td>
+                        <td class="py-2 text-gray-400 text-sm font-semibold text-left w-1/4">{{ (array_key_exists($evaluatee->student_id, $student_marks))? $student_marks[$evaluatee->student_id] : "0" }}/{{ $total_marks[$evaluatee->student_id] }}</td>
                         <td class="py-2 text-gray text-sm font-semibold text-center w-1/4">
                             <a href="/evaluation/{{ $evaluatee->student_id}}" class="rounded-full px-3 py-3 text-primary-700 hover:bg-primary-100">
                                 <i class="fa-regular fa-pen text-inherit fa-lg"></i>

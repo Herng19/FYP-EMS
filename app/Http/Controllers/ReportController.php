@@ -18,7 +18,7 @@ class ReportController extends Controller
         if(auth('web')->check()) {
             // Get lecturer's supervisees
             $lecturer = auth()->user();
-            $supervisees = $lecturer->supervisees->pluck('student_id'); 
+            $supervisees = $lecturer->supervisees; 
             $all_students_grade = [];
             $all_students_co = [];
 
@@ -27,18 +27,30 @@ class ReportController extends Controller
                 $total_mark = 0; 
 
                 // Get student name
-                $student_name = Student::where('student_id', $supervisee)->first()->name;
+                $student_name = Student::where('student_id', $supervisee->student_id)->first()->name;
 
                 // Get total marks for that student
-                $supervisee_marks = Evaluation::where('student_id', $supervisee)->get();
+                $supervisee_marks = Evaluation::where('student_id', $supervisee->student_id)->get();
 
-                // Calculate the total marks for the student
-                foreach($supervisee_marks as $mark) {
-                    if($mark->evaluation_type == 'evaluation2') {
-                        $total_mark += $mark->marks * 0.4;
+                // Calculate the total marks for the student of psm 1
+                if($supervisee->psm_year == 1) {
+                    foreach($supervisee_marks as $mark) {
+                        if($mark->evaluation_type == 'evaluation2') {
+                            $total_mark += $mark->marks * 0.2;
+                        }
+                        else {
+                            $total_mark += $mark->marks * 0.3;
+                        }
                     }
-                    else {
-                        $total_mark += $mark->marks * 0.3;
+                }
+                else {
+                    foreach($supervisee_marks as $mark) {
+                        if($mark->evaluation_type == 'evaluation3') {
+                            $total_mark += $mark->marks * 0.4;
+                        }
+                        else {
+                            $total_mark += $mark->marks * 0.2;
+                        }
                     }
                 }
 
@@ -58,7 +70,7 @@ class ReportController extends Controller
                     // For each evaluations of that student, calculate the total marks
                     foreach($evaluations as $evaluation) {
                         if($evaluation->evaluation_type == 'evaluation2') {
-                            $total_marks += $evaluation->marks * 0.4;
+                            $total_marks += $evaluation->marks * 0.2;
                         }
                         else {
                             $total_marks += $evaluation->marks * 0.3;
@@ -161,9 +173,6 @@ class ReportController extends Controller
             $all_students_co = [];
 
             return view('report.report_and_progress', compact('all_supervisee_marks', 'all_students_grade', 'all_students_co'));
-        }
-        else {
-            return redirect()->route('login');
         }
     }
 }

@@ -35,11 +35,10 @@ class EvaluationScheduleController extends Controller
             $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
             if(session('psm_year') == '1') {
                 $schedules = DB::table('students')
-                            ->join('projects', 'students.student_id', '=', 'projects.student_id')
                             ->join('slots', 'students.student_id', 'slots.student_id')
                             ->join('venues', 'slots.venue_id', 'venues.venue_id')
                             ->join('evaluation_schedules', 'slots.schedule_id', '=', 'evaluation_schedules.schedule_id')
-                            ->select('students.student_id', 'students.name', 'projects.project_title', 'evaluation_schedules.schedule_date', 'slots.slot_id', 'slots.start_time', 'venues.venue_id', 'venues.venue_name')
+                            ->select('students.student_id', 'students.name', 'slots.slot_id', 'slots.start_time', 'venues.venue_id', 'venues.venue_name')
                             ->where('evaluation_schedules.schedule_date', '=', session('date'))
                             ->where('students.psm_year', '=', session('psm_year'))
                             ->orderBy('venues.venue_id')
@@ -47,11 +46,10 @@ class EvaluationScheduleController extends Controller
             }
             else {
                 $schedules = DB::table('students')
-                ->join('projects', 'students.student_id', '=', 'projects.student_id')
                 ->join('slots', 'students.student_id', 'slots.student_id')
                 ->join('booths', 'slots.booth_id', 'booths.booth_id')
                 ->join('evaluation_schedules', 'slots.schedule_id', '=', 'evaluation_schedules.schedule_id')
-                ->select('students.student_id', 'students.name', 'projects.project_title', 'evaluation_schedules.schedule_date', 'slots.slot_id', 'slots.start_time', 'booths.booth_id as venue_id', 'booths.booth_name as venue_name')
+                ->select('students.student_id', 'students.name', 'slots.slot_id', 'slots.start_time', 'booths.booth_id as venue_id', 'booths.booth_name as venue_name')
                 ->where('evaluation_schedules.schedule_date', '=', session('date'))
                 ->where('students.psm_year', '=', session('psm_year'))
                 ->orderBy('booths.booth_id')
@@ -258,7 +256,7 @@ class EvaluationScheduleController extends Controller
         $stud_num = 0; 
 
         // for each research group, schedule students without slot, max 200 students overall
-        define("STUD_NUM", 230);
+        define("STUD_NUM", 200);
         for ($i = 0; $i < STUD_NUM; $i += $stud_num) {
             // Getting all variables 
             $students_had_slot = Slot::all()->pluck('student_id')->toArray();
@@ -285,7 +283,7 @@ class EvaluationScheduleController extends Controller
 
             // Only return avaialble evaluator (Except student's supervisor)
             foreach ($students_pending_slot as $student) {
-                $supervisor_id = Array(SupervisorList::where('student_id', '=', $student)->first()->lecturer_id);
+                $supervisor_id = SupervisorList::where('student_id', '=', $student)->pluck('lecturer_id')->toArray();
                 $evaluators1[] = Lecturer::where('research_group_id', '=', $first_stud_no_slot->research_group_id)
                                         ->whereNotIn('lecturer_id', $supervisor_id)
                                         ->pluck('lecturer_id')

@@ -31,6 +31,17 @@ class EvaluationController extends Controller
         // Union both queries
         $all_evaluatees = $supervisees->unionAll($evaluatees)->paginate(10);
 
+        $total_marks = array();
+        // Get the total marks for each student
+        foreach($all_evaluatees as $evaluatee) {
+            if(in_array($evaluatee->student_id, $evaluatees->pluck('student_id')->toArray())) {
+                $total_marks[$evaluatee->student_id] = 20;
+            }
+            else {
+                $total_marks[$evaluatee->student_id] = 60;
+            }
+        }
+
         // Get all marks that given by this lecturer
         $all_marks = Evaluation::where('lecturer_id', '=', auth()->user()->lecturer_id)->get();
         $all_marks_converted = array(); 
@@ -38,15 +49,42 @@ class EvaluationController extends Controller
         // Convert the marks to an array with student_id as key and marks as value, if same student exist, average the marks to 100%
         foreach($all_marks as $mark) {
             if(array_key_exists($mark->student_id, $all_marks_converted)) {
-                $all_marks_converted[$mark->student_id] = ($all_marks_converted[$mark->student_id] + $mark->marks)/2 ;
-            }else {
-                $all_marks_converted[$mark->student_id] = $mark->marks; 
+                // If student is psm 1, then evaluation 1 and 3 will be 30% and 30% respectively
+                // If evaluation 2, then the marks will be 40%
+                if($mark->student->psm_year == 1) {
+                    $all_marks_converted[$mark->student_id] = $all_marks_converted[$mark->student_id] + ($mark->marks * 30 / 100) ;
+                }
+                else if($mark->student->psm_year == 2) {
+                    if($mark->evaluation_type == 'evaluation1') {
+                        $all_marks_converted[$mark->student_id] = $all_marks_converted[$mark->student_id] + ($mark->marks * 20 / 100) ;
+                    }
+                    else if($mark->evaluation_type == 'evaluation3') {
+                        $all_marks_converted[$mark->student_id] = $all_marks_converted[$mark->student_id] + ($mark->marks * 40 / 100) ;
+                    }
+                }
+            }
+            else {
+                if($mark->evaluation_type == 'evaluation2') {
+                    $all_marks_converted[$mark->student_id] = $mark->marks * 20 / 100;
+                }
+                if($mark->student->psm_year == '1') {
+                    $all_marks_converted[$mark->student_id] = $mark->marks * 30 / 100;
+                }
+                else if($mark->student->psm_year == '2') {
+                    if($mark->evaluation_type == 'evaluation1') {
+                        $all_marks_converted[$mark->student_id] = $mark->marks * 20 / 100;
+                    }
+                    else if($mark->evaluation_type == 'evaluation3') {
+                        $all_marks_converted[$mark->student_id] = $mark->marks * 40 / 100;
+                    }
+                }
             }
         }
 
         return view('evaluation.student_list', [
             'evaluatees' => $all_evaluatees, 
-            'total_marks' => $all_marks_converted, 
+            'student_marks' => $all_marks_converted, 
+            'total_marks' => $total_marks, 
         ]);
     }
 

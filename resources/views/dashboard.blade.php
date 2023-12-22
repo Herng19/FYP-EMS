@@ -59,14 +59,13 @@
         <div class="pt-4 pl-4">
             <div class="bg-white rounded-lg p-8 h-full text-left justify-center drop-shadow-[0px_1px_18px_rgba(120,120,120,0.15)]">
                 <div class="h-5/6">
-                    <p class="font-bold text-xl text-primary-700">Next Evaluation</p>
-                    <p class="font-semibold text-md text-gray mt-4">First Evaluation (30%)</p>
-                    <p class="font-semibold text-sm text-gray-500">Submit until chapter 3, requirement part. </p>
-                    <p class="font-bold text-sm text-primary-900 mt-4">Due on 26/5/2023</p>
+                    <p class="font-bold text-xl text-primary-700">Evaluation for students</p>
+                    <p class="font-semibold text-sm text-justify text-gray-500 mt-2">Students that are ready to be evaluated will be show in the "Evaluation" tab, including your supervisee and students for evaluation 2</p>
+                    <p class="font-bold text-sm text-primary-900 mt-4">Due On: Check KALAM</p>
                 </div>
                 <a href="{{ route('evaluation') }}">
                     <x-button class="w-full font-bold text-md justify-center rounded-md px-8 py-2">
-                        Evaluate
+                        Evaluate NOW
                     </x-button>
                 </a>
             </div>

@@ -12,12 +12,17 @@
             {{-- Edit Top Student Form --}}
             <form action="/top students/edit" method="POST">
                 @csrf
-                <div class="flex justify-end mr-4 items-center">
-                    <div id="total_selected" class="text-primary-700 font-bold text-sm mr-1"></div>
-                    <div class="text-gray-400 text-sm">selected</div>
+                <div class="flex justify-between items-center">
+                    <div class="flex ml-4 items-center">
+                        <div id="total_selected" class="text-primary-700 font-bold text-md mr-1"></div>
+                        <div class="text-gray-400 text-md">selected</div>
+                    </div>
+                    <div class="items-center">
+                        <x-button class="mr-4">Save</x-button>
+                    </div>
                 </div>
                 {{-- Top Students List Table --}}
-                <x-show-table :headers="['Name', 'Research Group']">
+                <x-show-table :headers="['Name', 'Research Group', 'Marks' ,'Action']">
                     <tbody class="flex flex-col w-full" style="min-height: 60vh;">
                         @php $total_selected = 0; @endphp
                         @foreach ($students as $student)
@@ -25,6 +30,7 @@
                             <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ $loop->iteration }}.</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $student->name }}</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $student->research_group->research_group_name }} ({{ $student->research_group->research_group_short_form }})</td>
+                            <td class="py-2 pl-6 text-primary-800 text-sm font-semibold text-left w-1/3">{{ $marks[$student->student_id]? $marks[$student->student_id] : '0'; }} / 40</td>
                             @if($student->top_student)
                             @php $total_selected++; @endphp
                                 <td class="py-2 text-gray text-sm font-semibold text-center w-1/3"><input class="rounded-sm" type="checkbox" id="{{ $student->student_id }}" name="top_students[]" value="{{ $student->student_id }}" checked/></td>
@@ -35,9 +41,6 @@
                         @endforeach
                     </tbody>
                 </x-show-table>
-                <div class="flex justify-end items-center mt-4">
-                    <x-button class="mr-4">Save</x-button>
-                </div>
             </form>
         </div>
     </div>

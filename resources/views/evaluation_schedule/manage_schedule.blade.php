@@ -32,8 +32,10 @@
         <form action="/evaluation schedule" method="POST">
             @csrf
             <div class="flex justify-between w-full items-center">
-                <div class="flex">
+                <div class="flex items-center">
+                    <label for="date" class="text-xs text-gray-400 font-bold mr-2">Schedule Date: </label>
                     <input type="date" name="date" id="date" class="parameter rounded-md border-0 text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" value="{{Session::get('date')}}" required/>
+                    <label for="psm_year" class="text-xs text-gray-400 font-bold ml-2">Subject (PSM 1/2): </label>
                     <select name="psm_year" id="psm_year" class="parameter ml-2 rounded-md border-0 bg-white text-gray-400 text-sm font-semibold drop-shadow-[0px_1px_12px_rgba(185,185,185,0.25)]" required>
                         <option value="" class="text-gray-300" default>PSM Year</option>
                         <option value="1" {{ (Session::get('psm_year') && Session::get('psm_year') == '1')? 'selected': ''; }}>1</option>

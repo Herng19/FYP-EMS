@@ -43,17 +43,17 @@ Route::middleware('auth:web')->group(function () {
     
     // Route for Manage Evaluation Scheduel (Coordinator)
     Route::get('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
-    Route::put('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
-    Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'scheduleEvaluationSchedule'])->name('evaluation schedule');
+    Route::put('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule']);
+    Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'scheduleEvaluationSchedule']);
 
     // Route for Create Slot
     Route::get('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('evaluation schedule.create_slot');
-    Route::put('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot'])->name('evaluation schedule.create_slot');
-    Route::post('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'createSlot'])->name('evaluation schedule.create_slot');
+    Route::put('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'newSlot']);
+    Route::post('/evaluation schedule/create-slot', [EvaluationScheduleController::class, 'createSlot']);
 
     // Route for Edit Slot
     Route::get('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot'])->name('evaluation schedule.edit_slot');
-    Route::post('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot'])->name('evaluation schedule.edit_slot');
+    Route::post('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'editSlot']);
     Route::put('/evaluation schedule/edit-slot/{slot_id}', [EvaluationScheduleController::class, 'updateSlot']);
 
     // Route for Delete Slot
@@ -77,11 +77,11 @@ Route::middleware('auth:web')->group(function () {
 
     // Route for Create Rubric
     Route::get('/rubric/create-rubric', [RubricController::class, 'newRubric'])->name('rubric.new_rubric');
-    Route::post('/rubric/create-rubric', [RubricController::class, 'createRubric'])->name('rubric.new_rubric');
+    Route::post('/rubric/create-rubric', [RubricController::class, 'createRubric']);
 
     // Route for Edit Rubric
     Route::get('/rubric/edit/{rubric_id}', [RubricController::class, 'editRubric'])->name('rubric.edit_rubric');
-    Route::put('/rubric/edit/{rubric_id}', [RubricController::class, 'updateRubric'])->name('rubric.edit_rubric');
+    Route::put('/rubric/edit/{rubric_id}', [RubricController::class, 'updateRubric']);
 
     // Route for Delete Rubric
     Route::delete('/rubric/delete/{rubric_id}', [RubricController::class, 'deleteRubric'])->name('rubric.delete_rubric');
@@ -96,38 +96,39 @@ Route::middleware('auth:web')->group(function () {
 
     // Route for Top Students List
     Route::get('/top students', [TopStudentController::class, 'showTopStudents'])->name('top students');
+    Route::post('/top students', [TopStudentController::class, 'sortTopStudents']);
 
     // Route for edit Top Students
     Route::get('/top students/edit', [TopStudentController::class, 'editTopStudents'])->name('top students.edit_top_student');
-    Route::post('/top students/edit', [TopStudentController::class, 'updateTopStudents'])->name('top students.edit_top_student');
+    Route::post('/top students/edit', [TopStudentController::class, 'updateTopStudents']);
 
     // Route for Industrial Evaluator
     Route::get('/industrial evaluator', [IndustrialEvaluationController::class, 'showIndustrialEvaluators'])->name('industrial evaluator');
 
     // Route for create Industrial Evaluator
     Route::get('/industrial evaluator/create', [IndustrialEvaluationController::class, 'newIndustrialEvaluator'])->name('industrial evaluator.create_industrial_evaluator');
-    Route::post('/industrial evaluator/create', [IndustrialEvaluationController::class, 'createIndustrialEvaluator'])->name('industrial evaluator.create_industrial_evaluator');
+    Route::post('/industrial evaluator/create', [IndustrialEvaluationController::class, 'createIndustrialEvaluator']);
 
     // Route for edit Industrial Evaluator
     Route::get('/industrial evaluator/edit/{industrial_evaluator_id}', [IndustrialEvaluationController::class, 'editIndustrialEvaluator'])->name('industrial evaluator.edit_industrial_evaluator');
-    Route::put('/industrial evaluator/edit/{industrial_evaluator_id}', [IndustrialEvaluationController::class, 'updateIndustrialEvaluator'])->name('industrial evaluator.edit_industrial_evaluator');
+    Route::put('/industrial evaluator/edit/{industrial_evaluator_id}', [IndustrialEvaluationController::class, 'updateIndustrialEvaluator']);
     
     // Route for delete Industrial Evaluator
     Route::delete('industrial evaluator/delete/{industrial_evaluator_id}', [IndustrialEvaluationController::class, 'deleteIndustrialEvaluator'])->name('industrial evaluator.delete_industrial_evaluator');
 
     // Route for Industrial Schedule
     Route::get('/industrial schedule', [IndustrialEvaluationController::class, 'showIndustrialSchedule'])->name('industrial schedule');
-    Route::put('/industrial schedule', [IndustrialEvaluationController::class, 'showIndustrialSchedule'])->name('industrial schedule');
-    Route::post('/industrial schedule', [IndustrialEvaluationController::class, 'scheduleIndustrialSchedule'])->name('industrial schedule');
+    Route::put('/industrial schedule', [IndustrialEvaluationController::class, 'showIndustrialSchedule']);
+    Route::post('/industrial schedule', [IndustrialEvaluationController::class, 'scheduleIndustrialSchedule']);
 
     // Route for create industrial slot
     Route::get('/industrial schedule/create-slot', [IndustrialEvaluationController::class, 'newIndustrialSlot'])->name('industrial schedule.create_slot');
-    Route::put('/industrial schedule/create-slot', [IndustrialEvaluationController::class, 'newIndustrialSlot'])->name('industrial schedule.create_slot');
-    Route::post('/industrial schedule/create-slot', [IndustrialEvaluationController::class, 'createIndustrialSlot'])->name('industrial schedule.create_slot');
+    Route::put('/industrial schedule/create-slot', [IndustrialEvaluationController::class, 'newIndustrialSlot']);
+    Route::post('/industrial schedule/create-slot', [IndustrialEvaluationController::class, 'createIndustrialSlot']);
 
     // Route for update industrial slot
     Route::get('/industrial schedule/edit-slot/{slot_id}', [IndustrialEvaluationController::class, 'editIndustrialSlot'])->name('industrial schedule.edit_slot');
-    Route::post('/industrial schedule/edit-slot/{slot_id}', [IndustrialEvaluationController::class, 'editIndustrialSlot'])->name('industrial schedule.edit_slot');
+    Route::post('/industrial schedule/edit-slot/{slot_id}', [IndustrialEvaluationController::class, 'editIndustrialSlot']);
     Route::put('/industrial schedule/edit-slot/{slot_id}', [IndustrialEvaluationController::class, 'updateIndustrialSlot']);
 
     // Route for Delete Slot
@@ -144,11 +145,11 @@ Route::middleware('auth:web')->group(function () {
 
     // Route for Create Industrial Rubric
     Route::get('/industrial rubric/create-rubric', [IndustrialEvaluationController::class, 'newIndustrialRubric'])->name('industrial rubric.new_rubric');
-    Route::post('/industrial rubric/create-rubric', [IndustrialEvaluationController::class, 'createIndustrialRubric'])->name('industrial rubric.new_rubric');
+    Route::post('/industrial rubric/create-rubric', [IndustrialEvaluationController::class, 'createIndustrialRubric']);
 
     // Route for Edit Industrial Rubric
     Route::get('/industrial rubric/edit/{rubric_id}', [IndustrialEvaluationController::class, 'editIndustrialRubric'])->name('industrial rubric.edit_rubric');
-    Route::put('/industrial rubric/edit/{rubric_id}', [IndustrialEvaluationController::class, 'updateIndustrialRubric'])->name('industrial rubric.edit_rubric');
+    Route::put('/industrial rubric/edit/{rubric_id}', [IndustrialEvaluationController::class, 'updateIndustrialRubric']);
 
     // Route for Delete Industrial Rubric
     Route::delete('/industrial rubric/delete/{rubric_id}', [IndustrialEvaluationController::class, 'deleteIndustrialRubric'])->name('industrial rubric.delete_rubric');

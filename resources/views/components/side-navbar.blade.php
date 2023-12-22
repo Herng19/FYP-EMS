@@ -1,12 +1,12 @@
-<div class="justify-center flex-col flex bg-[#1e1e1e]">
+<div class="justify-center flex-col flex">
     {{-- title --}}
-    <div class="flex justify-center items-center pt-6 pb-2">
-        <img src="{{asset('img/umpsa_logo-removebg-preview.png')}}" alt="umpsa-logo" class="w-24 h-18">
-        <img src="{{asset('img/FK_logo-removebg.png')}}" alt="FK-logo" class="w-20 h-20">
+    <div class="flex justify-center items-center mt-2 pt-3 pb-3 bg-gray-100">
+        <img src="{{asset('img/umpsa_logo-removebg-preview.png')}}" alt="umpsa-logo" class="w-20 h-20 py-2">
+        <img src="{{asset('img/FK_logo-removebg.png')}}" alt="FK-logo" class="w-20 h-20 ml-2">
     </div>
 
     {{-- available nav items --}}
-    <div class="py-3 px-4 grow">
+    <div class="mt-2 py-3 px-4 grow bg-[#1e1e1e]">
         {{-- Dashboard --}}
         <x-navbar-item href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
             <x-slot name="icon">
@@ -144,7 +144,7 @@
     </div>
 
     {{-- logout button --}}
-    <div class="px-6 my-4 bg-transparent">
+    <div class="px-6 py-4 bg-[#1e1e1e]">
         <form method="POST" action="{{ route('logout') }}" x-data>
             @csrf
             <a href="{{ route('logout') }}" @click.prevent="$root.submit();" class="flex items-center object-fill mt-8 py-2 rounded-sm justify-center bg-red-500 text-gray-100 hover:bg-red-600 hover:text-white active:ring-red-700 active:ring-2 active:ring-offset-2 drop-shadow-[0px_0px_12px_rgba(255,150,150,0.2)]">
