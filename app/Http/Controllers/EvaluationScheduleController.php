@@ -254,7 +254,7 @@ class EvaluationScheduleController extends Controller
         $rooms_available = Venue::all()->pluck('venue_id')->toArray();
         $total_rooms_count = count($rooms_available);
         $rooms = array();
-        $num_particles = 20;
+        $num_particles = 100;
         $stud_num = 0; 
 
         // for each research group, schedule students without slot, max 200 students overall
@@ -511,10 +511,21 @@ class EvaluationScheduleController extends Controller
         $best_position = $particles[0]['position'];
         $best_fitness = $particles[0]['fitness'];
         $iterations = 0; 
+        $max_iteration = 0;
     
         // run the PSO algorithm
         while($best_fitness < 1 ) {
-            if($iterations >= 300) {
+            if(count($students_pending_slot)>15) {
+                $max_iteration = 1000;
+                $c1 = 2.5; 
+                $c2 = 1.5; 
+                $w = 0.7; 
+            }
+            else {
+                $max_iteration = 100; 
+            }
+
+            if($iterations >= $max_iteration) {
                 $iterations = 0;
                 $particles = $this->generate_particles($num_particles, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot);
                 $best_position = $particles[0]['position'];
