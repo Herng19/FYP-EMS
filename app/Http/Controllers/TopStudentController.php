@@ -47,9 +47,9 @@ class TopStudentController extends Controller
                              ->count();
 
         // If there are 2 evaluations for each psm 2 student, then proceed, else return error message
-        // if((count($all_psm2_students)*2) != $total_evaluations) {
-        //     return redirect('/top students')->with('error-message', 'Please make sure all students are evaluated in FYPro.');
-        // }
+        if((count($all_psm2_students)*2) != $total_evaluations) {
+            return redirect('/top students')->with('error-message', 'Please make sure all students are evaluated in FYPro.');
+        }
 
         // Clear all top students
         Student::where('top_student', '=', '1')->update(['top_student' => 0]);  

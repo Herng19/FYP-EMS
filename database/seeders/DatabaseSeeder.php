@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         ])->assignRole('student'); 
 
         // Set total student number
-        define("STUD_NUM", 300);
+        define("STUD_NUM", 200);
         
         // Factories call
         Student::factory()->count(STUD_NUM - 1)->create();

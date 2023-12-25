@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-ini_set('max_execution_time', 120);
+ini_set('max_execution_time', 300);
 
 use App\Models\Slot;
 use App\Models\Booth;
@@ -252,52 +252,60 @@ class EvaluationScheduleController extends Controller
         // Initiate variables for timeslots, particles num
         $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
         $rooms_available = Venue::all()->pluck('venue_id')->toArray();
+        $total_rooms_count = count($rooms_available);
+        $rooms = array();
         $num_particles = 20;
         $stud_num = 0; 
 
         // for each research group, schedule students without slot, max 200 students overall
-        define("STUD_NUM", 200);
-        for ($i = 0; $i < STUD_NUM; $i += $stud_num) {
-            // Getting all variables 
-            $students_had_slot = Slot::all()->pluck('student_id')->toArray();
+        define("STUD_NUM", 300);
 
-            $first_stud_no_slot = Student::whereNotIn('student_id', $students_had_slot)
-                                        ->where('psm_year', '=', $request->psm_year)
-                                        ->first();
+        // If psm year == 1, schedule as the way of psm 1
+        if($request->psm_year == '1') {
+            for ($i = 0; $i < ($total_rooms_count*count($timeslots)); $i += (count($rooms)*count($timeslots))) {
+                // Getting all variables 
+                $students_had_slot = Slot::all()->pluck('student_id')->toArray();
 
-            // If all students have been scheduled, break
-            if($first_stud_no_slot === null) {
-                break;
-            }
+                $first_stud_no_slot = Student::whereNotIn('student_id', $students_had_slot)
+                                            ->where('psm_year', '=', $request->psm_year)
+                                            ->first();
 
-            $students_pending_slot = Student::whereNotIn('student_id', $students_had_slot)
-                                ->where('research_group_id', '=', $first_stud_no_slot->research_group_id)
-                                ->where('psm_year', '=', $request->psm_year)
-                                ->limit(STUD_NUM-$i)
-                                ->pluck('student_id')
-                                ->toArray();
+                // If all students have been scheduled, break
+                if($first_stud_no_slot === null) {
+                    break;
+                }
 
-            $stud_num = count($students_pending_slot);
-            $evaluators1 = array();
-            $evaluators2 = array();
+                $students_pending_slot = Student::whereNotIn('student_id', $students_had_slot)
+                                    ->where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                    ->where('psm_year', '=', $request->psm_year)
+                                    ->limit(count($rooms_available)*count($timeslots))
+                                    ->pluck('student_id')
+                                    ->toArray();
 
-            // Only return avaialble evaluator (Except student's supervisor)
-            foreach ($students_pending_slot as $student) {
-                $supervisor_id = SupervisorList::where('student_id', '=', $student)->pluck('lecturer_id')->toArray();
-                $evaluators1[] = Lecturer::where('research_group_id', '=', $first_stud_no_slot->research_group_id)
-                                        ->whereNotIn('lecturer_id', $supervisor_id)
-                                        ->pluck('lecturer_id')
-                                        ->toArray();
-            }
-            $evaluators2 = $evaluators1;
-            
-            // If psm year == 1, schedule as the way of psm 1
-            if($request->psm_year == '1') {
+                $stud_num = count($students_pending_slot);
+
                 $rooms = array_slice($rooms_available, 0, ceil($stud_num/count($timeslots)));
                 array_splice($rooms_available, 0, ceil($stud_num/count($timeslots)));
 
-                // Get the schedule for a research group
+                $evaluators1 = array();
+                $evaluators2 = array();
 
+                // Only return avaialble evaluator (Except student's supervisor)
+                foreach ($students_pending_slot as $student) {
+                    $supervisor_id = SupervisorList::where('student_id', '=', $student)->pluck('lecturer_id')->toArray();
+                    $evaluators1[] = Lecturer::where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                            ->whereNotIn('lecturer_id', $supervisor_id)
+                                            ->pluck('lecturer_id')
+                                            ->toArray();
+                }
+                $evaluators2 = $evaluators1;
+
+                // Checking if then number of students is larger than available slots
+                if((count($rooms)*16) < count($students_pending_slot)) {
+                    break; 
+                }
+
+                // Get the schedule for a research group
                 $global_best_position = $this->particle_swarm_optimization($num_particles, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot);
                 $schedule = array();
                 for ($i = 0; $i < count($global_best_position); $i += 5) {
@@ -333,8 +341,45 @@ class EvaluationScheduleController extends Controller
                     ]);
                 }
             }
-            // else if psm year == 2. schedule as the way of psm 2 (1 student per booth)
-            else if($request->psm_year == '2') {
+        }
+        // else if psm year == 2. schedule as the way of psm 2 (1 student per booth)
+        else if($request->psm_year == '2') {
+            $all_booths = Booth::all()->pluck('booth_id')->toArray();
+            // Schedule students without slot for PSM 2
+            for ($i = 0; $i < count($all_booths); $i += $stud_num) {
+                // Getting all variables 
+                $students_had_slot = Slot::all()->pluck('student_id')->toArray();
+
+                $first_stud_no_slot = Student::whereNotIn('student_id', $students_had_slot)
+                                            ->where('psm_year', '=', $request->psm_year)
+                                            ->first();
+                                            
+                // If all students have been scheduled, break
+                if($first_stud_no_slot === null) {
+                    break;
+                }
+
+                $students_pending_slot = Student::whereNotIn('student_id', $students_had_slot)
+                                    ->where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                    ->where('psm_year', '=', $request->psm_year)
+                                    ->limit(STUD_NUM-$i)
+                                    ->pluck('student_id')
+                                    ->toArray();
+
+                $stud_num = count($students_pending_slot);
+                $evaluators1 = array();
+                $evaluators2 = array();
+
+                // Only return avaialble evaluator (Except student's supervisor)
+                foreach ($students_pending_slot as $student) {
+                    $supervisor_id = SupervisorList::where('student_id', '=', $student)->pluck('lecturer_id')->toArray();
+                    $evaluators1[] = Lecturer::where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                            ->whereNotIn('lecturer_id', $supervisor_id)
+                                            ->pluck('lecturer_id')
+                                            ->toArray();
+                }
+                $evaluators2 = $evaluators1;
+
                 // Get available booth
                 $booths_taken = Slot::where("booth_id", "!=", null)->pluck('booth_id')->toArray();
                 $booths_available = Booth::WhereNotIn('booth_id', $booths_taken)->pluck('booth_id')->toArray();
@@ -422,13 +467,13 @@ class EvaluationScheduleController extends Controller
         }
         
         // check student counts range 
-        $max_student_count = max($evaluator_student_counts);
-        $min_student_count = min($evaluator_student_counts);
-        $balance_penalty = $max_student_count - $min_student_count;
+        // $max_student_count = max($evaluator_student_counts);
+        // $min_student_count = min($evaluator_student_counts);
+        // $balance_penalty = $max_student_count - $min_student_count;
         
-        if($balance_penalty > 3) {
-            $cost += 1;
-        }
+        // if($balance_penalty > 3) {
+        //     $cost += 1;
+        // }
     
         return 1 / ($cost + 1); // minimize conflicts
     }
@@ -574,13 +619,13 @@ class EvaluationScheduleController extends Controller
         }
         
         // check student counts range 
-        $max_student_count = max($evaluator_student_counts);
-        $min_student_count = min($evaluator_student_counts);
-        $balance_penalty = $max_student_count - $min_student_count;
+        // $max_student_count = max($evaluator_student_counts);
+        // $min_student_count = min($evaluator_student_counts);
+        // $balance_penalty = $max_student_count - $min_student_count;
         
-        if($balance_penalty > 2) {
-            $cost += 1;
-        }
+        // if($balance_penalty > 2) {
+        //     $cost += 1;
+        // }
     
         return 1 / ($cost + 1); // minimize conflicts
     }
@@ -620,7 +665,7 @@ class EvaluationScheduleController extends Controller
     
         // run the PSO algorithm
         while($best_fitness < 1 ) {
-            if($iterations >= 300) {
+            if($iterations >= 500) {
                 $iterations = 0;
                 $particles = $this->generate_particles_psm2($num_particles, $timeslots, $evaluators1, $evaluators2, $students_pending_slot);
                 $best_position = $particles[0]['position'];
