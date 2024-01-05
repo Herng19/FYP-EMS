@@ -17,6 +17,7 @@ class Evaluation extends Model
         'lecturer_id',
         'evaluation_type',
         'marks', 
+        'comment', 
     ];
 
     protected $primaryKey = 'evaluation_id';

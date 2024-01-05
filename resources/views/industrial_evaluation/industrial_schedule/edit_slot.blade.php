@@ -151,7 +151,7 @@
         <div class="flex my-8 justify-end items-center">
             <x-danger-button data-modal-target="popup-modal-[{{ $slot->industrial_slot_id }}]" data-modal-toggle="popup-modal-[{{ $slot->industrial_slot_id }}]" class="bg-red-600 hover:bg-red-700 active:bg-red-600 focus:bg-red-600 focus:ring focus:ring-red-600">Delete</x-danger-button>
             <x-delete-confirmation-modal route="/industrial schedule/delete-slot/{{ $slot->industrial_slot_id }}" title="Delete Slot" description="Are you sure to delete this slot ?" id="{{ $slot->industrial_slot_id }}"/>
-            <a href="/industrial schedule"><x-secondary-button class="ml-4" id="cancel-button">Cancel</x-secondary-button></a>
+            <a href="/industrial schedule"><x-secondary-button class="ml-4" id="cancel-button">Back</x-secondary-button></a>
             <x-button type="submit" class="ml-4" form="edit-slot-form">Update</x-button>
         </div>
     </div>

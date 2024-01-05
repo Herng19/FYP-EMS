@@ -413,7 +413,7 @@ class IndustrialEvaluationController extends Controller
         for ($i = 0; $i < $num_particles; $i++) {
             $position = array();
             for ($j = 0; $j < count($students_pending_slot); $j++) {
-                $position[] = rand(0, count($timeslots) - 1);
+                $position[] = $j%16;
                 $position[] = rand(0, count($rooms) - 1);
                 $position[] = rand(0, count($evaluators1) - 1);
                 $position[] = rand(0, count($evaluators2) - 1);

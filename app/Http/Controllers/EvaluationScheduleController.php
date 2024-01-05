@@ -207,13 +207,26 @@ class EvaluationScheduleController extends Controller
             }
         }
 
-        $slot->update([
-            'student_id' => $formFields['name'],
-            'venue_id' => $formFields['venue'],
-            'schedule_id' => $schedule->schedule_id, 
-            'start_time' => $start_time,
-            'end_time' => $end_time, 
-        ]);
+        $psm_year = Student::find($formFields['name'])->psm_year;
+
+        if($psm_year == '1') {
+            Slot::create([
+                'student_id' => $formFields['name'],
+                'venue_id' => $formFields['venue'],
+                'schedule_id' => $schedule->schedule_id, 
+                'start_time' => $start_time,
+                'end_time' => $end_time, 
+            ]);
+        }
+        else {
+            Slot::create([
+                'student_id' => $formFields['name'],
+                'booth_id' => $formFields['venue'],
+                'schedule_id' => $schedule->schedule_id, 
+                'start_time' => $start_time,
+                'end_time' => $end_time, 
+            ]);
+        }
         
         return back()->with('success-message', 'Slot Updated Successfully');
     }
@@ -484,7 +497,7 @@ class EvaluationScheduleController extends Controller
         for ($i = 0; $i < $num_particles; $i++) {
             $position = array();
             for ($j = 0; $j < count($students_pending_slot); $j++) {
-                $position[] = rand(0, count($timeslots) - 1);
+                $position[] = $j%16;
                 $position[] = rand(0, count($rooms) - 1);
                 $position[] = rand(0, count($evaluators1[$j]) - 1);
                 $position[] = rand(0, count($evaluators2[$j]) - 1);

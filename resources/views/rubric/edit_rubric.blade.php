@@ -125,7 +125,7 @@
 
             {{-- Action Buttons --}}
             <div class="flex justify-end mt-8 mx-8">
-                <a href="/rubric"><x-secondary-button class="mr-2">Cancel</x-secondary-button></a>
+                <a href="/rubric"><x-secondary-button class="mr-2">Back</x-secondary-button></a>
                 <x-button>Update</x-button>
             </div>
         </form>

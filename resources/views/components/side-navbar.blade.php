@@ -28,21 +28,9 @@
             </x-slot>
         </x-navbar-item>
         @endrole
-
-        @hasanyrole('supervisor|evaluator')
-        {{-- Evaluation --}}
-        <x-navbar-item href="{{ route('evaluation') }}" :active="request()->routeIs('evaluation.*') || request()->routeIs('evaluation')">
-            <x-slot name="icon">
-                <i class="fa-light fa-graduation-cap"></i>
-            </x-slot>
-            <x-slot name="title">
-                {{__('Evaluation')}}
-            </x-slot>
-        </x-navbar-item>
-        @endhasanyrole
-
+        
         {{-- Evaluation Schedule --}}
-        <x-navbar-item href="{{ (auth('web')->check()) ? route('evaluation schedule') :  route('evaluation schedule.student_schedule')}}" :active="request()->routeIs('evaluation schedule.*') || request()->routeIs('evaluation schedule')">
+        <x-navbar-item href="{{ (auth('web')->check()) ? (auth()->user()->hasRole('coordinator'))? route('evaluation schedule') : route('evaluation schedule.view_schedule') :  route('evaluation schedule.student_schedule')}}" :active="request()->routeIs('evaluation schedule.*') || request()->routeIs('evaluation schedule')">
             <x-slot name="icon">
                 <i class="fa-light fa-table"></i>
             </x-slot>
@@ -60,6 +48,18 @@
                 {{__('Rubric')}}
             </x-slot>
         </x-navbar-item>
+
+        @hasanyrole('supervisor|evaluator')
+        {{-- Evaluation --}}
+        <x-navbar-item href="{{ route('evaluation') }}" :active="request()->routeIs('evaluation.*') || request()->routeIs('evaluation')">
+            <x-slot name="icon">
+                <i class="fa-light fa-graduation-cap"></i>
+            </x-slot>
+            <x-slot name="title">
+                {{__('Evaluation')}}
+            </x-slot>
+        </x-navbar-item>
+        @endhasanyrole
 
         {{-- Top Students --}}
         <x-navbar-item href="{{ (auth('web')->check()) ? route('top students') :  route('top students.student_top_student_list') }}" :active="request()->routeIs('top students.*') || request()->routeIs('top students')">

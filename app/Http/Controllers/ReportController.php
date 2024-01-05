@@ -19,6 +19,7 @@ class ReportController extends Controller
             // Get lecturer's supervisees
             $lecturer = auth()->user();
             $supervisees = $lecturer->supervisees; 
+            $all_supervisee_marks = [];
             $all_students_grade = [];
             $all_students_co = [];
 

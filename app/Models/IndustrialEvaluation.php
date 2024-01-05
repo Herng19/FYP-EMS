@@ -17,7 +17,8 @@ class IndustrialEvaluation extends Model
     
     protected $fillable = [
         'student_id', 
-        'marks'
+        'marks', 
+        'comment',
     ];
 
     public function student() {

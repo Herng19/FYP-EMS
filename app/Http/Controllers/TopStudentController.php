@@ -15,10 +15,10 @@ class TopStudentController extends Controller
         DB::statement("SET SQL_MODE=''");
         $students = Student::where('top_student', '=', '1')
                     ->where('psm_year', '=', '2')
-                    ->join('evaluations', 'students.student_id', '=', 'evaluations.student_id')
-                    ->where('evaluation_type', '=', 'evaluation2')
-                    ->groupBy('students.student_id')
-                    ->orderBy(DB::raw('SUM(marks)'), 'desc')
+                    // ->join('evaluations', 'students.student_id', '=', 'evaluations.student_id')
+                    // ->where('evaluation_type', '=', 'evaluation2')
+                    // ->groupBy('students.student_id')
+                    // ->orderBy(DB::raw('SUM(marks)'), 'desc')
                     ->paginate(10);
 
         // Calculate the students' total FYPro marks
@@ -47,9 +47,9 @@ class TopStudentController extends Controller
                              ->count();
 
         // If there are 2 evaluations for each psm 2 student, then proceed, else return error message
-        if((count($all_psm2_students)*2) != $total_evaluations) {
-            return redirect('/top students')->with('error-message', 'Please make sure all students are evaluated in FYPro.');
-        }
+        // if((count($all_psm2_students)*2) != $total_evaluations) {
+        //     return redirect('/top students')->with('error-message', 'Please make sure all students are evaluated in FYPro.');
+        // }
 
         // Clear all top students
         Student::where('top_student', '=', '1')->update(['top_student' => 0]);  

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('industrial_evaluation_id');
             $table->foreignId('student_id')->constrained('students', 'student_id');
             $table->integer('marks');
+            $table->string('comment')->nullable();
         });
     }
 

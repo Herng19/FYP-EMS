@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained('students', 'student_id');
             $table->string('evaluation_type');
             $table->integer('marks');
+            $table->string('comment')->nullable();
         });
     }
 

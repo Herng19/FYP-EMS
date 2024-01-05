@@ -3,6 +3,7 @@
         {{ __('Dashboard') }}
     </x-slot>
     <div class="flex items-stretch mx-12 w-auto">
+        @unlessrole('coordinator')
         <x-dashboard-item>
             <x-slot name="icon">
                 <div class="flex items-center rounded-md bg-[#efe9f7] px-8">
@@ -36,6 +37,41 @@
             </x-slot>
             <x-slot name="data">{{ $evaluatees }}</x-slot>
         </x-dashboard-item>
+        @else
+        <x-dashboard-item>
+            <x-slot name="icon">
+                <div class="flex items-center rounded-md bg-[#efe9f7] px-8">
+                    <i class="fas fa-users fa-xl text-[#6f518c]"></i>
+                </div>
+            </x-slot>
+            <x-slot name="title">
+                PSM 1 Students
+            </x-slot>
+            <x-slot name="data">{{ $psm1_students }}</x-slot>
+        </x-dashboard-item>
+        <x-dashboard-item>
+            <x-slot name="icon">
+                <div class="flex items-center rounded-md bg-[#f5ece6] px-8">
+                    <i class="fas fa-users fa-xl text-[#ab541f]"></i>
+                </div>
+            </x-slot>
+            <x-slot name="title">
+                PSM 2 Students
+            </x-slot>
+            <x-slot name="data">{{ $psm2_students }}</x-slot>
+        </x-dashboard-item>
+        <x-dashboard-item>
+            <x-slot name="icon">
+                <div class="flex items-center rounded-md bg-[#faebef] px-8">
+                    <i class="fas fa-users fa-xl text-[#a63353]"></i>
+                </div>
+            </x-slot>
+            <x-slot name="title">
+                Lecturers
+            </x-slot>
+            <x-slot name="data">{{ $lecturers }}</x-slot>
+        </x-dashboard-item>
+        @endunlessrole
     </div>
     <div class="grid grid-cols-3 gap-12 mx-20 my-12">
         <div class="col-span-2">
@@ -50,7 +86,7 @@
                             <td class="mx-4 py-2 text-gray text-sm font-semibold w-4">{{ $i+1 }}.</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->name }}</td>
                             <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">PSM {{ $supervisee->psm_year }}</td>
-                            <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->project_title }}</td>
+                            <td class="py-2 text-gray text-sm font-semibold text-left w-1/3">{{ $supervisee->project->project_title }}</td>
                         </tr>
                     @endforeach
                 </tbody>

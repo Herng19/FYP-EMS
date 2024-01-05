@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="flex justify-end items-center mt-4">
-                    <a href="/industrial evaluator"><x-secondary-button class="mr-2">cancel</x-secondary-button></a>
+                    <a href="/industrial evaluator"><x-secondary-button class="mr-2">Back</x-secondary-button></a>
                     <x-button type="submit">Update</x-button>
                 </div>
             </form>

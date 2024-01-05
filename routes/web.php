@@ -41,7 +41,7 @@ Route::middleware([
 Route::middleware('auth:web')->group(function () {
     Route::get('/supervisee', [SuperviseeListController::class, 'showSuperviseeList'])->name('supervisee');
     
-    // Route for Manage Evaluation Scheduel (Coordinator)
+    // Route for Manage Evaluation Schedule (Coordinator)
     Route::get('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule'])->name('evaluation schedule');
     Route::put('/evaluation schedule', [EvaluationScheduleController::class, 'showEvaluationSchedule']);
     Route::post('/evaluation schedule', [EvaluationScheduleController::class, 'scheduleEvaluationSchedule']);

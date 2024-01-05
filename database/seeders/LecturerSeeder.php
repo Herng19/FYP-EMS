@@ -15,7 +15,7 @@ class LecturerSeeder extends Seeder
     public function run(): void
     {
         Lecturer::create(['research_group_id' => 1,
-        'name' => 'En.Zulfahmi',
+        'name' => 'Coordinator',
         'email' => 'coordinator@example.com',
         'email_verified_at' => now(),
         'password' => bcrypt('test'), // password

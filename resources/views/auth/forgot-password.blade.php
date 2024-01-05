@@ -4,6 +4,10 @@
             <x-authentication-card-logo />
         </x-slot>
 
+        <div class="font-bold text-2xl text-primary-700">
+            {{ __('Reset Password') }}
+        </div>
+
         <div class="mb-4 text-sm text-gray-600">
             {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
         </div>
@@ -25,7 +29,12 @@
             </div>
 
             <div class="flex items-center justify-end mt-4">
-                <x-button>
+                <x-secondary-button>
+                    <a href="{{ route('login') }}">
+                        {{ __('Back') }}
+                    </a>
+                </x-secondary-button>
+                <x-button class="ml-2">
                     {{ __('Email Password Reset Link') }}
                 </x-button>
             </div>

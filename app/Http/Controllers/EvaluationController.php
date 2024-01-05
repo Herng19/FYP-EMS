@@ -64,10 +64,10 @@ class EvaluationController extends Controller
                 }
             }
             else {
-                if($mark->evaluation_type == 'evaluation2') {
+                if($mark->evaluation_type == "evaluation2") {
                     $all_marks_converted[$mark->student_id] = $mark->marks * 20 / 100;
                 }
-                if($mark->student->psm_year == '1') {
+                else if($mark->student->psm_year == '1') {
                     $all_marks_converted[$mark->student_id] = $mark->marks * 30 / 100;
                 }
                 else if($mark->student->psm_year == '2') {
@@ -118,7 +118,7 @@ class EvaluationController extends Controller
 
         // If no rubric found, return
         if($rubric_1 == null) {
-            return redirect()->route('evaluation')->with('error-message', 'Rubric not found');
+            return redirect()->route('evaluation')->with('error-message', 'Rubric not found, please contact coordinator/HORG to create a rubric.');
         }
 
         // Get every evaluation ids for the student and this lecturer
@@ -155,6 +155,21 @@ class EvaluationController extends Controller
         $marks_2_keyed = $marks_2->mapWithKeys(function ($item) {
             return [$item['sub_criteria_id'] => $item['scale']];
         });
+
+        // Get evaluations for that student
+        $evaluations = Evaluation::where('student_id', '=', $student_id)->get();
+
+        $evaluation = array();
+        $evaluation_2 = array();
+
+        foreach($evaluations as $eval) {
+            if($eval->evaluation_type == 'evaluation1' || $eval->evaluation_type == 'evaluation2') {
+                $evaluation = $eval;
+            }
+            else if($eval->evaluation_type == 'evaluation3') {
+                $evaluation_2 = $eval;
+            }
+        }
         
         return view('evaluation.edit_evaluation', [
             'student' => $student,
@@ -162,6 +177,8 @@ class EvaluationController extends Controller
             'rubric_2' => $rubric_2, 
             'marks' => $marks_keyed, 
             'marks_2' => $marks_2_keyed,
+            'evaluation' => $evaluation,
+            'evaluation_2' => $evaluation_2,
         ]);
     }
 
@@ -176,7 +193,7 @@ class EvaluationController extends Controller
         // Insert evaluation record
         $evaluation_id = Evaluation::updateOrCreate(
             ['student_id' => $student_id, 'lecturer_id' => auth()->user()->lecturer_id, 'evaluation_type' => $request->evaluation_type], 
-            ['marks' => $marks]
+            ['marks' => $marks, 'comment' => $request->comment]
         )->evaluation_id;
 
         // insert each sub criteria scale
@@ -198,7 +215,7 @@ class EvaluationController extends Controller
             // Insert evaluation record
             $evaluation_id = Evaluation::updateOrCreate(
                 ['student_id' => $student_id, 'lecturer_id' => auth()->user()->lecturer_id, 'evaluation_type' => $request->evaluation_type_2], 
-                ['marks' => $marks_2]
+                ['marks' => $marks_2, 'comment' => $request->comment_2]
             )->evaluation_id;
 
             // insert each sub criteria scale

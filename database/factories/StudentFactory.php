@@ -22,7 +22,7 @@ class StudentFactory extends Factory
             'name' => $this->faker->name,
             'password' => bcrypt('test'),
             'email' => $this->faker->unique()->safeEmail,
-            'course' => $this->faker->randomElement(['Software Engineering', 'Graphics Design & Animation', 'Data & Networking']),
+            'course' => $this->faker->randomElement(['Software Engineering', 'Graphics & Multimedia Technology', 'Computer Systems & Networking', 'Cyber Security']),
             'psm_year' => $this->faker->randomElement(['1', '2']),
             'top_student' => $this->faker->boolean(0),
         ];
