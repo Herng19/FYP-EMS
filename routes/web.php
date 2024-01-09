@@ -69,6 +69,20 @@ Route::middleware('auth:web')->group(function () {
     // Route for View Rubric List
     Route::get('/rubric', [RubricController::class, 'showRubricList'])->name('rubric');
 
+    // Route for show CO level settings
+    Route::get('/rubric/co-level-settings', [RubricController::class, 'showCOLevelSettings'])->name('rubric.co_level');
+
+    // Route for create CO Level
+    Route::get('/rubric/create-co-level', [RubricController::class, 'newCOLevel'])->name('rubric.edit_co_level');
+    Route::post('/rubric/create-co-level', [RubricController::class, 'createCOLevel'])->name('rubric.edit_co_level');
+
+    // Route for edit CO Level
+    Route::get('/rubric/edit-co-level/{co_level_id}', [RubricController::class, 'editCOLevel'])->name('rubric.edit_co_level');
+    Route::put('/rubric/edit-co-level/{co_level_id}', [RubricController::class, 'updateCOLevel'])->name('rubric.edit_co_level');
+
+    // Route for delete CO Level
+    Route::delete('/rubric/delete-co-level/{co_level_id}', [RubricController::class, 'deleteCOLevel'])->name('rubric.delete_co_level');
+
     // Route for View Single Rubric
     Route::get('/rubric/view/{rubric_id}', [RubricController::class, 'showRubric'])->name('rubric.view_rubric');
 
@@ -136,6 +150,20 @@ Route::middleware('auth:web')->group(function () {
 
     // Route for View Industrial Rubric List
     Route::get('/industrial rubric', [IndustrialEvaluationController::class, 'showIndustrialRubricList'])->name('industrial rubric');
+
+    // Route for show Industrial CO level settings
+    Route::get('/industrial rubric/co-level-settings', [IndustrialEvaluationController::class, 'showCOLevelSettings'])->name('industrial rubric.co_level');
+
+    // Route for create CO Level for industrial rubric
+    Route::get('/industrial rubric/create-co-level', [IndustrialEvaluationController::class, 'newCOLevel'])->name('industrial rubric.edit_co_level');
+    Route::post('/industrial rubric/create-co-level', [IndustrialEvaluationController::class, 'createCOLevel'])->name('industrial rubric.edit_co_level');
+
+    // Route for edit CO Level for industrial rubric
+    Route::get('/industrial rubric/edit-co-level/{co_level_id}', [IndustrialEvaluationController::class, 'editCOLevel'])->name('industrial rubric.edit_co_level');
+    Route::put('/industrial rubric/edit-co-level/{co_level_id}', [IndustrialEvaluationController::class, 'updateCOLevel'])->name('industrial rubric.edit_co_level');
+
+    // Route for delete CO Level for industrial rubric
+    Route::delete('/industrial rubric/delete-co-level/{co_level_id}', [IndustrialEvaluationController::class, 'deleteCOLevel'])->name('industrial rubric.delete_co_level');
 
     // Route for View Single Rubric
     Route::get('/industrial rubric/view/{rubric_id}', [IndustrialEvaluationController::class, 'showIndustrialRubric'])->name('industrial rubric.view_rubric');

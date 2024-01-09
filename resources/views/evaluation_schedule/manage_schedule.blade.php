@@ -22,11 +22,10 @@
             </div>
         </div>
 
-
         {{-- My Schedule --}}
-        <div class="flex justify-end mb-2">
+        {{-- <div class="flex justify-end mb-2">
             <a href="/evaluation schedule/view-schedule" class="text-primary-700 font-semibold text-sm underline">My Schedule >></a>
-        </div>
+        </div> --}}
 
         {{-- Evaluation Schedule Actions --}}
         <form action="/evaluation schedule" method="POST">
@@ -43,8 +42,8 @@
                     </select>
                 </div>
                 <div>
-                    <a href="/evaluation schedule/create-slot"><x-secondary-button class="border-primary-700 border-2 font-bold text-primary-700">NEW SLOT</x-secondary-button></a>
                     <x-button type="submit" id="submit">GENERATE</x-button>
+                    <a href="/evaluation schedule/create-slot"><x-secondary-button class="border-primary-700 border-2 font-bold text-primary-700">NEW SLOT</x-secondary-button></a>
                 </div>
             </div>
         </form>

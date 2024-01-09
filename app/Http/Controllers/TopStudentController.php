@@ -40,16 +40,16 @@ class TopStudentController extends Controller
 
     public function sortTopStudents(Request $request) {
         // Validate if all psm students are evaluated in evalaution 2 (FYPro)
-        // Getting all psm 2 students, and all nummber of evaluation 2(by evaluators)
+        // Getting all psm 2 students, and all number of evaluation 2(by evaluators)
         $all_psm2_students = Student::where('psm_year', '=', '2')->pluck('student_id')->toArray();
         $total_evaluations = Evaluation::where('evaluation_type', '=', 'evaluation2')
                              ->whereIn('student_id', $all_psm2_students)
                              ->count();
 
         // If there are 2 evaluations for each psm 2 student, then proceed, else return error message
-        // if((count($all_psm2_students)*2) != $total_evaluations) {
-        //     return redirect('/top students')->with('error-message', 'Please make sure all students are evaluated in FYPro.');
-        // }
+        if((count($all_psm2_students)*2) != $total_evaluations) {
+            return redirect('/top students')->with('error-message', 'Please make sure all students are evaluated in FYPro.');
+        }
 
         // Clear all top students
         Student::where('top_student', '=', '1')->update(['top_student' => 0]);  

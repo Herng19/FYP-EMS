@@ -14,6 +14,7 @@ use App\Models\EvaluatorList;
 use App\Models\SupervisorList;
 use App\Models\EvaluationSchedule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use App\Rules\evaluatorCrashTimeslot;
 use App\Rules\evaluatorCrashSupervisor;
 
@@ -65,9 +66,20 @@ class EvaluationScheduleController extends Controller
     // Function to show evaluator schedule or student schedule
     public function viewSchedule() {
         if(auth('web')->check()) {
-            $evaluatees = Lecturer::find(auth('web')->user()->lecturer_id)->evaluatees()->paginate(10);
-            
-            return view('evaluation_schedule.evaluator_schedule', ['evaluatees' => $evaluatees]);
+            if(Auth::user()->hasRole('supervisor')) {
+                $evaluatees = Lecturer::find(auth('web')->user()->lecturer_id)->evaluatees()->paginate(10);
+
+                return view('evaluation_schedule.evaluator_schedule', ['evaluatees' => $evaluatees]);
+            }
+            else {
+                $students_had_slot = Slot::all()->pluck('student_id')->toArray();
+                $evaluatees = Student::where('research_group_id', '=', auth()->user()->research_group->research_group_id)
+                            ->whereIn('student_id', $students_had_slot)
+                            ->orderBy('psm_year')
+                            ->paginate(10);
+
+                return view('evaluation_schedule.evaluator_schedule', ['evaluatees' => $evaluatees]);
+            }
         }
         else if(auth('student')->check()) {
             $student = Student::find(auth('student')->user()->student_id);
@@ -85,7 +97,7 @@ class EvaluationScheduleController extends Controller
 
         ($selected_student->psm_year == 1)? $venues = Venue::all() : $venues = Booth::all();
         $timeslots = ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
-        $available_evaluators = Lecturer::where('research_group_id', $selected_student->research_group_id)->get();
+        $available_evaluators = Lecturer::where('research_group_id', $selected_student->research_group_id)->role('evaluator')->get();
 
         return view('evaluation_schedule.create_slot', ["students" => $students, 
                                                 "selected_student" => $selected_student, 
@@ -156,7 +168,7 @@ class EvaluationScheduleController extends Controller
         $evaluators = $selected_student->evaluators->toArray();
         ($selected_student->psm_year == '1')? $venues = Venue::all() : $venues = Booth::all();
         $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
-        $available_evaluators = Lecturer::where('research_group_id', $selected_student->research_group_id)->get();
+        $available_evaluators = Lecturer::where('research_group_id', $selected_student->research_group_id)->role('evaluator')->get();
 
         return view('evaluation_schedule.edit_slot', ["students" => $students, 
                                                 "slot" => $slot,
@@ -307,6 +319,7 @@ class EvaluationScheduleController extends Controller
                 foreach ($students_pending_slot as $student) {
                     $supervisor_id = SupervisorList::where('student_id', '=', $student)->pluck('lecturer_id')->toArray();
                     $evaluators1[] = Lecturer::where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                            ->role('evaluator')
                                             ->whereNotIn('lecturer_id', $supervisor_id)
                                             ->pluck('lecturer_id')
                                             ->toArray();
@@ -387,6 +400,7 @@ class EvaluationScheduleController extends Controller
                 foreach ($students_pending_slot as $student) {
                     $supervisor_id = SupervisorList::where('student_id', '=', $student)->pluck('lecturer_id')->toArray();
                     $evaluators1[] = Lecturer::where('research_group_id', '=', $first_stud_no_slot->research_group_id)
+                                            ->role('evaluator')
                                             ->whereNotIn('lecturer_id', $supervisor_id)
                                             ->pluck('lecturer_id')
                                             ->toArray();

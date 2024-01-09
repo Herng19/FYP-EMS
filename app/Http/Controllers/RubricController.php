@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use PDF;
 use App\Models\Rubric;
+use App\Models\CoLevel;
 use App\Models\SubCriteria;
 use Illuminate\Http\Request;
 use App\Models\CriteriaScale;
@@ -57,8 +58,11 @@ class RubricController extends Controller
             $research_groups = ResearchGroup::where('research_group_id', '=', $user->research_group_id)->get();
         }
 
+        $co_levels = CoLevel::all();
+
         return view('rubric.create_rubric', [
-            'research_groups' => $research_groups
+            'research_groups' => $research_groups, 
+            'co_levels' => $co_levels,
         ]);
     }
 
@@ -86,7 +90,7 @@ class RubricController extends Controller
                     'criteria_id' => $criteria_id,
                     'sub_criteria_name' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_name"],
                     'sub_criteria_description' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_description"],
-                    'co_level' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_co_level"],
+                    'co_level_id' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_co_level"],
                     'weightage' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_weightage"],
                 ])->id;
 
@@ -116,10 +120,12 @@ class RubricController extends Controller
         else {
             $research_groups = ResearchGroup::where('research_group_id', '=', $user->research_group_id)->get();
         }
+        $co_levels = CoLevel::all();
 
         return view('rubric.edit_rubric', [
             'rubric' => $rubric,
             'research_groups' => $research_groups,
+            'co_levels' => $co_levels,
         ]);
     }
 
@@ -157,7 +163,7 @@ class RubricController extends Controller
                                 ->update([
                                     'sub_criteria_name' => $sub_criterias[$sub_criteria]["sub_criteria_name"],
                                     'sub_criteria_description' => $sub_criterias[$sub_criteria]["sub_criteria_description"],
-                                    'co_level' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
+                                    'co_level_id' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
                                     'weightage' => $sub_criterias[$sub_criteria]["sub_criteria_weightage"]
                                 ]);
                 }
@@ -211,10 +217,61 @@ class RubricController extends Controller
         return 0;
     }
 
-    // Function to delete scale\
+    // Function to delete scale
     public function deleteScale($scale_id) {
         CriteriaScale::where('scale_id', '=', $scale_id)->delete();
 
         return 0;
+    }
+
+    // CO Level Settings
+    // Function to show co level setting page
+    public function showCOLevelSettings() {
+        $co_levels = CoLevel::paginate(10);
+
+        return view('rubric.co_level_settings', [
+            'co_levels' => $co_levels,
+        ]);
+    }
+
+    // Function to show create co level form
+    public function newCOLevel() {
+        return view('rubric.create_co_level');
+    }
+
+    // Function to create co level
+    public function createCOLevel(Request $request) {
+        CoLevel::create([
+            'co_level_name' => $request->co_level_name,
+            'co_level_description' => $request->co_level_description,
+        ]);
+
+        return redirect('/rubric/co-level-settings')->with('success-message', 'Co Level created successfully!');
+    }
+
+    // Function to show edit co level form
+    public function editCOLevel($co_level_id) {
+        $co_level = CoLevel::find($co_level_id);
+
+        return view('rubric.edit_co_level', [
+            'co_level' => $co_level,
+        ]);
+    }
+
+    // Function to update co level
+    public function updateCOLevel($co_level_id, Request $request) {
+        CoLevel::find($co_level_id)->update([
+            'co_level_name' => $request->co_level_name,
+            'co_level_description' => $request->co_level_description,
+        ]);
+
+        return redirect('/rubric/co-level-settings')->with('success-message', 'Co Level updated successfully!');
+    }
+
+    // Function to delete co level
+    public function deleteCOLevel($co_level_id) {
+        CoLevel::find($co_level_id)->delete();
+
+        return redirect('/rubric/co-level-settings')->with('success-message', 'Co Level deleted successfully!');
     }
 }

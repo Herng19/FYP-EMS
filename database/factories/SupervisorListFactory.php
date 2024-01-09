@@ -21,7 +21,7 @@ class SupervisorListFactory extends Factory
         static $number = 1; 
 
         $student = Student::find($number); 
-        $lecturers = Lecturer::where('research_group_id', $student->research_group_id)->pluck('lecturer_id')->toArray();
+        $lecturers = Lecturer::where('research_group_id', $student->research_group_id)->role('supervisor')->pluck('lecturer_id')->toArray();
 
         return [
             'student_id' => $number++,

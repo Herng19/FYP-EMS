@@ -7,6 +7,7 @@ use App\Models\Booth;
 use App\Models\Venue;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use App\Models\IndustrialCoLevel;
 use Illuminate\Support\Facades\DB;
 use App\Models\IndustrialEvaluator;
 use App\Models\IndustrialEvaluation;
@@ -542,7 +543,9 @@ class IndustrialEvaluationController extends Controller
 
     // Function to show create industrial rubric form
     public function newIndustrialRubric() {
-        return view('industrial_evaluation.industrial_rubric.create_rubric');
+        $co_levels = IndustrialCoLevel::all();
+
+        return view('industrial_evaluation.industrial_rubric.create_rubric', ['co_levels' => $co_levels]);
     }
 
     // Function to create industrial rubric
@@ -567,7 +570,7 @@ class IndustrialEvaluationController extends Controller
                     'industrial_criteria_id' => $criteria_id,
                     'sub_criteria_name' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_name"],
                     'sub_criteria_description' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_description"],
-                    'co_level' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_co_level"],
+                    'industrial_co_level_id' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_co_level"],
                     'weightage' => $request->criteria[$criteria][$sub_criteria]["sub_criteria_weightage"],
                 ])->id;
 
@@ -589,8 +592,9 @@ class IndustrialEvaluationController extends Controller
     // Function to show edit industrial rubric form
     public function editIndustrialRubric($rubric_id, Request $request) {
         $rubric = IndustrialevaluationRubric::find($rubric_id);
+        $co_levels = IndustrialCoLevel::all();
 
-        return view('industrial_evaluation.industrial_rubric.edit_rubric', ['rubric' => $rubric]);
+        return view('industrial_evaluation.industrial_rubric.edit_rubric', ['rubric' => $rubric, 'co_levels' => $co_levels]);
     }
 
     // Function to update industrial rubric
@@ -625,7 +629,7 @@ class IndustrialEvaluationController extends Controller
                                 ->update([
                                     'sub_criteria_name' => $sub_criterias[$sub_criteria]["sub_criteria_name"],
                                     'sub_criteria_description' => $sub_criterias[$sub_criteria]["sub_criteria_description"],
-                                    'co_level' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
+                                    'industrial_co_level_id' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
                                     'weightage' => $sub_criterias[$sub_criteria]["sub_criteria_weightage"]
                                 ]);
                 }
@@ -634,7 +638,7 @@ class IndustrialEvaluationController extends Controller
                         'industrial_criteria_id' => $criteria_id,
                         'sub_criteria_name' => $sub_criterias[$sub_criteria]["sub_criteria_name"],
                         'sub_criteria_description' => $sub_criterias[$sub_criteria]["sub_criteria_description"],
-                        'co_level' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
+                        'industrial_co_level_id' => $sub_criterias[$sub_criteria]["sub_criteria_co_level"],
                         'weightage' => $sub_criterias[$sub_criteria]["sub_criteria_weightage"]
                     ])->id;
                 }
@@ -764,5 +768,56 @@ class IndustrialEvaluationController extends Controller
         }
 
         return redirect()->route('industrial evaluation')->with('success-message', 'Evaluation recorded successfully.');
+    }
+
+    // CO Level Settings
+    // Function to show co level setting page
+    public function showCOLevelSettings() {
+        $co_levels = IndustrialCoLevel::paginate(10);
+
+        return view('industrial_evaluation.industrial_rubric.co_level_settings', [
+            'co_levels' => $co_levels,
+        ]);
+    }
+
+    // Function to show create co level form
+    public function newCOLevel() {
+        return view('industrial_evaluation.industrial_rubric.create_co_level');
+    }
+
+    // Function to create co level
+    public function createCOLevel(Request $request) {
+        IndustrialCoLevel::create([
+            'co_level_name' => $request->co_level_name,
+            'co_level_description' => $request->co_level_description,
+        ]);
+
+        return redirect('/industrial rubric/co-level-settings')->with('success-message', 'Co Level created successfully!');
+    }
+
+    // Function to show edit co level form
+    public function editCOLevel($co_level_id) {
+        $co_level = IndustrialCoLevel::find($co_level_id);
+
+        return view('industrial_evaluation.industrial_rubric.edit_co_level', [
+            'co_level' => $co_level,
+        ]);
+    }
+
+    // Function to update co level
+    public function updateCOLevel($co_level_id, Request $request) {
+        IndustrialCoLevel::find($co_level_id)->update([
+            'co_level_name' => $request->co_level_name,
+            'co_level_description' => $request->co_level_description,
+        ]);
+
+        return redirect('/industrial rubric/co-level-settings')->with('success-message', 'Co Level updated successfully!');
+    }
+
+    // Function to delete co level
+    public function deleteCOLevel($co_level_id) {
+        IndustrialCoLevel::find($co_level_id)->delete();
+
+        return redirect('/industrial rubric/co-level-settings')->with('success-message', 'Co Level deleted successfully!');
     }
 }

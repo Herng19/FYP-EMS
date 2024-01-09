@@ -6,8 +6,9 @@
     <x-success-message/>
     
     <div class="mt-4 px-12">
-        <div class="flex justify-end">
-            <a href="/industrial rubric/create-rubric"><x-button><i class="fa-regular fa-plus mr-2"></i>New Rubric</x-button></a>
+        <div class="flex justify-between">
+            <a href="/industrial rubric/co-level-settings"><x-button><i class="fa-regular fa-gear mr-2"></i>CO Settings</x-button></a>
+            <a href="/industrial rubric/create-rubric"><x-secondary-button class="border-primary-700 border-2 font-bold text-primary-700"><i class="fa-regular fa-plus mr-2"></i>New Rubric</x-secondary-button></a>
         </div>
         <div class="mt-2">
             <x-show-table :headers="['Rubric', 'Research Group', 'Action']">

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('industrial_criteria_id')->constrained('industrial_rubric_criterias', 'industrial_criteria_id')->cascadeOnDelete();
             $table->string('sub_criteria_name');
             $table->string('sub_criteria_description');
-            $table->string('co_level');
+            $table->foreignId('industrial_co_level_id')->constrained('industrial_co_levels', 'industrial_co_level_id')->cascadeOnDelete();
             $table->integer('weightage');
         });
     }

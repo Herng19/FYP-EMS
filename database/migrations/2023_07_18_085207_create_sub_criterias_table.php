@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('criteria_id')->constrained('rubric_criterias', 'criteria_id')->cascadeOnDelete();
             $table->string('sub_criteria_name');
             $table->string('sub_criteria_description');
-            $table->string('co_level');
+            $table->foreignId('co_level_id')->constrained('co_levels', 'co_level_id')->cascadeOnDelete();
             $table->integer('weightage');
         });     
     }

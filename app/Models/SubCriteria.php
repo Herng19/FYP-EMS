@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\COLevel;
 use App\Models\CriteriaMark;
 use App\Models\CriteriaScale;
 use App\Models\RubricCriteria;
@@ -16,7 +17,7 @@ class SubCriteria extends Model
         'criteria_id',
         'sub_criteria_name',
         'sub_criteria_description',
-        'co_level', 
+        'co_level_id', 
         'weightage', 
     ];
 
@@ -32,5 +33,9 @@ class SubCriteria extends Model
 
     public function criteria_marks() {
         return $this->hasMany(CriteriaMark::class, 'sub_criteria_id', 'sub_criteria_id');
+    }
+
+    public function co_level() {
+        return $this->belongsTo(COLevel::class, 'co_level_id', 'co_level_id');
     }
 }

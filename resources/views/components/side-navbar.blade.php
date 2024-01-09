@@ -24,7 +24,7 @@
                 <i class="fa-light fa-users"></i>
             </x-slot>
             <x-slot name="title">
-                {{__('Supervisee')}}
+                {{__('Supervisee List')}}
             </x-slot>
         </x-navbar-item>
         @endrole

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\IndustrialCoLevel;
 use App\Models\IndustrialCriteriaScale;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\IndustrialRubricCriteria;
@@ -17,7 +18,7 @@ class IndustrialSubCriteria extends Model
         'industrial_criteria_id',
         'sub_criteria_name',
         'sub_criteria_description',
-        'co_level',
+        'industrial_co_level_id',
         'weightage', 
     ];
 
@@ -31,5 +32,9 @@ class IndustrialSubCriteria extends Model
 
     public function industrial_criteria_marks() {
         return $this->hasMany(IndustrialCriteriaMark::class, 'industrial_sub_criteria_id', 'industrial_sub_criteria_id');
+    }
+
+    public function industrial_co_level() {
+        return $this->belongsTo(IndustrialCoLevel::class, 'industrial_co_level_id', 'industrial_co_level_id');
     }
 }

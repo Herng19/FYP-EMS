@@ -57,7 +57,7 @@
                 @foreach ($rubric_criteria->sub_criterias as $j => $sub_criteria)
                     <tr>
                         <td style="padding-left: 12px; text-align: left; {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $i+1 }}.{{ $j+1 }} {{ $sub_criteria->sub_criteria_name }}</td>
-                        <td style="text-transform: uppercase; {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $sub_criteria->co_level }}</td>
+                        <td style="text-transform: uppercase; {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $sub_criteria->co_level->co_level_name }}</td>
                         @foreach ($sub_criteria->criteria_scales as $scale)
                             @if( $scale->scale_level == 2 || $scale->scale_level == 4 )
                                 <td style="color: rgb(100, 100, 100); {{ ($j%2 == 0)? 'background-color: #f1f1f1': ''; }}">{{ $scale->scale_description }}</td>

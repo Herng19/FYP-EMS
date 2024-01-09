@@ -21,10 +21,31 @@ class DashboardController extends Controller
         }
         else if(auth('web')->check()) {
             if(Auth::user()->hasRole('coordinator')) {
-                $supervisees = Auth::user()->supervisees;
+                $supervisees = Student::orderBy('psm_year')->get();
                 $psm1_students = Student::where('psm_year', '=', '1')->count();
                 $psm2_students = Student::where('psm_year', '=', '2')->count();
-                $lecturers = Lecturer::all()->count();
+                $lecturers = Lecturer::role('supervisor')->count();
+
+                return view('dashboard', [
+                    'supervisees' => $supervisees, 
+                    'psm1_students' => $psm1_students,
+                    'psm2_students' => $psm2_students,
+                    'lecturers' => $lecturers
+                ]);
+            }
+            else if(Auth::user()->hasRole('head of research group')) {
+                $supervisees = Student::where('research_group_id', '=', Auth::user()->research_group->research_group_id)
+                                ->orderBy('psm_year')
+                                ->get();
+                $psm1_students = Student::where('research_group_id', '=', Auth::user()->research_group->research_group_id)
+                                ->where('psm_year', '=', '1')
+                                ->count();
+                $psm2_students = Student::where('research_group_id', '=', Auth::user()->research_group->research_group_id)
+                                ->where('psm_year', '=', '2')
+                                ->count();
+                $lecturers = Lecturer::role('supervisor')
+                                ->where('research_group_id', '=', Auth::user()->research_group->research_group_id)
+                                ->count();
 
                 return view('dashboard', [
                     'supervisees' => $supervisees, 

@@ -81,9 +81,13 @@
                                     <div>
                                         <select id="sub-criteria-co-level" name="criteria[{{ $i }}][{{ $j }}][sub_criteria_co_level]" class="block text-sm font-semibold mt-1 w-full bg-white border border-slate-200 text-gray-700 focus:ring-primary-400 focus:border-0 px-4 py-2 rounded-md" required>
                                             <option value="" class="text-gray-400 font-semibold" default>--CO Level--</option>
-                                            <option value="co-1" class="text-gray-500 font-semibold" {{ ($sub_criteria->co_level == "co-1")? "selected" : "" }}>CO 1</option>
-                                            <option value="co-2" class="text-gray-500 font-semibold" {{ ($sub_criteria->co_level == "co-2")? "selected" : "" }}>CO 2</option>
-                                            <option value="co-3" class="text-gray-500 font-semibold" {{ ($sub_criteria->co_level == "co-3")? "selected" : "" }}>CO 3</option>
+                                            @foreach ($co_levels as $co_level)
+                                                @if($co_level->co_level_id == $sub_criteria->co_level->co_level_id )
+                                                    <option value="{{ $co_level->co_level_id }}" class="text-gray-500 font-semibold" selected>{{ $co_level->co_level_name }}</option>
+                                                @else
+                                                    <option value="{{ $co_level->co_level_id }}" class="text-gray-500 font-semibold">{{ $co_level->co_level_name }}</option>
+                                                @endif
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>

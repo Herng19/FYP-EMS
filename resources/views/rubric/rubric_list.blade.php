@@ -6,11 +6,19 @@
     <x-success-message/>
     
     <div class="px-12">
-        @hasanyrole('head of research group|coordinator')
+        @role('coordinator')
+        <div class="flex justify-between">
+            <a href="/rubric/co-level-settings"><x-button><i class="fa-regular fa-gear mr-2"></i>CO Settings</x-button></a>
+            <a href="/rubric/create-rubric"><x-secondary-button class="border-primary-700 border-2 font-bold text-primary-700"><i class="fa-regular fa-plus mr-2"></i>New Rubric</x-secondary-button></a>
+        </div>
+        @endrole
+
+        @role('head of research group')
         <div class="flex justify-end">
             <a href="/rubric/create-rubric"><x-button><i class="fa-regular fa-plus mr-2"></i>New Rubric</x-button></a>
         </div>
-        @endhasanyrole
+        @endrole
+
         <div class="mt-2">
             <x-show-table :headers="['Rubric', 'Evaluation', 'Research Group', 'Action']">
                 <tbody class="flex flex-col w-full" style="min-height: 60vh;">
