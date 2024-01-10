@@ -34,10 +34,10 @@
                     @if($student->slot != null)
                     <div class="ml-4 items-center">
                         <div class="text-primary-100 text-xs font-semibold">
-                            {{ $student->slot->venues->venue_name }}
+                            {{ ($student->psm_year == 1)? $student->slot->venues->venue_name : $student->slot->booths->booth_name; }}
                         </div>
                         <div class="text-md font-bold text-white">
-                            {{ $student->slot->venues->venue_code }}
+                            {{ ($student->psm_year == 1)? $student->slot->venues->venue_code : $student->slot->booths->booth_code; }}
                         </div>
                     </div>
                     @else

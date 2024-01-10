@@ -24,20 +24,20 @@
             <tbody class="flex flex-col w-full" style="min-height: 65vh;">
                 @foreach ($rubric->industrial_rubric_criterias as $i => $rubric_criteria)
                     <tr class="flex px-8 py-2 items-center">
-                        <td class="py-2 text-gray text-sm font-bold text-left w-1/4 break-all">{{ $i+1 }} {{ $rubric_criteria->criteria_name }}</td>
+                        <td class="py-2 text-gray text-sm font-bold text-left w-1/4">{{ $i+1 }} {{ $rubric_criteria->criteria_name }}</td>
                     </tr>
                     @foreach ($rubric_criteria->industrial_sub_criterias as $j => $sub_criteria)
                         <tr class="flex px-8 pt-2 items-center {{ ($j%2 == 0)? 'bg-primary-50' : '';}}">
-                            <td class="py-2 text-gray text-xs font-semibold text-left w-1/4 pl-4 break-all">{{ $i+1 }}.{{ $j+1 }} {{ $sub_criteria->sub_criteria_name }}</td>
-                            <td class="py-2 text-gray text-xs font-semibold text-center w-1/4 uppercase text-center break-all">{{ $sub_criteria->industrial_co_level->co_level_name }}</td>
+                            <td class="py-2 text-gray text-xs font-semibold text-left w-1/4 pl-4">{{ $i+1 }}.{{ $j+1 }} {{ $sub_criteria->sub_criteria_name }}</td>
+                            <td class="py-2 text-gray text-xs font-semibold text-center w-1/4 uppercase text-center">{{ $sub_criteria->industrial_co_level->co_level_name }}</td>
                             @foreach ($sub_criteria->industrial_criteria_scales as $scale)
                                 @if( $scale->scale_level % 2 == 1 )
-                                    <td class="py-2 text-gray-400 text-xs font-semibold text-center w-1/4 break-all">{{ $scale->scale_description }}</td>
+                                    <td class="py-2 text-gray-400 text-xs font-semibold text-center w-1/4">{{ $scale->scale_description }}</td>
                                 @else
-                                    <td class="py-2 text-gray text-xs font-semibold text-center w-1/4 break-all">{{ $scale->scale_description }}</td>
+                                    <td class="py-2 text-gray text-xs font-semibold text-center w-1/4">{{ $scale->scale_description }}</td>
                                 @endif
                             @endforeach
-                            <td class="py-2 text-gray text-xs font-semibold text-center w-1/4 uppercase text-center break-all">{{ $sub_criteria->weightage }}</td>
+                            <td class="py-2 text-gray text-xs font-semibold text-center w-1/4 uppercase text-center">{{ $sub_criteria->weightage }}</td>
                         </tr>
                     @endforeach
                 @endforeach

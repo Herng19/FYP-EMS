@@ -6,7 +6,7 @@
         {{-- Normal Evaluation --}}
         <div class="justify-start px-4 py-4 shadow-md rounded-lg bg-white">
             @if(null != $student->slot)
-            <div class="text-primary-700 font-bold text-xl">Evaluation 1</div>
+            <div class="text-primary-700 font-bold text-xl">Evaluation 2</div>
             <div class="grid grid-cols-6 gap-4 ml-8 mt-4">
                 <div class="inline-block text-gray-500 font-bold text-sm text-end">Evaluation Date : </div>
                 <div class="inline-block col-span-5 text-gray font-bold text-sm">{{(date("d-m-Y", strtotime($student->slot->start_time)))}}</div>
@@ -17,7 +17,7 @@
             </div>
             <div class="grid grid-cols-6 gap-4 ml-8 mt-4">
                 <div class="inline-block text-gray-500 font-bold text-sm text-end">Venue : </div>
-                <div class="inline-block col-span-5 text-gray font-bold text-sm">{{ $student->slot->venues->venue_code }} {{ $student->slot->venues->venue_name }}</div>
+                <div class="inline-block col-span-5 text-gray font-bold text-sm">{{ ($student->psm_year == 1)? $student->slot->venues->venue_code : $student->slot->booths->booth_code }} {{ ($student->psm_year == 1)? $student->slot->venues->venue_name : $student->slot->booths->booth_name }}</div>
             </div>
             <div class="grid grid-cols-6 gap-4 ml-8 mt-4">
                 <div class="inline-block text-gray-500 font-bold text-sm text-end">Evaluators : </div>
@@ -37,25 +37,24 @@
         {{-- Industrial Evaluation --}}
         @if($industrial_evaluation !== null)
         <div class="justify-start px-4 py-4 shadow-md rounded-lg bg-white mt-4">
-            <div class="text-primary-700 font-bold text-xl">Evaluation 1</div>
+            <div class="text-primary-700 font-bold text-xl">Industrial Evaluation</div>
             <div class="grid grid-cols-6 gap-4 ml-8 mt-4">
                 <div class="inline-block text-gray-500 font-bold text-sm text-end">Evaluation Date : </div>
-                <div class="inline-block col-span-5 text-gray font-bold text-sm">{{(date("d-m-Y", strtotime($student->slot->start_time)))}}</div>
+                <div class="inline-block col-span-5 text-gray font-bold text-sm">{{(date("d-m-Y", strtotime($student->industrial_evaluation_slot->start_time)))}}</div>
             </div>
             <div class="grid grid-cols-6 gap-4 ml-8 mt-4">
                 <div class="inline-block text-gray-500 font-bold text-sm text-end">Timeslot : </div>
-                <div class="inline-block col-span-5 text-gray font-bold text-sm">{{(date("H:i", strtotime($student->slot->start_time)))}} - {{(date("H:i", strtotime($student->slot->end_time)))}}</div>
+                <div class="inline-block col-span-5 text-gray font-bold text-sm">{{(date("H:i", strtotime($student->industrial_evaluation_slot->start_time)))}} - {{(date("H:i", strtotime($student->industrial_evaluation_slot->end_time)))}}</div>
             </div>
             <div class="grid grid-cols-6 gap-4 ml-8 mt-4">
                 <div class="inline-block text-gray-500 font-bold text-sm text-end">Venue : </div>
-                <div class="inline-block col-span-5 text-gray font-bold text-sm">{{ $student->slot->venues->venue_code }} {{ $student->slot->venues->venue_name }}</div>
+                <div class="inline-block col-span-5 text-gray font-bold text-sm">{{ $student->industrial_evaluation_slot->booths->booth_code }} {{ $student->slot->booths->booth_name }}</div>
             </div>
             <div class="grid grid-cols-6 gap-4 ml-8 mt-4">
                 <div class="inline-block text-gray-500 font-bold text-sm text-end">Evaluators : </div>
-                @foreach($student->evaluators as $evaluator)
+                @foreach($industrial_evaluators as $evaluator)
                     <div class="flex items-center col-span-5 text-gray font-bold text-sm">
-                        <img class="h-8 w-8 rounded-full object-cover mr-2" src="{{ $evaluator->profile_photo_url }}" alt="{{ $evaluator->name }}" />
-                        {{ $evaluator->name }}
+                        {{ $evaluator->evaluator_name }}
                     </div>
                     <div class=""></div>
                 @endforeach

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\COLevel;
+use App\Models\CoLevel;
 use App\Models\CriteriaMark;
 use App\Models\CriteriaScale;
 use App\Models\RubricCriteria;
@@ -36,6 +36,6 @@ class SubCriteria extends Model
     }
 
     public function co_level() {
-        return $this->belongsTo(COLevel::class, 'co_level_id', 'co_level_id');
+        return $this->belongsTo(CoLevel::class, 'co_level_id', 'co_level_id');
     }
 }

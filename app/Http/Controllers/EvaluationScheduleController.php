@@ -14,9 +14,12 @@ use App\Models\EvaluatorList;
 use App\Models\SupervisorList;
 use App\Models\EvaluationSchedule;
 use Illuminate\Support\Facades\DB;
+use App\Models\IndustrialEvaluator;
 use Illuminate\Support\Facades\Auth;
 use App\Rules\evaluatorCrashTimeslot;
+use App\Models\IndustrialSlotEvaluator;
 use App\Rules\evaluatorCrashSupervisor;
+use App\Models\IndustrialEvaluationSlot;
 
 class EvaluationScheduleController extends Controller
 {
@@ -83,9 +86,17 @@ class EvaluationScheduleController extends Controller
         }
         else if(auth('student')->check()) {
             $student = Student::find(auth('student')->user()->student_id);
-            $industrial_evaluation = null; 
+            $industrial_evaluation = IndustrialEvaluationSlot::where('student_id', '=', $student->student_id)->first(); 
 
-            return view('evaluation_schedule.student_schedule', ['student' => $student, 'industrial_evaluation' => $industrial_evaluation]);
+            if($industrial_evaluation != null) {
+                $industrial_slot_evaluators = IndustrialSlotEvaluator::where('industrial_slot_id', '=', $industrial_evaluation->industrial_slot_id)->pluck('industrial_evaluator_id')->toArray();
+                $industrial_evaluators = IndustrialEvaluator::whereIn('industrial_evaluator_id', $industrial_slot_evaluators)->get();
+            }
+            else {
+                $industrial_evaluators = null;
+            }
+
+            return view('evaluation_schedule.student_schedule', ['student' => $student, 'industrial_evaluation' => $industrial_evaluation, 'industrial_evaluators' => $industrial_evaluators]);
         }
     }
 
@@ -222,7 +233,7 @@ class EvaluationScheduleController extends Controller
         $psm_year = Student::find($formFields['name'])->psm_year;
 
         if($psm_year == '1') {
-            Slot::create([
+            $slot->update([
                 'student_id' => $formFields['name'],
                 'venue_id' => $formFields['venue'],
                 'schedule_id' => $schedule->schedule_id, 
@@ -231,7 +242,7 @@ class EvaluationScheduleController extends Controller
             ]);
         }
         else {
-            Slot::create([
+            $slot->update([
                 'student_id' => $formFields['name'],
                 'booth_id' => $formFields['venue'],
                 'schedule_id' => $schedule->schedule_id, 
@@ -416,8 +427,8 @@ class EvaluationScheduleController extends Controller
                 $schedule = array();
                 for ($i = 0; $i < count($global_best_position); $i += 4) {
                     $timeslot = $timeslots[$global_best_position[$i]];
-                    $evaluator1 = $evaluators1[$i/5][$global_best_position[$i + 1]];
-                    $evaluator2 = $evaluators2[$i/5][$global_best_position[$i + 2]];
+                    $evaluator1 = $evaluators1[$i/4][$global_best_position[$i + 1]];
+                    $evaluator2 = $evaluators2[$i/4][$global_best_position[$i + 2]];
                     $student = $students_pending_slot[$global_best_position[$i + 3]];
                     $schedule[] = array($timeslot, $evaluator1, $evaluator2, $student);
                 }
@@ -624,8 +635,8 @@ class EvaluationScheduleController extends Controller
     
         for ($i = 0; $i < count($position); $i += 4) {
             $timeslot = $timeslots[$position[$i]];
-            $evaluator1 = $evaluators1[$i/5][$position[$i + 1]];
-            $evaluator2 = $evaluators2[$i/5][$position[$i + 2]];
+            $evaluator1 = $evaluators1[$i/4][$position[$i + 1]];
+            $evaluator2 = $evaluators2[$i/4][$position[$i + 2]];
             $student = $students_pending_slot[$position[$i + 3]];
             $schedule[] = array($timeslot, $evaluator1, $evaluator2, $student);
     

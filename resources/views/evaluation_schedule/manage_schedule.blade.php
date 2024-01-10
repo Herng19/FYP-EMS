@@ -92,6 +92,7 @@
         
         // Whenever date or psm year changes, update the schedule data
         $('.parameter').on('change', function(e) {
+            e.preventDefault();
             date = $("input[name=date]").val();
             psm_year = $("select[name=psm_year]").val();
 
@@ -114,6 +115,7 @@
 
         // submit form when generate button is clicked
         $('form').on('submit', function(e) {
+            e.preventDefault();
             date = $("input[name=date]").val();
             psm_year = $("select[name=psm_year]").val();
 

@@ -74,7 +74,7 @@ Route::middleware('auth:web')->group(function () {
 
     // Route for create CO Level
     Route::get('/rubric/create-co-level', [RubricController::class, 'newCOLevel'])->name('rubric.edit_co_level');
-    Route::post('/rubric/create-co-level', [RubricController::class, 'createCOLevel'])->name('rubric.edit_co_level');
+    Route::post('/rubric/create-co-level', [RubricController::class, 'createCOLevel']);
 
     // Route for edit CO Level
     Route::get('/rubric/edit-co-level/{co_level_id}', [RubricController::class, 'editCOLevel'])->name('rubric.edit_co_level');

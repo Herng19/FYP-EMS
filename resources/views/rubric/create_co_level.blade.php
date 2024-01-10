@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="mt-2 mx-4">
-            <form action="/industrial rubric/create-co-level" method="POST">
+            <form action="/rubric/create-co-level" method="POST">
                 @csrf
                 <div class="flex flex-col mt-4">
                     <label for="co_level_name" class="font-semibold text-sm text-gray mb-2">CO Level Name</label>

@@ -22,7 +22,6 @@
         td {
             padding: 4px;
             text-align: center;
-            word-break: break-word;
             width: 32px;
             max-width: 32px;
             font-size: 12px;

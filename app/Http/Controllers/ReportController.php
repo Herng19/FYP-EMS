@@ -205,7 +205,7 @@ class ReportController extends Controller
                     $total_marks = 0;
                     $evaluations = Evaluation::where('student_id', $student->student_id)->get();
                     if($evaluations->count() == 0) {
-                        break;
+                        continue;
                     }
 
                     // For each evaluations of that student, calculate the total marks
@@ -259,6 +259,7 @@ class ReportController extends Controller
                 });
                 $all_supervisee_marks = $all_supervisee_marks->merge($industrial_mark);
             }
+
 
             $all_students_grade = []; 
             $all_students_co = [];

@@ -733,11 +733,16 @@ class IndustrialEvaluationController extends Controller
         // Get industrial evaluation of the student being evaluate
         $evaluation = IndustrialEvaluation::where('student_id', '=', $student_id)->first();
 
-        // Get all recorded marks for the student's evaluation
-        $marks = IndustrialCriteriaMark::where('industrial_evaluation_id', '=', $evaluation->industrial_evaluation_id)->get(); 
-        $marks_keyed = $marks->mapWithKeys(function ($item) {
-            return [$item['industrial_sub_criteria_id'] => $item['scale']];
-        });
+        if($evaluation != null) {
+            // Get all recorded marks for the student's evaluation
+            $marks = IndustrialCriteriaMark::where('industrial_evaluation_id', '=', $evaluation->industrial_evaluation_id)->get(); 
+            $marks_keyed = $marks->mapWithKeys(function ($item) {
+                return [$item['industrial_sub_criteria_id'] => $item['scale']];
+            });
+        }
+        else {
+            $marks_keyed = null;
+        }
         
         return view('industrial_evaluation.industrial_evaluation.edit_evaluation', [
             'student' => $student,
