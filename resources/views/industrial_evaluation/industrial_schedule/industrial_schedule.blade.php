@@ -98,7 +98,7 @@
                   }
             });
         });
-
+        
         // submit form when generate button is clicked
         $('form').on('submit', function(e) {
             e.preventDefault();

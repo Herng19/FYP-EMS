@@ -274,7 +274,7 @@ class IndustrialEvaluationController extends Controller
         // Initiate variables for timeslots, particles num
         $timeslots = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30','15:00', '15:30','16:00', '16:30','17:00', '17:30'];
         $rooms_available = Booth::all()->pluck('booth_id')->toArray();
-        $num_particles = 20;
+        $num_particles = 100;
         $stud_num = 0; 
 
         // Getting all variables 
@@ -293,7 +293,6 @@ class IndustrialEvaluationController extends Controller
         $students_pending_slot = Student::whereNotIn('student_id', $students_had_slot)
                             ->where('psm_year', '=', 2)
                             ->where('top_student', '=', 1)
-                            ->limit(15)
                             ->pluck('student_id')
                             ->toArray();
 
@@ -302,29 +301,28 @@ class IndustrialEvaluationController extends Controller
         // Get industrial evaluators
         $evaluators2 = $evaluators1 = IndustrialEvaluator::all()->pluck('industrial_evaluator_id')->toArray();
         
-        $rooms = array_slice($rooms_available, 0, ceil($stud_num/count($timeslots)));
-        array_splice($rooms_available, 0, ceil($stud_num/count($timeslots)));
+        // $rooms = array_slice($rooms_available, 0, ceil($stud_num/count($timeslots)));
+        // array_splice($rooms_available, 0, ceil($stud_num/count($timeslots)));
 
         // Get the schedule
-        $global_best_position = $this->particle_swarm_optimization($num_particles, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot);
+        $global_best_position = $this->particle_swarm_optimization($num_particles, $timeslots, $evaluators1, $evaluators2, $students_pending_slot);
         $schedule = array();
-        for ($i = 0; $i < count($global_best_position); $i += 5) {
+        for ($i = 0; $i < count($global_best_position); $i += 4) {
             $timeslot = $timeslots[$global_best_position[$i]];
-            $room = $rooms[$global_best_position[$i + 1]];
-            $evaluator1 = $evaluators1[$global_best_position[$i + 2]];
-            $evaluator2 = $evaluators2[$global_best_position[$i + 3]];
-            $student = $students_pending_slot[$global_best_position[$i + 4]];
-            $schedule[] = array($timeslot, $room, $evaluator1, $evaluator2, $student);
+            $evaluator1 = $evaluators1[$global_best_position[$i + 1]];
+            $evaluator2 = $evaluators2[$global_best_position[$i + 2]];
+            $student = $students_pending_slot[$global_best_position[$i + 3]];
+            $schedule[] = array($timeslot, $evaluator1, $evaluator2, $student);
         }
 
         // Foreach student, insert data into slots, and evaluator list
-        foreach($schedule as $slot) {
+        foreach($schedule as $i => $slot) {
             $start_time = date('Y-m-d H:i:s', strtotime("$request->date $slot[0]"));
             $end_time = date('Y-m-d H:i:s', strtotime("$request->date $slot[0]") + 30*60);
 
             $slot_id = IndustrialEvaluationSlot::create([
-                'student_id' => $slot[4],
-                'booth_id' => $slot[1],
+                'student_id' => $slot[3],
+                'booth_id' => $rooms_available[$i],
                 'industrial_schedule_id' => $schedule_id, 
                 'start_time' => $start_time,
                 'end_time' => $end_time, 
@@ -332,12 +330,12 @@ class IndustrialEvaluationController extends Controller
 
             IndustrialSlotEvaluator::create([
                 'industrial_slot_id' => $slot_id,
-                'industrial_evaluator_id' => $slot[2]
+                'industrial_evaluator_id' => $slot[1]
             ]);
 
             IndustrialSlotEvaluator::create([
                 'industrial_slot_id' => $slot_id,
-                'industrial_evaluator_id' => $slot[3]
+                'industrial_evaluator_id' => $slot[2]
             ]);
         }
 
@@ -352,18 +350,17 @@ class IndustrialEvaluationController extends Controller
     }
 
     // Evaluation function to evaluate industrial evaluation schedule generated
-    private function evaluate($position, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot) {
+    private function evaluate($position, $timeslots, $evaluators1, $evaluators2, $students_pending_slot) {
         $schedule = array();
         $evaluator_student_counts = array();
 
     
-        for ($i = 0; $i < count($position); $i += 5) {
+        for ($i = 0; $i < count($position); $i += 4) {
             $timeslot = $timeslots[$position[$i]];
-            $room = $rooms[$position[$i + 1]];
-            $evaluator1 = $evaluators1[$position[$i + 2]];
-            $evaluator2 = $evaluators2[$position[$i + 3]];
-            $student = $students_pending_slot[$position[$i + 4]];
-            $schedule[] = array($timeslot, $room, $evaluator1, $evaluator2, $student);
+            $evaluator1 = $evaluators1[$position[$i + 1]];
+            $evaluator2 = $evaluators2[$position[$i + 2]];
+            $student = $students_pending_slot[$position[$i + 3]];
+            $schedule[] = array($timeslot, $evaluator1, $evaluator2, $student);
     
             $evaluator_student_counts[$evaluator1] = 0;
             $evaluator_student_counts[$evaluator2] = 0;
@@ -375,19 +372,19 @@ class IndustrialEvaluationController extends Controller
             $conflicts = 0;
             
             // count the number of students assigned to each evaluator
+            $evaluator_student_counts[$schedule[$i][1]]++;
             $evaluator_student_counts[$schedule[$i][2]]++;
-            $evaluator_student_counts[$schedule[$i][3]]++;
 
-            if($schedule[$i][2] == $schedule[$i][3]){
+            if($schedule[$i][1] == $schedule[$i][2]){
                 $conflicts++;
             }
             
             for ($j = $i + 1; $j < count($schedule); $j++) {
                 // check for timeslot/venue/evaluators conflicts
-                if($schedule[$j][2] == $schedule[$j][3]){
+                if($schedule[$j][1] == $schedule[$j][2]){
                     $conflicts++;
                 }
-                else if ($schedule[$i][2] == $schedule[$j][3] || $schedule[$i][3] == $schedule[$j][2] || $schedule[$i][2] == $schedule[$j][2] || $schedule[$i][3] == $schedule[$j][3] || $schedule[$i][1] == $schedule[$j][1]) {
+                else if ($schedule[$i][1] == $schedule[$j][2] || $schedule[$i][2] == $schedule[$j][1] || $schedule[$i][1] == $schedule[$j][1] || $schedule[$i][2] == $schedule[$j][2]) {
                     if ($schedule[$i][0] == $schedule[$j][0]) {
                         $conflicts++;
                     }
@@ -397,56 +394,55 @@ class IndustrialEvaluationController extends Controller
         }
         
         // check student counts range 
-        // $max_student_count = max($evaluator_student_counts);
-        // $min_student_count = min($evaluator_student_counts);
-        // $balance_penalty = $max_student_count - $min_student_count;
+        $max_student_count = max($evaluator_student_counts);
+        $min_student_count = min($evaluator_student_counts);
+        $balance_penalty = $max_student_count - $min_student_count;
         
-        // if($balance_penalty > 2) {
-        //     $cost += 1;
-        // }
+        if($balance_penalty > 3) {
+            $cost += 1;
+        }
     
         return 1 / ($cost + 1); // minimize conflicts
     }
 
     // initialize the particles for industrial evaluation schedule
-    private function generate_particles($num_particles, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot) {
+    private function generate_particles($num_particles, $timeslots, $evaluators1, $evaluators2, $students_pending_slot) {
         $particles = array();
         for ($i = 0; $i < $num_particles; $i++) {
             $position = array();
             for ($j = 0; $j < count($students_pending_slot); $j++) {
-                $position[] = $j%16;
-                $position[] = rand(0, count($rooms) - 1);
+                $position[] = rand(0, count($timeslots) - 1);
                 $position[] = rand(0, count($evaluators1) - 1);
                 $position[] = rand(0, count($evaluators2) - 1);
                 $position[] = $j;
             }
             $particles[] = array(
                 'position' => $position,
-                'velocity' => array_fill(0, count($students_pending_slot)*5, 0),
+                'velocity' => array_fill(0, count($students_pending_slot)*4, 0),
                 'best_position' => $position,
-                'best_fitness' => $this->evaluate($position, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot),
-                'fitness' => $this->evaluate($position, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot)
+                'best_fitness' => $this->evaluate($position, $timeslots, $evaluators1, $evaluators2, $students_pending_slot),
+                'fitness' => $this->evaluate($position, $timeslots, $evaluators1, $evaluators2, $students_pending_slot)
             );
         }
         return $particles; 
     }
 
     // PSO algorithm for industrial evaluation schedule
-    private function particle_swarm_optimization($num_particles, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot) {   
+    private function particle_swarm_optimization($num_particles, $timeslots, $evaluators1, $evaluators2, $students_pending_slot) {   
         // PSO parameters
         $c1 = 3.0;
         $c2 = 1.0;
         $w = 0.5;
-        $particles = $this->generate_particles($num_particles, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot);
+        $particles = $this->generate_particles($num_particles, $timeslots, $evaluators1, $evaluators2, $students_pending_slot);
         $best_position = $particles[0]['position'];
         $best_fitness = $particles[0]['fitness'];
         $iterations = 0; 
     
         // run the PSO algorithm
         while($best_fitness < 1 ) {
-            if($iterations >= 300) {
+            if($iterations >= 1000) {
                 $iterations = 0;
-                $particles = $this->generate_particles($num_particles, $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot);
+                $particles = $this->generate_particles($num_particles, $timeslots, $evaluators1, $evaluators2, $students_pending_slot);
                 $best_position = $particles[0]['position'];
                 $best_fitness = $particles[0]['fitness'];
             }
@@ -458,8 +454,8 @@ class IndustrialEvaluationController extends Controller
             }
             for ($i = 0; $i < $num_particles; $i++) {
                 // update the particle velocity
-                for ($j = 0; $j < (count($students_pending_slot) * 5); $j++) {
-                    if ( $j % 5 == 4 ) {
+                for ($j = 0; $j < (count($students_pending_slot) * 4); $j++) {
+                    if ( $j % 4 == 3 ) {
                         $particles[$i]['velocity'][$j] = 0;
                     }
                     else {
@@ -471,23 +467,21 @@ class IndustrialEvaluationController extends Controller
                     }
                 }
                 // update the particle position
-                for ($j = 0; $j < (count($students_pending_slot) * 5); $j++) {
+                for ($j = 0; $j < (count($students_pending_slot) * 4); $j++) {
                     $particles[$i]['position'][$j] += $particles[$i]['velocity'][$j];
                     // handle out-of-bounds positions
-                    if ($j % 5 == 0 && $particles[$i]['position'][$j] >= count($timeslots)) {
+                    if ($j % 4 == 0 && $particles[$i]['position'][$j] >= count($timeslots)) {
                         $particles[$i]['position'][$j] = count($timeslots) - 1;
-                    } else if ($j % 5 == 1 && $particles[$i]['position'][$j] >= count($rooms)) {
-                        $particles[$i]['position'][$j] = count($rooms) - 1;
-                    } else if ($j % 5 == 2 && $particles[$i]['position'][$j] >= count($evaluators1)) {
+                    } else if ($j % 4 == 1 && $particles[$i]['position'][$j] >= count($evaluators1)) {
                         $particles[$i]['position'][$j] = count($evaluators1) - 1;
-                    } else if ($j % 5 == 3 && $particles[$i]['position'][$j] >= count($evaluators2)) {
+                    } else if ($j % 4 == 2 && $particles[$i]['position'][$j] >= count($evaluators2)) {
                         $particles[$i]['position'][$j] = count($evaluators2) - 1;
                     } else if ($particles[$i]['position'][$j] < 0) {
                         $particles[$i]['position'][$j] = 0;
                     }
                 }
                 // update the particle fitness
-                $particles[$i]['fitness'] = $this->evaluate($particles[$i]['position'], $timeslots, $rooms, $evaluators1, $evaluators2, $students_pending_slot);
+                $particles[$i]['fitness'] = $this->evaluate($particles[$i]['position'], $timeslots, $evaluators1, $evaluators2, $students_pending_slot);
                 // update the particle's best position and fitness
                 if ($particles[$i]['fitness'] > $particles[$i]['best_fitness']) {
                     $particles[$i]['best_position'] = $particles[$i]['position'];
